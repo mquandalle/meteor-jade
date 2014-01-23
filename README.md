@@ -16,7 +16,7 @@ This package is available on [atmosphere](https://atmosphere.meteor.com/) so you
 can install it with [meteorite](http://oortcloud.github.io/meteorite/):
 
 ```sh
-mrt install jade
+mrt add jade
 ```
 
 ## Examples
@@ -201,7 +201,7 @@ Everything is executed at bundle time.
 
 ### Donations
 
-This code is published under the [MIT license](LICENSE). If you want to buy me a
-beer, I proudly accept bitcoin donations:
+This code is published under the [MIT license](LICENSE).
 
+If you want to buy me a beer, I proudly accept bitcoin donations:
 [1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy](https://blockchain.info/address/1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy)
