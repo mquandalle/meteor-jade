@@ -1,0 +1,12 @@
+{
+  "name": "jade",
+  "description": "Jade template language for Meteor",
+  "author": "Maxime QUANDALLE <maxime@quandalle.com>",
+  "version": "0.1.0",
+  "git": "https://github.com/mquandalle/meteor-jade",
+  "homepage": "https://github.com/mquandalle/meteor-jade",
+  "meteor": {
+    "git": " https://github.com/meteor/meteor.git",
+    "branch": "shark"
+  }
+}
