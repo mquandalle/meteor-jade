@@ -100,8 +100,8 @@ _.extend(Compiler.prototype, {
   },
 
   // We interpret "Mixins" as "Components"
-  // Thanks to our customize Lexer, `if`, `unless`, `else if`, `else`, `with`
-  // and `each` are retrieved as Mixins by the parser
+  // Thanks to our customize Lexer, `if`, `unless`, `with` and `each` are
+  // retrieved as Mixins by the parser
   visitMixin: function(node, attrs, content, elseContent) {
     var self = this;
     var componentName = node.name;
@@ -224,7 +224,7 @@ _.extend(Compiler.prototype, {
       spacebarsSymbol = "{{" + val + "}}";
     else
       spacebarsSymbol = "{{{" + val + "}}}";
-    return Spacebars.parse(spacebarsSymbol);
+    return Spacebars.TemplateTag.parse(spacebarsSymbol);
   },
 
   registerRootNode: function(node, result) {

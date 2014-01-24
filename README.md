@@ -28,44 +28,81 @@ thoses examples templates and even more in the [examples directory](examples/).
 
 ## Usage
 
+Meteor-jade basically works like pure Jade, so if you never use Jade before you
+should take a look at the [documentation](http://jade-lang.com/reference/).
+
+There are some specifics rules relative to the Meteor way of handling templates.
+These rules are mostly the same as the Spacebars ones.
+
+### Templates
+
 You can define a template with the following syntax:
 
 ```jade
 template(name="myTemplateA")
-  p This is more the Meteor-way
+  p This paragraphe in inside my template
 ```
 
-If you want to include a template inside another, use the following syntax:
+There are two particular templates that are automatically rendered inside the
+DOM: `head` and `body`. If you want to include a template inside another,
+precede its name by the `+` symbol:
+
+```jade
+head
+  title Leaderboard
+
+body
+  +leaderboard
+  //- This is equivalent of {{> leaderboard}}
+```
+
+Inside a text node you can use both `{{handlebars}}` and `#{jade}` expressions
+but the last one is recommended:
+
+```jade
+template(name="leaderboard")
+  p Welcome #{player.name}
+```
+
+### Components
+
+As you may already know, Meteor templates are "components" as well. To use a
+template as a component, you simply have to provide a `content` block and
+optionally a `elseContent` block after the inclusion:
 
 ```jade
 body
-  //- This is equivalent to {{> leaderboard}}
-  +leaderboard
-```
+  +ifEven(value=2)
+    | Hello world
+  else
+    | Bye world
 
-You can provide a `content` block and optionnaly an `elseContent` block to any
-component: 
-[see the Meteor UI wiki page](https://github.com/meteor/meteor/wiki/New-Template-Engine-Preview#new-pattern-for-defining-custom-block-helpers)
-
-```jade 
-body
-  //- 
-    ifEven is a user defined component
+  //-
     This is the equivalent of:
     {{#ifEven value=2}}
-      2 is even
+      Hello world
     {{else}}
-      2 is odd
+      Bye world
     {{/ifEven}}
-
-  +ifEven(value=2)
-    | 2 is even
-  else
-    | 2 is odd
+    ifEven is component defined by the user
+    See the complete example in ./examples/components.jade
 ```
 
-For the build-in components (`if`, `unless`, `each` and `with`) you don't need
-to write the `+` symbol before invocation:
+Like with Spacebars, a component can receive both ordered and keywords
+arguments. Keywords arguments must be written after the ordered one:
+
+```
++myComponent(arg1, arg2, arg3, key1=val1, key2=val2)
+```
+
+Brackets are optional:
+
+```
++myComponent arg1, arg2, arg2, key1=val1, key2=val2
+```
+
+For the four build-in components (`if`, `unless`, `each` and `with`) the `+`
+is also optional:
 
 ```jade
 ul
@@ -76,7 +113,7 @@ ul
       li= name
 ```
 
-Inside a text node you can use both `{{handlebars}}` and `#{jade}` expressions.
+[Learn more about components](https://github.com/meteor/meteor/wiki/New-Template-Engine-Preview#new-pattern-for-defining-custom-block-helpers)
 
 ### Load order issue
 
@@ -193,15 +230,18 @@ new functionnality proposition.
 ### Implementation
 
 This package use the Jade lexer to define the grammar, we just add a few customs
-rules for the components managment. Then we use the Jade parser which returns a
-syntax tree that we adapt to make it compatible with the Meteor format. We
-finally rely on the Spacebars compiler to generate the javascript code.
+rules specifics to the Meteor components model. Then we use the Jade parser
+which returns a syntax tree that we transform to make it compatible with the
+Meteor format. We finally rely on the Spacebars compiler to generate the
+JavaScript code sent to the client.
 
 Everything is executed at bundle time.
 
-### Donations
+### License
 
 This code is published under the [MIT license](LICENSE).
 
-If you want to buy me a beer, I proudly accept bitcoin donations:
+### Tips
+
+If you want to buy me a beer, I proudly accept bitcoin tips:
 [1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy](https://blockchain.info/address/1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy)
