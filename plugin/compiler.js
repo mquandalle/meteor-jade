@@ -120,10 +120,15 @@ _.extend(Compiler.prototype, {
 
   visitTag: function(node, attrs, content) {
     var self = this;
+    var tagName = node.name.toUpperCase();
+
+    if (! HTML.isTagEnsured(tagName))
+      self.throwError("Unknow tag: " + tagName, node);
+
     if (! _.isEmpty(attrs))
       content.unshift(attrs);
 
-    return HTML[node.name.toUpperCase()].apply(undefined, content);
+    return HTML[tagName].apply(undefined, content);
   },
 
   visitText: function(node) {
@@ -276,7 +281,7 @@ _.extend(Compiler.prototype, {
     message = message || "Syntax error";
     if (node.line)
       message += " on line " + node.line;
-    
-    throw message; 
+
+    throw message;
   }
 });
