@@ -49,7 +49,7 @@ _.extend(Compiler.prototype, {
       
       if (currentNode.type === "Mixin") {
         // Define stack potentials elements
-        if (currentNode.args && currentNode.args.kind === "if")
+        if (currentNode.name === "if")
           stackElements = ["else if", "else"];
         else
           stackElements = ["else"];
@@ -58,20 +58,17 @@ _.extend(Compiler.prototype, {
         // Create the stack [nodeIf, nodeElseIf..., nodeElse]
         stack = [];
         while (nodes[i+1] && nodes[i+1].type === "Mixin" &&
-               nodes[i+1].args && nodes[i+1].args.kind &&
-               stackElements.indexOf(nodes[i+1].args.kind) !== -1) {
+               stackElements.indexOf(nodes[i+1].name) !== -1) {
           stack.push(nodes[++i])
         }
 
         // Transform the stack
         elseNode = stack.shift() || null;
-        if (elseNode && elseNode.args && elseNode.args.kind === "else if") {
+        if (elseNode && elseNode.name === "else if") {
           elseNode.name = "if";
-          elseNode.args.kind = "if";
           elseNode = {
             name: "else",
             type: "Mixin",
-            args: { kind: "else"},
             block: { nodes: [elseNode].concat(stack) },
             call: false
           }
@@ -107,12 +104,11 @@ _.extend(Compiler.prototype, {
   // and `each` are retrieved as Mixins by the parser
   visitMixin: function(node, attrs, content, elseContent) {
     var self = this;
+    var componentName = node.name;
     var spacebarsSymbol = content === null ? ">" : "#";
-    // XXX Improve args managment
-    var args = node.args && node.args.args || "";
-
+    var args = node.args || "";
     var tag = Spacebars.TemplateTag.parse("{{" + spacebarsSymbol + 
-                                          node.name + " " + args + "}}");
+                                             componentName + " " + args + "}}");
     if (content !== null)
       tag.content = content;
 
@@ -126,7 +122,7 @@ _.extend(Compiler.prototype, {
     var self = this;
     if (! _.isEmpty(attrs))
       content.unshift(attrs);
-    
+
     return HTML[node.name.toUpperCase()].apply(undefined, content);
   },
 

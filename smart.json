@@ -6,7 +6,6 @@
   "git": "https://github.com/mquandalle/meteor-jade",
   "homepage": "https://github.com/mquandalle/meteor-jade",
   "meteor": {
-    "git": " https://github.com/meteor/meteor.git",
     "branch": "shark"
   }
 }

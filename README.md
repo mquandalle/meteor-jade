@@ -45,7 +45,7 @@ body
 
 You can provide a `content` block and optionnaly an `elseContent` block to any
 component: 
-[see the Meteor UI wiki page](https://github.com/meteor/meteor/wiki/New-Template-Engine-Preview#new-pattern-for-defining-custom-block-helpers>)
+[see the Meteor UI wiki page](https://github.com/meteor/meteor/wiki/New-Template-Engine-Preview#new-pattern-for-defining-custom-block-helpers)
 
 ```jade 
 body
@@ -59,9 +59,9 @@ body
     {{/ifEven}}
 
   +ifEven(value=2)
-    2 is even
+    | 2 is even
   else
-    2 is odd
+    | 2 is odd
 ```
 
 For the build-in components (`if`, `unless`, `each` and `with`) you don't need
@@ -89,7 +89,7 @@ This is probably a file load order issue. Meteor uses
 in order to push `html` files ahead of everything else. It's not possible for
 a package to register an extension name to benefit of the same behavior yet.
 
-What you can do, as a temporary solution, is to rename yours `myfile.jade`, into
+What you can do, as a temporary solution, is to rename your `myfile.jade`, into
 `myfile.jade.html`. This package will continue to compile it like before, and
 the Meteor hack will push the file before your code.
 
@@ -159,7 +159,7 @@ It is possible to use server-side filters in order to use a specific compiler
 for a particular block. For now `:markdown` is the only filter supported.
 
 ```jade
-p
+body
   :markdown
     # I love writing my docs in markdown
 
@@ -167,8 +167,8 @@ p
     * So the client doesn't have to do it
 ```
 
-The difference with the markdown block helper `+markdown` is that the
-compilation is done on the server, not the client.
+The difference with the `+markdown` block helper is that the compilation is done
+on the server, not the client.
 
 ### Anonymous helper
 

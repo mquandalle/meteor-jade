@@ -1,24 +1,21 @@
-// We need do modify a little the classical Jade grammar in order to define
-// both user defined and build-in components.
+// We modify a bit the Jade grammar in order to define both user defined and
+// build-in components.
 // 
-// Components are saved as "Mixin" objects. The args parameter contains:
-//   * `kind` the kind of the component (if, with, each...)
-//   * `args` a string of the parameters on the line
-//   
-// XXX It would be better to define a "Component" node. The problem is that it's
-// not possible to provide a custom list of nodes to the jade parser yet (as of
-// 1.1.5)
+// We save components as "Mixins" nodes. That's a good host because like
+// "Mixins", components have:
+// 1. a name
+// 2. some arguments (optionnal)
 
 Lexer = Npm.require('jade').Lexer;
 
 // Build-in components
 Lexer.prototype.builtInComponents = function () {
   var self = this;
-  var captures;
+  var captures, tok;
   if (captures = /^(if|unless|else if|else|with|each)\b([^\n]*)/.exec(self.input)) {
     self.consume(captures[0].length);
-    var tok  = self.tok('mixin', captures[1]);
-    tok.args = {kind: captures[1], args: captures[2]};
+    tok = self.tok('mixin', captures[1]);
+    tok.args = captures[2];
     return tok;
   }
 };
@@ -26,6 +23,13 @@ Lexer.prototype.builtInComponents = function () {
 // User components, uses the syntax `+componentName(arguments)`
 Lexer.prototype.userComponents = function () {
   var self = this;
+  var captures, tok;
+  if (captures = /^\+([\w-]+)\b(\(([\w\b="',_+]+)\))?/.exec(self.input)) {
+    self.consume(captures[0].length);
+    tok = self.tok('mixin', captures[1]);
+    tok.args = captures[3] || "";
+    return tok;
+  }
 };
 
 // Register the two rules above
