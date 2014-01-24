@@ -150,7 +150,7 @@ syntaxes:
 
 ```jade
 div(class = isSelected && "selected")
-div(class = isSelected || "hidden")
+div(class = !isSelected && "hidden")
 div(class = isSelected ? "visible" : "hidden")
 div(class = if isSelected: "visible" else: "hidden")
 div(class = each classes: this)
