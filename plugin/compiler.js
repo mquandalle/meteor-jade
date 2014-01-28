@@ -241,7 +241,7 @@ _.extend(Compiler.prototype, {
 
     // Doctypes
     else if (node.type === "Doctype") {
-      console.warn("Meteor sets the doctype for you (line " + node.line + ")");
+      self.throwError("Meteor sets the doctype for you", node);
     }
 
     // There are two specials templates: head and body
@@ -249,24 +249,24 @@ _.extend(Compiler.prototype, {
       var template = node.name;
 
       if (self[template] !== null)
-        self.throwError("<" + template + "> is set twice", node);
+        self.throwError(template + " is set twice", node);
       if (node.attrs.length !== 0)
-        self.throwError("Attributes on <" + template +"> not supported", node);
+        self.throwError("Attributes on " + template + " not supported", node);
 
       self[template] = result;
-    } 
+    }
 
     // Templates
     else if (node.name === "template") {
       if (node.attrs.length !== 1 || node.attrs[0].name !== 'name')
-        self.throwError('Templates must have only a "name" attribute', node);
-      
+        self.throwError('Templates must only have a "name" attribute', node);
+
       var name = self.visitAttributes(node.attrs).name;
 
       if (name === "content")
         self.throwError('Template can\'t be named "content"', node);
       if (_.has(self.templates, name))
-        self.throwError('Template "' + name + '" is defined twice', node);
+        self.throwError('Template "' + name + '" is set twice', node);
 
       self.templates[name] = result;
     }
@@ -282,6 +282,6 @@ _.extend(Compiler.prototype, {
     if (node.line)
       message += " on line " + node.line;
 
-    throw message;
+    throw new Error(message);
   }
 });
