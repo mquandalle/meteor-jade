@@ -1,6 +1,6 @@
 var sourceHandler = function (compileStep) {
 
-  // XXX Code copied from 
+  // XXX Code copied from
   // packages/templating/plugin/compile-template.js:6
   if (! compileStep.arch.match(/^browser(\.|$)/))
     return;
@@ -21,7 +21,7 @@ var sourceHandler = function (compileStep) {
       data: HTML.toHTML(results.head)
     });
   }
-  
+
   // Body
   if (results.body !== null) {
     content += "\nUI.body.contentParts.push(UI.Component.extend({";

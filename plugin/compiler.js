@@ -40,27 +40,23 @@ _.extend(Compiler.prototype, {
       var elseNode = null;
 
       // If the node is a Mixin (ie Component), we check if there are some
-      // `else if` and `else` blocks after it and if so, we groups thoses 
+      // `else if` and `else` blocks after it and if so, we groups thoses
       // nodes by two with the following transformation:
       // if a               if a
       // else if b          else
       // else          =>     if b
       //                      else
-      
+
       if (currentNode.type === "Mixin") {
-        // Define stack potentials elements
-        if (currentNode.name === "if")
-          stackElements = ["else if", "else"];
-        else
-          stackElements = ["else"];
-
-
         // Create the stack [nodeIf, nodeElseIf..., nodeElse]
         stack = [];
-        while (nodes[i+1] && nodes[i+1].type === "Mixin" &&
-               stackElements.indexOf(nodes[i+1].name) !== -1) {
-          stack.push(nodes[++i])
-        }
+        while (currentNode.name === "if" && nodes[i+1] &&
+          nodes[i+1].type === "Mixin" && nodes[i+1].name === "else if")
+            stack.push(nodes[++i])
+
+        if (nodes[i+1] && nodes[i+1].type === "Mixin" &&
+          nodes[i+1].name === "else")
+            stack.push(nodes[++i])
 
         // Transform the stack
         elseNode = stack.shift() || null;
@@ -84,7 +80,7 @@ _.extend(Compiler.prototype, {
   visitNode: function(node, elseNode, level) {
     var self = this;
     var attrs = self.visitAttributes(node.attrs);
-    var content = (node.code) ? [ self.visitCode(node.code) ] : 
+    var content = (node.code) ? [ self.visitCode(node.code) ] :
                                              self.visitBlock(node.block, level);
     var elseContent = self.visitBlock(elseNode && elseNode.block, level);
 
@@ -105,10 +101,15 @@ _.extend(Compiler.prototype, {
   visitMixin: function(node, attrs, content, elseContent) {
     var self = this;
     var componentName = node.name;
+
+    if (componentName === "else")
+      self.throwError("Unexpected else block", node);
+
     var spacebarsSymbol = content === null ? ">" : "#";
     var args = node.args || "";
-    var tag = Spacebars.TemplateTag.parse("{{" + spacebarsSymbol + 
-                                             componentName + " " + args + "}}");
+    var mustache = "{{" + spacebarsSymbol + componentName + " " + args + "}}";
+    var tag = Spacebars.TemplateTag.parse(mustache);
+
     if (content !== null)
       tag.content = content;
 
@@ -158,11 +159,6 @@ _.extend(Compiler.prototype, {
     return self.visitComment(comment)
   },
 
-  visitElse: function (node) {
-    var self = this;
-    self.throwError("Unexpected else block", node);
-  },
-
   visitFilter: function (filter, attrs, content) {
     var self = this;
     if (Filters[filter.name])
@@ -173,7 +169,7 @@ _.extend(Compiler.prototype, {
 
   visitAttributes: function (attrs) {
     // The jade parser provide an attribute tree of this type:
-    // [{name: "class", val: "val1", escaped: true }, {name: "id" val: "val2"}]
+    // [{name: "class", val: "val1", escaped: true}, {name: "id" val: "val2"}]
     // Let's transform that into:
     // {"class": "val1", id: "val2"}
     // Moreover if an "id" or "class" attribute is used more than once we need
@@ -193,14 +189,12 @@ _.extend(Compiler.prototype, {
       var key = attr.name;
 
       // XXX We need a better handler for JavaScript code
-      var quotes = ["'", '"'];
-      if (quotes.indexOf(val.slice(0, 1)) !== -1 && 
-        val.slice(-1) === val.slice(0, 1))
+      if (/^('|")/.test(val) && val.slice(-1) === val.slice(0, 1))
         // First case this is a string
         val = val.slice(1, -1);
       else
         // Otherwise this is some code we need to evaluate
-        val = self.lookup(val, attr.escaped);
+        val = HTML.Special(self.lookup(val, attr.escaped));
 
       if (key === "$dyn")
         key = "$specials";

@@ -1,6 +1,6 @@
 // We modify a bit the Jade grammar in order to define both user defined and
 // build-in components.
-// 
+//
 // We save components as "Mixins" nodes. That's a good host because like
 // "Mixins", components have:
 // 1. a name
@@ -24,7 +24,7 @@ Lexer.prototype.builtInComponents = function () {
 Lexer.prototype.userComponents = function () {
   var self = this;
   var captures, tok;
-  if (captures = /^\+([\w-]+)\b(\(([\w\b="',_+]+)\))?/.exec(self.input)) {
+  if (captures = /^\+([\w-]+)\b(\(?([\w\b="',_+]+)\)?)?/.exec(self.input)) {
     self.consume(captures[0].length);
     tok = self.tok('mixin', captures[1]);
     tok.args = captures[3] || "";
