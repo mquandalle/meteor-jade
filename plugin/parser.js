@@ -18,4 +18,4 @@ Parser = function Parser(str, filename, options){
   this.inMixin = false;
 };
 
-Parser.prototype = (Npm.require('jade')).Parser.prototype;
+Parser.prototype = Npm.require('jade').Parser.prototype;

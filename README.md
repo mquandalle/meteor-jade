@@ -36,10 +36,11 @@ These rules are mostly the same as the Spacebars ones.
 
 ### Templates
 
-You can define a template with the following syntax:
+Every HTML tag must be in a template. You can define a template with the
+following syntax:
 
 ```jade
-template(name="myTemplateA")
+template(name="myTemplate")
   p This paragraphe in inside my template
 ```
 
@@ -53,7 +54,7 @@ head
 
 body
   +leaderboard
-  //- This is equivalent of {{> leaderboard}}
+  //- This is equivalent to {{> leaderboard}}
 ```
 
 Inside a text node you can use both `{{handlebars}}` and `#{jade}` expressions
@@ -84,12 +85,12 @@ body
     {{else}}
       Bye world
     {{/ifEven}}
-    ifEven is component defined by the user
+    ifEven is a component defined by the user
     See the complete example in ./examples/components.jade
 ```
 
 Like with Spacebars, a component can receive both ordered and keywords
-arguments. Keywords arguments must be written after the ordered one:
+arguments. Keywords arguments must be written after the ordered ones:
 
 ```
 +myComponent(arg1, arg2, arg3, key1=val1, key2=val2)
