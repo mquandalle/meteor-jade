@@ -92,7 +92,7 @@ _.extend(Compiler.prototype, {
 
   visitCode: function(code) {
     // XXX Need to improve this for "anonymous helpers"
-    return this.lookup(code.val, code.escape);
+    return HTML.Special(this.lookup(code.val, code.escape));
   },
 
   // We interpret "Mixins" as "Components"
