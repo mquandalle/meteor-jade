@@ -142,7 +142,7 @@ _.extend(Compiler.prototype, {
     // Since we rely on the Spacebars parser for this, we support the
     // {{mustache}} syntax as well.
     var self = this;
-    var jadeExpression = /#\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/
+    var jadeExpression = /#\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g;
     text = text.replace(jadeExpression, "{{$1}}");
     return Spacebars.parse(text);
   },
