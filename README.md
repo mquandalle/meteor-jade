@@ -41,7 +41,7 @@ following syntax:
 
 ```jade
 template(name="myTemplate")
-  p This paragraphe in inside my template
+  p This paragraphe is inside my template
 ```
 
 There are two particular templates that are automatically rendered inside the
@@ -99,7 +99,7 @@ arguments. Keywords arguments must be written after the ordered ones:
 Brackets are optional:
 
 ```
-+myComponent arg1, arg2, arg2, key1=val1, key2=val2
++myComponent arg1, arg2, arg3, key1=val1, key2=val2
 ```
 
 For the four build-in components (`if`, `unless`, `each` and `with`) the `+`
@@ -241,6 +241,14 @@ Everything is executed at bundle time.
 ### License
 
 This code is published under the [MIT license](LICENSE).
+
+### Tests
+
+Use the following command to run the tests:
+
+```
+$ mrt test-packages ./
+```
 
 ### Tips
 

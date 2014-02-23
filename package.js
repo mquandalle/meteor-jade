@@ -1,5 +1,5 @@
 Package.describe({
-  summary: "HTML dialect with fewer braces and semicolons"
+  summary: "Jade template language for Meteor"
 });
 
 Package._transitional_registerBuildPlugin({
@@ -20,4 +20,12 @@ Package._transitional_registerBuildPlugin({
     "jade": "1.1.5",
     "markdown": "0.5.0",
   }
+});
+
+Package.on_test(function (api) {
+  api.use("jade");
+  api.use("tinytest");
+  api.add_files("tests/tests.jade");
+  api.add_files("tests/client.js", "client");
+  api.add_files("tests/server.js", "server");
 });

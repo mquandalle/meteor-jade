@@ -1,0 +1,65 @@
+template(name="htmlTags")
+  h1
+  h2.myClass
+  h3#myId
+  h4.myClass#myId
+  form: input
+  header
+    div
+  p this is an #strong[important] word
+  div styling #span[#span[tags]]
+
+template(name="unwrappedText")
+  | Unwrapped text
+  h1
+    | Hello world
+
+template(name="htmlAttributes")
+//-   input#i1(required)
+//-   input#i2(type='password')
+//-   input#i3(required=isRequired)
+//-   input#i4(arg1, arg2, arg3=val3, arg4=val4)
+//-   input#i5($dyn = attrs)
+//-   div.class1.class2(class = "class3")
+
+template(name="elseIf")
+//-   if isAdmin
+//-     h1 Hello admin
+//-   else if isConnected
+//-     h1 Hello user
+//-   else
+//-     h1 Hello visitor
+
+template(name="expressions")
+//-   h1= myTitle
+//-   p Hello #{name} #{surname}
+
+template(name="componentsInclusion")
+//-   +componentA
+//-   +componentB
+//-     p content
+//-   else
+//-     p elseContent
+
+template(name="componentsArguments")
+//-   +componentC(arg)
+//-   +componentD(arg1, arg2)
+//-   +componentE(key1=val1, key2 = val2)
+//-   +componentE arg1, arg2, key1=val1, key2 = val2
+
+template(name="filterMarkdown")
+//-   :markdown
+//-     # First title
+
+//-     * Let's compile this text on the server
+//-     * So the client doesn't have to do it
+
+//- template(name="componentA")
+//-   h1 Hello world
+
+//- template(name="componentB")
+//-   +content
+//-   +elseContent
+
+//- template(name="componentC")
+
