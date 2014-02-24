@@ -3,7 +3,7 @@
   "description": "Jade template language for Meteor",
   "author": "Maxime QUANDALLE <maxime@quandalle.com>",
   "version": "0.1.2",
-  "git": "https://github.com/mquandalle/meteor-jade",
+  "git": "https://github.com/mquandalle/meteor-jade.git",
   "homepage": "https://github.com/mquandalle/meteor-jade",
   "meteor": {
     "branch": "shark"
