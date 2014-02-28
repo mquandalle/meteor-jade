@@ -9,8 +9,7 @@ ending with `.html` and Jade will take care of those ending with `.jade`.
 ## Installation
 
 > *Warning*: This package is made for the new **Meteor UI** system, which is not
-released as a stable version yet. You'll need to run the latest preview
-`template-engine-preview-11` or the `shark` branch of the Meteor repository.
+released as a stable version yet. You'll need to run the `blaze-rc0` release.
 
 This package is available on [atmosphere](https://atmosphere.meteor.com/) so you
 can install it with [meteorite](http://oortcloud.github.io/meteorite/):
