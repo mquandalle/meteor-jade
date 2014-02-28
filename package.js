@@ -17,7 +17,7 @@ Package._transitional_registerBuildPlugin({
     "plugin/handler.js",
   ],
   npmDependencies: {
-    "jade": "1.1.5",
+    "jade": "1.2.0",
     "markdown": "0.5.0",
   }
 });
