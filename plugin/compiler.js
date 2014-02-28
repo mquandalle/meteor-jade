@@ -52,11 +52,11 @@ _.extend(Compiler.prototype, {
         stack = [];
         while (currentNode.name === "if" && nodes[i+1] &&
           nodes[i+1].type === "Mixin" && nodes[i+1].name === "else if")
-            stack.push(nodes[++i])
+            stack.push(nodes[++i]);
 
         if (nodes[i+1] && nodes[i+1].type === "Mixin" &&
           nodes[i+1].name === "else")
-            stack.push(nodes[++i])
+            stack.push(nodes[++i]);
 
         // Transform the stack
         elseNode = stack.shift() || null;
@@ -85,7 +85,7 @@ _.extend(Compiler.prototype, {
     var elseContent = self.visitBlock(elseNode && elseNode.block, level);
 
     if (level === 1)
-      return self.registerRootNode(node, content)
+      return self.registerRootNode(node, content);
     else
       return self['visit' + node.type](node, attrs, content, elseContent);
   },
@@ -150,13 +150,13 @@ _.extend(Compiler.prototype, {
   visitComment: function (comment) {
     // If buffer boolean is true we want to display this comment in the DOM
     if (comment.buffer)
-      return HTML.Comment(comment.val)
+      return HTML.Comment(comment.val);
   },
 
   visitBlockComment: function (comment) {
     var self = this;
     comment.val = "\n" + _.pluck(comment.block.nodes, "val").join("\n") + "\n";
-    return self.visitComment(comment)
+    return self.visitComment(comment);
   },
 
   visitFilter: function (filter, attrs, content) {
