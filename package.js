@@ -1,5 +1,6 @@
 Package.describe({
-  summary: "Jade template language for Meteor"
+  summary: "Jade template language for Meteor",
+  version: "0.1.4"
 });
 
 Package._transitional_registerBuildPlugin({
