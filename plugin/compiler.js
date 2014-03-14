@@ -33,11 +33,10 @@ _.extend(Compiler.prototype, {
     var self = this;
     var buffer = [];
     var nodes = block.nodes;
-    var current, elseNode, stack, stackElements;
+    var currentNode, elseNode, stack;
 
     for (var i = 0; i < nodes.length; i++) {
-      var currentNode = nodes[i];
-      var elseNode = null;
+      currentNode = nodes[i];
 
       // If the node is a Mixin (ie Component), we check if there are some
       // `else if` and `else` blocks after it and if so, we groups thoses
@@ -59,7 +58,7 @@ _.extend(Compiler.prototype, {
             stack.push(nodes[++i]);
 
         // Transform the stack
-        elseNode = stack.shift() || null;
+        elseNode = stack.shift();
         if (elseNode && elseNode.name === "else if") {
           elseNode.name = "if";
           elseNode = {
@@ -80,7 +79,7 @@ _.extend(Compiler.prototype, {
   visitNode: function(node, elseNode, level) {
     var self = this;
     var attrs = self.visitAttributes(node.attrs);
-    var content = (node.code) ? [ self.visitCode(node.code) ] :
+    var content = (node.code) ? self.visitCode(node.code) :
                                              self.visitBlock(node.block, level);
     var elseContent = self.visitBlock(elseNode && elseNode.block, level);
 
@@ -92,7 +91,7 @@ _.extend(Compiler.prototype, {
 
   visitCode: function(code) {
     // XXX Need to improve this for "anonymous helpers"
-    return HTMLTools.Special(this.lookup(code.val, code.escape));
+    return [ HTMLTools.Special(this.lookup(code.val, code.escape)) ];
   },
 
   // We interpret "Mixins" as "Components"
