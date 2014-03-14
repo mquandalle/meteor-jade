@@ -6,6 +6,7 @@ Package._transitional_registerBuildPlugin({
   name: "compileJade",
   use: [
     "underscore",
+    "htmljs",
     "html-tools",
     "spacebars-compiler",
   ],

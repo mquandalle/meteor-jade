@@ -92,7 +92,7 @@ _.extend(Compiler.prototype, {
 
   visitCode: function(code) {
     // XXX Need to improve this for "anonymous helpers"
-    return HTML.Special(this.lookup(code.val, code.escape));
+    return HTMLTools.Special(this.lookup(code.val, code.escape));
   },
 
   // We interpret "Mixins" as "Components"
@@ -116,12 +116,12 @@ _.extend(Compiler.prototype, {
     if (elseContent !== null)
       tag.elseContent = elseContent;
 
-    return HTML.Special(tag);
+    return HTMLTools.Special(tag);
   },
 
   visitTag: function(node, attrs, content) {
     var self = this;
-    var tagName = node.name.toUpperCase();
+    var tagName = node.name.toLowerCase();
 
     if (! HTML.isTagEnsured(tagName))
       self.throwError("Unknow tag: " + tagName, node);
@@ -129,7 +129,7 @@ _.extend(Compiler.prototype, {
     if (! _.isEmpty(attrs))
       content.unshift(attrs);
 
-    return HTML[tagName].apply(undefined, content);
+    return HTML[tagName.toUpperCase()].apply(null, content);
   },
 
   visitText: function(node) {
@@ -194,7 +194,7 @@ _.extend(Compiler.prototype, {
         val = val.slice(1, -1);
       else
         // Otherwise this is some code we need to evaluate
-        val = HTML.Special(self.lookup(val, attr.escaped));
+        val = HTMLTools.Special(self.lookup(val, attr.escaped));
 
       if (key === "$dyn")
         key = "$specials";

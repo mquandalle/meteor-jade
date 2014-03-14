@@ -6,6 +6,6 @@
   "git": "https://github.com/mquandalle/meteor-jade.git",
   "homepage": "https://github.com/mquandalle/meteor-jade",
   "meteor": {
-    "tag": "blaze-rc0"
+    "branch": "shark"
   }
 }
