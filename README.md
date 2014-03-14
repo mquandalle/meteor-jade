@@ -3,13 +3,13 @@
 This [Meteor](https://www.meteor.com/) smart package provides support for
 the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative.
 
-Spacebars and Jade package can coexist, Spacebars will continue to compile files
+Spacebars and Jade packages can coexist, Spacebars will continue to compile files
 ending with `.html` and Jade will take care of those ending with `.jade`.
 
 ## Installation
 
 > *Warning*: This package is made for the new **Meteor UI** system, which is not
-released as a stable version yet. You'll need to run the `blaze-rc0` release.
+released as a stable version yet. You'll need to run the `blaze-rc1` release.
 
 This package is available on [atmosphere](https://atmosphere.meteor.com/) so you
 can install it with [meteorite](http://oortcloud.github.io/meteorite/):
@@ -62,6 +62,42 @@ but the last one is recommended:
 ```jade
 template(name="leaderboard")
   p Welcome #{player.name}
+```
+
+### HTML Tag attributes
+
+In Jade you define HTML Tag attributes inside parenthesis and separated by
+commas:
+
+```jade
+input(name="myName", placeholder="name", autofocus)
+```
+
+If you want to conditionally include a HTML Tag attribute you can use the
+following syntax:
+
+```jade
+input(required = isRequired)
+```
+
+Where `isRequired` is a (potentially reactive) boolean defined in a template
+helper. Here are the Spacebars equivalents:
+
+```html
+<input {{#if isRequired}}required{{/if}}>
+<input required=isRequired>
+```
+
+If you want to add a list of dynamic attributes use:
+
+```jade
+input($dyn = attrs)
+```
+
+Spacebars equivalent:
+
+```html
+<input {{attrs}}>
 ```
 
 ### Components
@@ -130,34 +166,6 @@ What you can do, as a temporary solution, is to rename your `myfile.jade`, into
 `myfile.jade.html`. This package will continue to compile it like before, and
 the Meteor hack will push the file before your code.
 
-## Missing features
-
-### Components inside tags
-
-In Spacebars you can use any component inside a tag argument:
-
-```html
-<div class="{{#if isSelected}}selected{{/if}}"></div>
-<div class="{{#unless isSelected}}hidden{{/unless}}"></div>
-<div class="{{#if isSelected}}visible{{else}}hidden{{/if}}"></div>
-<div class={{#each classes}}this{{/each}}></div>
-<input {{#if isRequired}}required{{/if}}>
-<input {{attrs}}>
-```
-
-It's not possible yet to do this kind of things with Jade. Here are the planned
-syntaxes:
-
-```jade
-div(class = isSelected && "selected")
-div(class = !isSelected && "hidden")
-div(class = isSelected ? "visible" : "hidden")
-div(class = if isSelected: "visible" else: "hidden")
-div(class = each classes: this)
-input(required = isRequired)
-input($dyn = attrs) // This one is already working
-```
-
 ## Additional features
 
 We have some additional features over Spacebars.
@@ -221,7 +229,7 @@ attributes (see the [Components inside tags section](#components-inside-tags)).
 
 See [related issue](https://github.com/mquandalle/meteor-jade/issues/1)
 
-## Contribute
+## Contributing
 
 Contributions are welcome, whether it is for a
 [bug report](https://github.com/mquandalle/meteor-jade/issues/new), a fix or a
