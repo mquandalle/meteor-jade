@@ -173,7 +173,6 @@ _.extend(Compiler.prototype, {
     // {"class": "val1", id: "val2"}
     // Moreover if an "id" or "class" attribute is used more than once we need
     // to concatenate the values.
-
     if (_.isUndefined(attrs))
       return;
 
@@ -191,6 +190,11 @@ _.extend(Compiler.prototype, {
       if (/^('|")/.test(val) && val.slice(-1) === val.slice(0, 1))
         // First case this is a string
         val = val.slice(1, -1);
+
+      else if (val === true)
+        // For cases like <input required> Spacebars compiler expect required
+        // attriute to have the value `""` but Jade parser returns `true`
+        val = "";
       else
         // Otherwise this is some code we need to evaluate
         val = HTMLTools.Special(self.lookup(val, attr.escaped));
