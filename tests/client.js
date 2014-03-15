@@ -23,10 +23,8 @@ Tinytest.add('Jade - HTML tags', function (test) {
   test.isNotNull(tpl.find('h4.myClass#myId'));
   test.isNotNull(tpl.find('form > input'));
   test.isNotNull(tpl.find('header > div'));
-  // XXX Inline tags using the #tag[] syntax doesn't work yet
-  // XXX Modify the jade parser?
-  // test.isNotNull(tpl.find('p > strong'));
-  // test.isNotNull(tpl.find('div > span > span'));
+  test.isNotNull(tpl.find('p > strong'));
+  test.isNotNull(tpl.find('div > span > span'));
 });
 
 Tinytest.add('Jade - Unwrapped Text', function (test) {
