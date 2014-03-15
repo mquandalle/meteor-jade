@@ -1,11 +1,11 @@
 // Integration tests, template are defined in the tests/tests.jade file and
 // instanciated with the following function:
 
-var instanciate = function (tplName) {
-  var component = UI.render(Template[tplName]);
+var instanciate = function (tplName, data) {
+  var component = UI.renderWithData(Template[tplName], data);
   // XXX `document.body` isn't a good host for that purpose
   // I don't really want to add the template in the DOM
-  UI.DomRange.insert(component.dom, document.body);
+  UI.insert(component, document.body);
   return component.templateInstance;
 };
 
@@ -18,7 +18,7 @@ Tinytest.add('Jade - HTML tags', function (test) {
   test.isNotNull(tpl.find('h4.myClass#myId'));
   test.isNotNull(tpl.find('form > input'));
   test.isNotNull(tpl.find('header > div'));
-  // XXX Inline tgs using the #tag[] syntax doesn't work yer
+  // XXX Inline tags using the #tag[] syntax doesn't work yet
   // XXX Modify the jade parser?
   // test.isNotNull(tpl.find('p > strong'));
   // test.isNotNull(tpl.find('div > span > span'));
@@ -31,9 +31,28 @@ Tinytest.add('Jade - Unwrapped Text', function (test) {
   test.equal(tpl.find("h1").innerText, "Hello world");
 });
 
-
 Tinytest.add('Jade - HTML attributes', function (test) {
-  // XXX TBD
+  var tpl = instanciate("htmlAttributes", {
+    isRequired: true,
+    placeholder: "test",
+    attrs: {
+      required: true,
+      placeholder: "test"
+    }
+  });
+  var tpl2 = instanciate("htmlAttributes", {
+    isRequired: false
+  });
+  test.isTrue(tpl.find("#i1").required);
+  test.equal(tpl.find("#i2").type, "password");
+  test.isTrue(tpl.find("#i3").required);
+  test.isFalse(tpl2.find("#i3").required);
+  test.isTrue(tpl.find("#i4").required);
+  test.equal(tpl.find("#i4").placeholder, "test");
+  // XXX Bug
+  // test.isTrue(tpl.find("#i5").required);
+  // test.equal(tpl.find("#i5").placeholder, "test");
+  test.equal(tpl.find("div").className, "class1 class2 class3");
 });
 
 Tinytest.add('Jade - else if', function (test) {

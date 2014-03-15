@@ -15,12 +15,12 @@ template(name="unwrappedText")
     | Hello world
 
 template(name="htmlAttributes")
-//-   input#i1(required)
-//-   input#i2(type='password')
-//-   input#i3(required=isRequired)
-//-   input#i4(arg1, arg2, arg3=val3, arg4=val4)
-//-   input#i5($dyn = attrs)
-//-   div.class1.class2(class = "class3")
+  input#i1(required)
+  input#i2(type='password')
+  input#i3(required=isRequired)
+  input#i4(required, placeholder=placeholder)
+  input#i5($dyn = attrs)
+  div.class1.class2(class = "class3")
 
 template(name="elseIf")
 //-   if isAdmin
