@@ -1,9 +1,9 @@
 //- First, define the component (jade + js)
 template(name="ifEven")
   if isEven value
-    +content
+    +UI.contentBlock
   else
-    +elseContent
+    +UI.elseBlock
 
 //-
   Template.ifEven.isEven = function (value) {
