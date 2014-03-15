@@ -3,9 +3,14 @@
 
 var instanciate = function (tplName, data) {
   var component = UI.renderWithData(Template[tplName], data);
-  // XXX `document.body` isn't a good host for that purpose
-  // I don't really want to add the template in the DOM
-  UI.insert(component, document.body);
+
+  // Create an invisible <div> node to render the component
+  var testDiv = document.createElement("div");
+  testDiv.style.display = "none";
+  testDiv.className = tplName;
+
+  // Insert the component
+  UI.insert(component, testDiv);
   return component.templateInstance;
 };
 
