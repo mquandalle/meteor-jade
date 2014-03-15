@@ -7,12 +7,8 @@ var sourceHandler = function (compileStep) {
 
   // Parse and compile the content
   var content = compileStep.read().toString('utf8');
-  var tree    = (new Parser(content, null, { lexer: Lexer })).parse();
-  var results = (new Compiler(tree)).compile();
-
-  // Generate the final js file
-  // XXX generate a source map
-  var content = "";
+  var parser  = new Parser(content, compileStep.inputPath, { lexer: Lexer });
+  var results = new Compiler(parser.parse()).compile();
 
   // Head
   if (results.head !== null) {
@@ -21,6 +17,10 @@ var sourceHandler = function (compileStep) {
       data: HTML.toHTML(results.head)
     });
   }
+
+  // Generate the final js file
+  // XXX generate a source map
+  var content = "";
 
   // Body
   if (results.body !== null) {
