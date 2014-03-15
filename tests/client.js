@@ -61,7 +61,12 @@ Tinytest.add('Jade - HTML attributes', function (test) {
 });
 
 Tinytest.add('Jade - else if', function (test) {
-  // XXX TBD
+  var tpl1 = instanciate("elseIf", {isAdmin: true});
+  var tpl2 = instanciate("elseIf", {isConnected: true});
+  var tpl3 = instanciate("elseIf");
+  test.equal(tpl1.find("h1").innerText, "Hello admin");
+  test.equal(tpl2.find("h1").innerText, "Hello user");
+  test.equal(tpl3.find("h1").innerText, "Hello visitor");
 });
 
 Tinytest.add('Jade - Expressions', function (test) {
