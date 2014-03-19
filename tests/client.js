@@ -62,13 +62,20 @@ Tinytest.add('Jade - else if', function (test) {
   var tpl1 = instanciate("elseIf", {isAdmin: true});
   var tpl2 = instanciate("elseIf", {isConnected: true});
   var tpl3 = instanciate("elseIf");
-  test.equal(tpl1.find("h1").innerText, "Hello admin");
-  test.equal(tpl2.find("h1").innerText, "Hello user");
-  test.equal(tpl3.find("h1").innerText, "Hello visitor");
 });
 
 Tinytest.add('Jade - Expressions', function (test) {
-  // XXX TBD
+  var tpl = instanciate("expressions", {
+    myTitle: "Hello World",
+    address: {country: "France"},
+    name: "Maxime",
+    surname: "Quandalle",
+    btnKind: "btn-success"
+  });
+  test.equal(tpl.find("h1").innerText, "Hello World");
+  test.equal(tpl.find("h2").innerText, "Hello France");
+  test.equal(tpl.find("h3").innerText, "Hello Maxime Quandalle");
+  // test.equal(tpl.find("button").className, "btn btn-success");
 });
 
 Tinytest.add('Jade - Components inclusion', function (test) {

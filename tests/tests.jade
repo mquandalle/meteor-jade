@@ -31,8 +31,10 @@ template(name="elseIf")
     h1 Hello visitor
 
 template(name="expressions")
-//-   h1= myTitle
-//-   p Hello #{name} #{surname}
+  h1= myTitle
+  h2 Hello #{address.country}
+  h3 Hello #{name} #{surname}
+  button(class="btn #{btnKind}")
 
 template(name="componentsInclusion")
   +componentA
