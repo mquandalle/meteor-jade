@@ -48,7 +48,7 @@ template(name="todo_item")
     else
       .destroy
       .display
-        input.check(name="markdone", type="checkbox", $dyn=done_checkbox)
+        input.check(name="markdone", type="checkbox", checked=done)
         .todo-text= text
     .item-tags
       each tag_objs
