@@ -35,11 +35,11 @@ template(name="expressions")
 //-   p Hello #{name} #{surname}
 
 template(name="componentsInclusion")
-//-   +componentA
-//-   +componentB
-//-     p content
-//-   else
-//-     p elseContent
+  +componentA
+  +componentB
+    h2 content
+  else
+    h3 elseContent
 
 template(name="componentsArguments")
 //-   +componentC(arg)
@@ -54,12 +54,15 @@ template(name="filterMarkdown")
 //-     * Let's compile this text on the server
 //-     * So the client doesn't have to do it
 
-//- template(name="componentA")
-//-   h1 Hello world
+template(name="componentA")
+  h1 Hello world
 
-//- template(name="componentB")
-//-   +content
-//-   +elseContent
+template(name="componentB")
+  +UI.contentBlock
+  +UI.contentBlock
+  +UI.elseBlock
+  +UI.elseBlock
+  +UI.elseBlock
 
 //- template(name="componentC")
 

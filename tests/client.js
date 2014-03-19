@@ -72,7 +72,10 @@ Tinytest.add('Jade - Expressions', function (test) {
 });
 
 Tinytest.add('Jade - Components inclusion', function (test) {
-  // XXX TBD
+  var tpl = instanciate("componentsInclusion");
+  test.equal(tpl.findAll("h1").length, 1);
+  test.equal(tpl.findAll("h2").length, 2);
+  test.equal(tpl.findAll("h3").length, 3);
 });
 
 Tinytest.add('Jade - Components arguments', function (test) {
