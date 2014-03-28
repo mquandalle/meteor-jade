@@ -21,12 +21,12 @@ template(name="lists")
         div.list(class=selected)
           if editing
             .edit
-              input#list-name-input(type="text", value=name)
+              input#list-name-input(type="text" value=name)
           else
             .display
-              a.list-name(class=name_class, href="/#{_id}")= name
+              a.list-name(class=name_class href="/#{_id}")= name
     #createList
-      input#new-list(type="text", placeholder="New list")
+      input#new-list(type="text" placeholder="New list")
 
 template(name="todos")
   if any_list_selected
@@ -35,7 +35,7 @@ template(name="todos")
         | Loading...
       else
         #new-todo-box
-          input#new-todo(type="text", placeholder="New item")
+          input#new-todo(type="text" placeholder="New item")
         ul#item-list
           each todos
             +todo_item
@@ -44,11 +44,11 @@ template(name="todo_item")
   li.todo(class=done_class)
     if editing
       .edit
-        input#todo-input(type="text", value=text)
+        input#todo-input(type="text" value=text)
     else
       .destroy
       .display
-        input.check(name="markdone", type="checkbox", checked=done)
+        input.check(name="markdone" type="checkbox" checked=done)
         .todo-text= text
     .item-tags
       each tag_objs

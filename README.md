@@ -57,7 +57,7 @@ template(name="leaderboard")
 In Jade you define HTML Tag attributes inside parenthesis:
 
 ```jade
-input(name="myName", placeholder="name", autofocus)
+input(name="myName" placeholder="name" autofocus)
 ```
 
 If you want to conditionally include a HTML Tag attribute you can use the
