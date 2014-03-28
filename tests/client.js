@@ -78,7 +78,7 @@ Tinytest.add('Jade - Expressions', function (test) {
   test.equal(tpl.find("h1").innerText, "Hello World");
   test.equal(tpl.find("h2").innerText, "Hello France");
   test.equal(tpl.find("h3").innerText, "Hello Maxime Quandalle");
-  // test.equal(tpl.find("button").className, "btn btn-success");
+  test.equal(tpl.find("button").className, "btn btn-success");
 });
 
 Tinytest.add('Jade - Components inclusion', function (test) {

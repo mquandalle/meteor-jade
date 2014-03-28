@@ -19,7 +19,7 @@ Package._transitional_registerBuildPlugin({
     "plugin/handler.js",
   ],
   npmDependencies: {
-    "jade": "1.3.0",
+    "jade": "https://github.com/mquandalle/jade/tarball/f3f956fa1031e05f85be7bc7b67f12e9ec80ba37",
     "markdown": "0.5.0",
   }
 });

@@ -189,7 +189,7 @@ _.extend(Compiler.prototype, {
       // XXX We need a better handler for JavaScript code
       if (/^('|")/.test(val) && val.slice(-1) === val.slice(0, 1))
         // First case this is a string
-        val = val.slice(1, -1);
+        val = self.parseText(val.slice(1, -1));
 
       else if (val === true)
         // For cases like <input required> Spacebars compiler expect required
