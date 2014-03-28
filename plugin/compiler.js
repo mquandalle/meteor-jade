@@ -28,7 +28,7 @@ _.extend(Compiler.prototype, {
 
   visitBlock: function (block, level) {
     if (_.isUndefined(block) || _.isNull(block) || ! _.has(block, 'nodes'))
-      return null;
+      return [];
 
     var self = this;
     var buffer = [];
@@ -104,15 +104,20 @@ _.extend(Compiler.prototype, {
     if (componentName === "else")
       self.throwError("Unexpected else block", node);
 
-    var spacebarsSymbol = content === null ? ">" : "#";
+    var spacebarsSymbol = content.length === 0 ? ">" : "#";
     var args = node.args || "";
     var mustache = "{{" + spacebarsSymbol + componentName + " " + args + "}}";
     var tag = Spacebars.TemplateTag.parse(mustache);
 
-    if (content !== null)
+    // Optimize arrays
+    if (content.length === 1)
+      tag.content = content[0];
+    else if (content.length > 1)
       tag.content = content;
 
-    if (elseContent !== null)
+    if (elseContent.length === 1)
+      tag.elseContent = elseContent[0];
+    else if (elseContent.length > 1)
       tag.elseContent = elseContent;
 
     return HTMLTools.Special(tag);
@@ -182,6 +187,17 @@ _.extend(Compiler.prototype, {
     var self = this;
     var dict = {};
 
+    var concatAttributes = function(a, b) {
+      if (_.isString(a) && _.isString(b))
+        return a + b;
+      if (_.isUndefined(a))
+        return b;
+
+      if (! _.isArray(a)) a = [a];
+      if (! _.isArray(b)) b = [b];
+      return a.concat(b);
+    };
+
     _.each(attrs, function (attr) {
       var val = attr.val;
       var key = attr.name;
@@ -202,15 +218,13 @@ _.extend(Compiler.prototype, {
       if (key === "$dyn")
         key = "$specials";
 
+
       // If a user has defined such kind of tag: div.myClass(class="myClass2")
       // we need to concatenate classes (and ids)
-      if ((dict["class"] && key === "class") ||
-          (dict["id"] && key === "id"))
-        dict[key].push(" ", val)
-      else if (dict["$specials"] && key === "$specials")
-        dict[key].push(val)
-      else
-        dict[key] = [val];
+      if ((key === "class" || key === "id") && dict[key])
+        val = [" ", val];
+
+      dict[key] = concatAttributes(dict[key], val);
     });
 
     return dict;
