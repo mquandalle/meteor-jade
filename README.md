@@ -6,18 +6,6 @@ the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative.
 Spacebars and Jade packages can coexist, Spacebars will continue to compile files
 ending with `.html` and Jade will take care of those ending with `.jade`.
 
-## Installation
-
-> *Warning*: This package is made for the new **Meteor UI** system, which is not
-released as a stable version yet. You'll need to run the `blaze-rc1` release.
-
-This package is available on [atmosphere](https://atmosphere.meteor.com/) so you
-can install it with [meteorite](http://oortcloud.github.io/meteorite/):
-
-```sh
-mrt add jade
-```
-
 ## Examples
 
 Meteor comes with some examples such as
@@ -66,8 +54,7 @@ template(name="leaderboard")
 
 ### HTML Tag attributes
 
-In Jade you define HTML Tag attributes inside parenthesis and separated by
-commas:
+In Jade you define HTML Tag attributes inside parenthesis:
 
 ```jade
 input(name="myName", placeholder="name", autofocus)
@@ -81,14 +68,7 @@ input(required = isRequired)
 ```
 
 Where `isRequired` is a (potentially reactive) boolean defined in a template
-helper. Here are the Spacebars equivalents:
-
-```html
-<input {{#if isRequired}}required{{/if}}>
-<input required=isRequired>
-```
-
-If you want to add a list of dynamic attributes use:
+helper. If you want to add a list of dynamic attributes use:
 
 ```jade
 input($dyn = attrs)
