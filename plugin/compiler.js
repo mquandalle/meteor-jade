@@ -245,6 +245,10 @@ _.extend(Compiler.prototype, {
 
     var self = this;
 
+    // Don't use an array if there is only one node
+    if (result.length === 1)
+      result = result[0];
+
     // Ignore top level comments
     if (node.type === "Comment" || node.type === "BlockComment" ||
         node.type === "TAG" && _.isUndefined(node.name)) {
