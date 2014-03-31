@@ -24,7 +24,7 @@ Lexer.prototype.builtInComponents = function () {
 Lexer.prototype.userComponents = function () {
   var self = this;
   var captures, tok;
-  if (captures = /^\+([\.\w-]+)\b(\(?([\w\b="',_+]+)\)?)?/.exec(self.input)) {
+  if (captures = /^\+([\.\w-]+)\b(\(?(.+)\)?)?/.exec(self.input)) {
     self.consume(captures[0].length);
     tok = self.tok('mixin', captures[1]);
     tok.args = captures[3] || "";
