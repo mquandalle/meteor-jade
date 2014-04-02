@@ -20,33 +20,33 @@ var sourceHandler = function (compileStep) {
 
   // Generate the final js file
   // XXX generate a source map
-  var content = "";
+  var jsContent = "";
 
   // Body
   if (results.body !== null) {
-    content += "\nUI.body.contentParts.push(UI.Component.extend({";
-    content += "render: " + Spacebars.codeGen(results.body, { isBody: true });
-    content += "}));\n";
-    content += "\nMeteor.startup(function () { if (! UI.body.INSTANTIATED) {\n";
-    content += "  UI.body.INSTANTIATED = true; UI.materialize(UI.body, document.body);\n";
-    content += "}});\n";
+    jsContent += "\nUI.body.contentParts.push(UI.Component.extend({";
+    jsContent += "render: " + Spacebars.codeGen(results.body, { isBody: true });
+    jsContent += "}));\n";
+    jsContent += "\nMeteor.startup(function () { if (! UI.body.INSTANTIATED) {\n";
+    jsContent += "  UI.body.INSTANTIATED = true; UI.materialize(UI.body, document.body);\n";
+    jsContent += "}});\n";
   }
 
   // Templates
   _.forEach(results.templates, function (tree, tplName) {
-    content += "\nTemplate.__define__(\"" + tplName +"\", ";
-    content += Spacebars.codeGen(tree, { isTemplate: true });
-    content += ");\n";
+    jsContent += "\nTemplate.__define__(\"" + tplName +"\", ";
+    jsContent += Spacebars.codeGen(tree, { isTemplate: true });
+    jsContent += ");\n";
   });
 
-  if (content !== "") {
+  if (jsContent !== "") {
     compileStep.addJavaScript({
       path: compileStep.inputPath + '.js',
       sourcePath: compileStep.inputPath,
-      data: content
+      data: jsContent
     });
   }
-}
+};
 
 Plugin.registerSourceHandler("jade", { isTemplate: true }, sourceHandler);
 

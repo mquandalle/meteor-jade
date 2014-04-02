@@ -6,7 +6,7 @@ var compile = function(str) {
   return Compiler.compile(tree);
 };
 
-var i = indent = function(n) {
+var i = function(n) {
   return "\n" + Array(n || 1).join("  ");
 };
 

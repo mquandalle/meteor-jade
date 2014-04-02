@@ -11,8 +11,9 @@ Lexer = Npm.require('jade').Lexer;
 // Build-in components
 Lexer.prototype.builtInComponents = function () {
   var self = this;
-  var captures, tok;
-  if (captures = /^(if|unless|else if|else|with|each)\b([^\n]*)/.exec(self.input)) {
+  var tok;
+  var captures = /^(if|unless|else if|else|with|each)\b([^\n]*)/.exec(self.input);
+  if (captures) {
     self.consume(captures[0].length);
     tok = self.tok('mixin', captures[1]);
     tok.args = captures[2];
@@ -23,8 +24,9 @@ Lexer.prototype.builtInComponents = function () {
 // User components, uses the syntax `+componentName(arguments)`
 Lexer.prototype.userComponents = function () {
   var self = this;
-  var captures, tok;
-  if (captures = /^\+([\.\w-]+)\b(\(?(.+)\)?)?/.exec(self.input)) {
+  var tok;
+  var captures = /^\+([\.\w-]+)\b(\(?(.+)\)?)?/.exec(self.input);
+  if (captures) {
     self.consume(captures[0].length);
     tok = self.tok('mixin', captures[1]);
     tok.args = captures[3] || "";
@@ -36,7 +38,7 @@ Lexer.prototype.userComponents = function () {
 var _super = Lexer.prototype.next;
 Lexer.prototype.next = function () {
   var self = this;
-  return self.builtInComponents()
-    || self.userComponents()
-    || _super.call(self);
+  return self.builtInComponents() ||
+         self.userComponents() ||
+         _super.call(self);
 };

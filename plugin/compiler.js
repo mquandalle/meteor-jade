@@ -12,7 +12,7 @@ Compiler = function(tree, filename) {
   self.head = null;
   self.body = null;
   self.templates = {};
-}
+};
 
 _.extend(Compiler.prototype, {
 
@@ -23,7 +23,7 @@ _.extend(Compiler.prototype, {
       head: self.head,
       body: self.body,
       templates: self.templates
-    }
+    };
   },
 
   visitBlock: function (block, level) {
@@ -66,7 +66,7 @@ _.extend(Compiler.prototype, {
             type: "Mixin",
             block: { nodes: [elseNode].concat(stack) },
             call: false
-          }
+          };
         }
       }
 
@@ -145,7 +145,6 @@ _.extend(Compiler.prototype, {
     // The parser doesn't parse the #{expression} syntax. Let's do it.
     // Since we rely on the Spacebars parser for this, we support the
     // {{mustache}} syntax as well.
-    var self = this;
     var jadeExpression = /#\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g;
     text = text.replace(jadeExpression, "{{$1}}");
     return Spacebars.parse(text);
@@ -252,6 +251,7 @@ _.extend(Compiler.prototype, {
     // Ignore top level comments
     if (node.type === "Comment" || node.type === "BlockComment" ||
         node.type === "TAG" && _.isUndefined(node.name)) {
+      return;
     }
 
     // Doctypes

@@ -8,4 +8,4 @@ Filters = {
   markdown: function (content) {
     return markdownToHTML(content);
   }
-}
+};

@@ -12,7 +12,8 @@ Parser = function Parser(str, filename, options){
   this.mixins = {};
   this.options = options || {};
   // <mquandalle>
-  this.lexer = new (this.options.lexer || Lexer)(this.input, filename);
+  var Constructor = this.options.lexer || Lexer;
+  this.lexer = new Constructor(this.input, filename);
   // </mquandalle>
   this.contexts = [this];
   this.inMixin = false;
