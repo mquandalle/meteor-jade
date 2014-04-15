@@ -1,5 +1,140 @@
-template(name="match-jade-htmlarg")
-  p(id=paragraphId)
+//- HTML tags
 
-template(name="match-jade-inclusionwithargs")
-  +myTemplate arg1=arg1 arg2=arg2
+template(name="match-jade-singleTagAttribute")
+  input(required)
+
+template(name="match-jade-tagAttributeWithTextValue-1")
+  input(type='text')
+
+template(name="match-jade-tagAttributeWithTextValue-2")
+  input(type="text")
+
+template(name="match-jade-helperInTagAttribute")
+  input(required=isRequired)
+
+template(name="match-jade-dynamicTagAttributes")
+  input($dyn=attrs)
+
+template(name="match-jade-multipleTagAttributes-1")
+  input(type="password" required=isRequired autofocus $dyn=attrs)
+
+template(name="match-jade-multipleTagAttributes-2")
+  input(type="password", required=isRequired, autofocus, $dyn=attrs)
+
+template(name="match-jade-cssClasses")
+  div.class1.class2(class="class3")
+
+template(name="match-jade-inlineColonTags")
+  form: input
+
+template(name="match-jade-inlineBracketsTags")
+  div styling #[span #[span tags]]
+
+template(name="match-jade-justText-1")
+  | Hello world
+
+//- template(name="match-jade-justText-2")
+//-   = "Hello world"
+
+//- template(name="match-jade-justText-3")
+//-   = 'Hello world'
+
+//- Template helpers
+
+template(name="match-jade-tagHelper")
+  textarea= textareaValue
+
+template(name="match-jade-justHelper")
+  = helper
+
+template(name="match-jade-inlineHelper-1")
+  p Hello #{world}
+
+template(name="match-jade-inlineHelper-2")
+  p Hello {{world}}
+
+template(name="match-jade-mustacheCall")
+  p {{func arg1 arg2}}
+
+template(name="match-jade-multipleInlineHelpers")
+  p Hello #{foo} #{bar} #{baz}
+
+template(name="match-jade-tagAttributeInterpolation")
+  button(class="btn #{btnKind}")
+
+
+//- Build-in components
+
+template(name="match-jade-if-1")
+  if weAreTheWorld
+    | hello world
+
+template(name="match-jade-if-2")
+  +if weAreTheWorld
+    | hello world
+
+//- template(name="match-jade-if-3")
+//-   if(weAreTheWorld)
+//-     | hello world
+
+//- template(name="match-jade-if-4")
+//-   +if(weAreTheWorld)
+//-     | hello world
+
+template(name="match-jade-ifAndElse")
+  if weAreTheWorld
+    | hello world
+  else
+    | we are the children
+
+template(name="match-jade-with")
+  with user
+    = name
+
+template(name="match-jade-each")
+  each users
+    = name
+
+//- else if syntaxic sugar
+
+template(name="match-jade-elseif")
+  if condA
+    h1 hello A
+  else if condB
+    h2 hello B
+  else if condC
+    h3 hello C
+  else
+    h4 goodbye
+
+
+//- Components - templates inclusions
+
+template(name="match-jade-inclusion")
+  +myTemplate
+
+template(name="match-jade-contentsInclusion")
+  +UI.content
+  +UI.elseContent
+
+template(name="match-jade-inclusionWithPositionalArgs-1")
+  +myTemplate arg1 arg2
+
+//- template(name="match-jade-inclusionWithPositionalArgs-2")
+//-   +myTemplate(arg1 arg2)
+
+template(name="match-jade-inclusionWithKeywordArgs-1")
+  +myTemplate key1=arg1 key2=arg2
+
+//- template(name="match-jade-inclusionWithKeywordArgs-2")
+//-   +myTemplate(key1=arg1 key2=arg2)
+
+
+//- Markdown filter
+
+template(name="match-jade-markdownFilter")
+  :markdown
+    # Markdown text
+
+    * first *point*
+    * second _point_

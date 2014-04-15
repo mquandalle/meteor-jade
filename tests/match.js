@@ -1,12 +1,25 @@
-var tests = {
-  'htmlarg': "it should interpolate expressions inside html arguments",
-  'inclusionwithargs': "it should include the template with arguments"
+var removeLineComment = function (code) {
+  var lineBreak = "\n";
+  return _.map(code.split(lineBreak), function (line) {
+    return line.replace(/(.+?)\s*\/\/ [0-9]+/, "$1");
+  }).join(lineBreak);
+};
+
+var tpl2txt = function(tpl) {
+  return tpl.render && removeLineComment(tpl.render.toString());
 };
 
 Tinytest.add('Jade - Compiled template match Spacebars', function (test) {
-  _.each(tests, function(desc, name) {
-    var jadeTpl = Template[["match", "jade", name].join("-")];
-    var htmlTpl = Template[["match", "html", name].join("-")];
-    test.equal(jadeTpl.render.toString(), htmlTpl.render.toString(), desc);
+  _.each(Template, function(jadeTpl, tplName) {
+    if (! tplName.match(/^match-jade/))
+      return;
+
+    var testName = tplName.split('-')[2];
+    var htmlTplName = ["match", "html", testName].join("-");
+
+    if (_.has(Template, htmlTplName))
+      test.equal(tpl2txt(jadeTpl), tpl2txt(Template[htmlTplName]));
+    else
+      test.fail("Missing template: " + htmlTplName);
   });
 });
