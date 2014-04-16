@@ -12,7 +12,7 @@ Lexer = Npm.require('jade').Lexer;
 Lexer.prototype.builtInComponents = function () {
   var self = this;
   var tok;
-  var captures = /^(if|unless|else if|else|with|each)\b([^\n]*)/.exec(self.input);
+  var captures = /^(if|unless|else if|else|with|each) *\(?([^\n\)]*)\)?/.exec(self.input);
   if (captures) {
     self.consume(captures[0].length);
     tok = self.tok('mixin', captures[1]);
@@ -25,7 +25,7 @@ Lexer.prototype.builtInComponents = function () {
 Lexer.prototype.userComponents = function () {
   var self = this;
   var tok;
-  var captures = /^\+([\.\w-]+)\b(\(?(.+)\)?)?/.exec(self.input);
+  var captures = /^\+([\.\w-]+) *(\(?([^\n\)]+)\)?)?/.exec(self.input);
   if (captures) {
     self.consume(captures[0].length);
     tok = self.tok('mixin', captures[1]);

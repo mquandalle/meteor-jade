@@ -73,13 +73,17 @@ template(name="match-jade-if-2")
   +if weAreTheWorld
     | hello world
 
-//- template(name="match-jade-if-3")
-//-   if(weAreTheWorld)
-//-     | hello world
+template(name="match-jade-if-3")
+  if(weAreTheWorld)
+    | hello world
 
-//- template(name="match-jade-if-4")
-//-   +if(weAreTheWorld)
-//-     | hello world
+template(name="match-jade-if-4")
+  +if(weAreTheWorld)
+    | hello world
+
+template(name="match-jade-if-5")
+  +if (weAreTheWorld)
+    | hello world
 
 template(name="match-jade-ifAndElse")
   if weAreTheWorld
@@ -94,6 +98,7 @@ template(name="match-jade-with")
 template(name="match-jade-each")
   each users
     = name
+
 
 //- else if syntaxic sugar
 
@@ -120,14 +125,14 @@ template(name="match-jade-contentsInclusion")
 template(name="match-jade-inclusionWithPositionalArgs-1")
   +myTemplate arg1 arg2
 
-//- template(name="match-jade-inclusionWithPositionalArgs-2")
-//-   +myTemplate(arg1 arg2)
+template(name="match-jade-inclusionWithPositionalArgs-2")
+  +myTemplate(arg1 arg2)
 
 template(name="match-jade-inclusionWithKeywordArgs-1")
   +myTemplate key1=arg1 key2=arg2
 
-//- template(name="match-jade-inclusionWithKeywordArgs-2")
-//-   +myTemplate(key1=arg1 key2=arg2)
+template(name="match-jade-inclusionWithKeywordArgs-2")
+  +myTemplate(key1=arg1 key2=arg2)
 
 
 //- Markdown filter
