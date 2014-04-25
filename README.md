@@ -131,21 +131,6 @@ ul
 
 [Learn more about components](https://github.com/meteor/meteor/wiki/New-Template-Engine-Preview#new-pattern-for-defining-custom-block-helpers)
 
-### Load order issue
-
-If you encouter an error such as
-
-> Cannot set property 'xxx' of undefined
-
-This is probably a file load order issue. Meteor uses
-[a hack](https://github.com/meteor/meteor/blob/ae67643a3f2de0dd9fb8db7f7bd8e1c6fe2ba285/tools/files.js#L42)
-in order to push `html` files ahead of everything else. It's not possible for
-a package to register an extension name to benefit of the same behavior yet.
-
-What you can do, as a temporary solution, is to rename your `myfile.jade`, into
-`myfile.jade.html`. This package will continue to compile it like before, and
-the Meteor hack will push the file before your code.
-
 ## Additional features
 
 We have some additional features over Spacebars.
