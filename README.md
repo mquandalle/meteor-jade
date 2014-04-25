@@ -129,7 +129,7 @@ ul
       li= name
 ```
 
-[Learn more about components](https://github.com/meteor/meteor/wiki/New-Template-Engine-Preview#new-pattern-for-defining-custom-block-helpers)
+[Learn more about components](https://github.com/meteor/meteor/wiki/Using-Blaze#new-pattern-for-defining-custom-block-helpers)
 
 ## Additional features
 
