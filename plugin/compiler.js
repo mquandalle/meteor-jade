@@ -215,7 +215,9 @@ _.extend(Compiler.prototype, {
         val = HTMLTools.Special(self.lookup(val, attr.escaped));
 
       if (key === "$dyn")
-        key = "$specials";
+        // Temporal fix for spacebars bug
+        // https://github.com/meteor/meteor/issues/2075
+        return dict["$specials"] = [val];
 
 
       // If a user has defined such kind of tag: div.myClass(class="myClass2")
