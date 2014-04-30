@@ -1,4 +1,4 @@
-# Jade for Meteor [![Build Status](https://travis-ci.org/mquandalle/meteor-jade.png?branch=master)](https://travis-ci.org/mquandalle/meteor-jade)
+# Jade for Meteor
 
 This [Meteor](https://www.meteor.com/) smart package provides support for
 the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative.
