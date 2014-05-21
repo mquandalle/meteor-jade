@@ -130,6 +130,10 @@ _.extend(Compiler.prototype, {
     if (! HTML.isTagEnsured(tagName))
       self.throwError("Unknow tag: " + tagName, node);
 
+    // Interpose a new line between children
+    for (var i = content.length - 1; i > 0; i--)
+      content.splice(i, 0, "\n");
+
     if (! _.isEmpty(attrs))
       content.unshift(attrs);
 
