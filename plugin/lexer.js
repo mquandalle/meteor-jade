@@ -8,15 +8,20 @@
 
 Lexer = Npm.require('jade').Lexer;
 
+// XXX Remove this function when inline JavaScript expression support lands
+var unwrap = function (value) {
+  return value && /^\(?(.+?)\)?$/.exec(value.trim())[1];
+};
+
 // Build-in components
 Lexer.prototype.builtInComponents = function () {
   var self = this;
   var tok;
-  var captures = /^(if|unless|else if|else|with|each) *\(?([^\n\)]*)\)?/.exec(self.input);
+  var captures = /^(if|unless|else if|else|with|each)\b(.*)/.exec(self.input);
   if (captures) {
     self.consume(captures[0].length);
     tok = self.tok('mixin', captures[1]);
-    tok.args = captures[2];
+    tok.args = unwrap(captures[2]);
     return tok;
   }
 };
