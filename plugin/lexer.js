@@ -10,7 +10,8 @@ Lexer = Npm.require('jade').Lexer;
 
 // XXX Remove this function when inline JavaScript expression support lands
 var unwrap = function (value) {
-  return value && /^\(?(.+?)\)?$/.exec(value.trim())[1];
+  if (_.isString(value) && value.trim())
+    return /^\(?(.+?)\)?$/.exec(value.trim())[1];
 };
 
 // Build-in components
