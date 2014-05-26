@@ -44,13 +44,16 @@ body
   //- This is equivalent to {{> leaderboard}}
 ```
 
-Inside a text node you can use both `{{handlebars}}` and `#{jade}` expressions
+Inside a text node you can use both `{{spacebars}}` and `#{jade}` expressions
 but the last one is recommended:
 
 ```jade
 template(name="leaderboard")
   p Welcome #{player.name}
 ```
+
+If you want to insert raw HTML you can use the `!{jade}` syntax which is
+equivalent to the triple-braced `{{{spacebars}}}` expression.
 
 ### HTML Tag attributes
 

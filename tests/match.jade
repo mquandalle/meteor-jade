@@ -61,6 +61,12 @@ template(name="match-jade-inlineHelper-1")
 template(name="match-jade-inlineHelper-2")
   p Hello {{world}}
 
+template(name="match-jade-unescapedInlineHelper-1")
+  p Hello !{world}
+
+template(name="match-jade-unescapedInlineHelper-2")
+  p Hello {{{world}}}
+
 template(name="match-jade-mustacheCall")
   p {{func arg1 arg2}}
 

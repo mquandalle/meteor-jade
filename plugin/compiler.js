@@ -146,11 +146,12 @@ _.extend(Compiler.prototype, {
   },
 
   parseText: function(text) {
-    // The parser doesn't parse the #{expression} syntax. Let's do it.
+    // The parser doesn't parse #{expression} and !{unescapedExpression}
+    // syntaxes. So let's do it.
     // Since we rely on the Spacebars parser for this, we support the
-    // {{mustache}} syntax as well.
-    var jadeExpression = /#\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g;
-    text = text.replace(jadeExpression, "{{$1}}");
+    // {{mustache}} and {{unescapedMustache}} syntaxes as well.
+    text = text.replace(/#\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g, "{{$1}}");
+    text = text.replace(/!\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g, "{{{$1}}}");
     return Spacebars.parse(text);
   },
 
