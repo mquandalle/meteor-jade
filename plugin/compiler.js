@@ -113,12 +113,12 @@ _.extend(Compiler.prototype, {
     if (content.length === 1)
       tag.content = content[0];
     else if (content.length > 1)
-      tag.content = content;
+      tag.content = self._interposeEOL(content);
 
     if (elseContent.length === 1)
       tag.elseContent = elseContent[0];
     else if (elseContent.length > 1)
-      tag.elseContent = elseContent;
+      tag.elseContent = self._interposeEOL(elseContent);
 
     return HTMLTools.Special(tag);
   },
@@ -131,8 +131,7 @@ _.extend(Compiler.prototype, {
       self.throwError("Unknow tag: " + tagName, node);
 
     // Interpose a new line between children
-    for (var i = content.length - 1; i > 0; i--)
-      content.splice(i, 0, "\n");
+    self._interposeEOL(content);
 
     if (! _.isEmpty(attrs))
       content.unshift(attrs);
@@ -242,6 +241,12 @@ _.extend(Compiler.prototype, {
     else
       spacebarsSymbol = "{{{" + val + "}}}";
     return Spacebars.TemplateTag.parse(spacebarsSymbol);
+  },
+
+  _interposeEOL: function(array) {
+    for (var i = array.length - 1; i > 0; i--)
+      array.splice(i, 0, "\n");
+    return array;
   },
 
   registerRootNode: function(node, result) {
