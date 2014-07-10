@@ -25,7 +25,7 @@ var sourceHandler = function (compileStep) {
   // Body
   if (results.body !== null) {
     jsContent += "\nUI.body.contentParts.push(UI.Component.extend({";
-    jsContent += "render: " + Spacebars.codeGen(results.body, { isBody: true });
+    jsContent += "render: " + SpacebarsCompiler.codeGen(results.body, { isBody: true });
     jsContent += "}));\n";
     jsContent += "\nMeteor.startup(function () { if (! UI.body.INSTANTIATED) {\n";
     jsContent += "  UI.body.INSTANTIATED = true; UI.materialize(UI.body, document.body);\n";
@@ -35,7 +35,7 @@ var sourceHandler = function (compileStep) {
   // Templates
   _.forEach(results.templates, function (tree, tplName) {
     jsContent += "\nTemplate.__define__(\"" + tplName +"\", ";
-    jsContent += Spacebars.codeGen(tree, { isTemplate: true });
+    jsContent += SpacebarsCompiler.codeGen(tree, { isTemplate: true });
     jsContent += ");\n";
   });
 

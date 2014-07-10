@@ -91,7 +91,7 @@ _.extend(Compiler.prototype, {
 
   visitCode: function(code) {
     // XXX Need to improve this for "anonymous helpers"
-    return [ HTMLTools.Special(this.lookup(code.val, code.escape)) ];
+    return [ this._spacebarsParse(this.lookup(code.val, code.escape)) ];
   },
 
   // We interpret "Mixins" as "Components"
@@ -107,7 +107,7 @@ _.extend(Compiler.prototype, {
     var spacebarsSymbol = content.length === 0 ? ">" : "#";
     var args = node.args || "";
     var mustache = "{{" + spacebarsSymbol + componentName + " " + args + "}}";
-    var tag = Spacebars.TemplateTag.parse(mustache);
+    var tag = self._spacebarsParse(mustache);
 
     // Optimize arrays
     if (content.length === 1)
@@ -120,7 +120,7 @@ _.extend(Compiler.prototype, {
     else if (elseContent.length > 1)
       tag.elseContent = self._interposeEOL(elseContent);
 
-    return HTMLTools.Special(tag);
+    return tag;
   },
 
   visitTag: function(node, attrs, content) {
@@ -151,7 +151,7 @@ _.extend(Compiler.prototype, {
     // {{mustache}} and {{unescapedMustache}} syntaxes as well.
     text = text.replace(/#\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g, "{{$1}}");
     text = text.replace(/!\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g, "{{{$1}}}");
-    return Spacebars.parse(text);
+    return SpacebarsCompiler.parse(text);
   },
 
   visitComment: function (comment) {
@@ -200,6 +200,7 @@ _.extend(Compiler.prototype, {
       if (! _.isArray(b)) b = [b];
       return a.concat(b);
     };
+    var dynamicAttrs = [];
 
     _.each(attrs, function (attr) {
       var val = attr.val;
@@ -214,34 +215,41 @@ _.extend(Compiler.prototype, {
         // For cases like <input required> Spacebars compiler expect required
         // attriute to have the value `""` but Jade parser returns `true`
         val = "";
-      else
+      else {
         // Otherwise this is some code we need to evaluate
-        val = HTMLTools.Special(self.lookup(val, attr.escaped));
+        val = self._spacebarsParse(self.lookup(val, attr.escaped));
+        val.position = HTMLTools.TEMPLATE_TAG_POSITION.IN_START_TAG;
+      }
 
       if (key === "$dyn")
-        // Temporal fix for spacebars bug
-        // https://github.com/meteor/meteor/issues/2075
-        return dict["$specials"] = [val];
-
+        return dynamicAttrs.push(val);
 
       // If a user has defined such kind of tag: div.myClass(class="myClass2")
       // we need to concatenate classes (and ids)
-      if ((key === "class" || key === "id") && dict[key])
-        val = [" ", val];
+      else if ((key === "class" || key === "id") && dict[key])
+      val = [" ", val];
 
       dict[key] = concatAttributes(dict[key], val);
     });
+
+    if (dynamicAttrs.length === 0)
+      return dict;
+    else {
+      dynamicAttrs.unshift(dict);
+      return HTML.Attrs.apply(null, dynamicAttrs);
+    }
 
     return dict;
   },
 
   lookup: function (val, escape) {
-    if (escape)
-      spacebarsSymbol = "{{" + val + "}}";
-    else
-      spacebarsSymbol = "{{{" + val + "}}}";
-    return Spacebars.TemplateTag.parse(spacebarsSymbol);
+    var mustache = "{{" + val + "}}";
+    if (! escape)
+      mustache = "{" + mustache + "}";
+    return HTMLTools.parseFragment(mustache);
   },
+
+  _spacebarsParse: SpacebarsCompiler.TemplateTag.parse,
 
   _interposeEOL: function(array) {
     for (var i = array.length - 1; i > 0; i--)

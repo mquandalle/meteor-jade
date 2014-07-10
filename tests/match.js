@@ -6,7 +6,7 @@ var removeLineComment = function (code) {
 };
 
 var tpl2txt = function(tpl) {
-  return tpl.render && removeLineComment(tpl.render.toString());
+  return tpl.__render && removeLineComment(tpl.__render.toString());
 };
 
 Tinytest.add('Jade - Compiled template match Spacebars', function (test) {
