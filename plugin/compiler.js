@@ -207,9 +207,13 @@ _.extend(Compiler.prototype, {
       var key = attr.name;
 
       // XXX We need a better handler for JavaScript code
-      if (/^('|")/.test(val) && val.slice(-1) === val.slice(0, 1))
+      if (/^('|")/.test(val) && val.slice(-1) === val.slice(0, 1)) {
         // First case this is a string
         val = self.parseText(val.slice(1, -1));
+        if (val.type === "DOUBLE") {
+          val.position = HTMLTools.TEMPLATE_TAG_POSITION.IN_START_TAG;
+        }
+      }
 
       else if (val === true)
         // For cases like <input required> Spacebars compiler expect required
