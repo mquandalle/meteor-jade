@@ -15,6 +15,9 @@ template(name="match-jade-helperInTagAttribute")
 template(name="match-jade-dynamicTagAttributes")
   input($dyn=attrs)
 
+template(name="match-jade-dynamicTagAttributesWithArgs")
+  input($dyn="{{attrs arg1 arg2}}")
+
 template(name="match-jade-multipleTagAttributes-1")
   input(type="password" required=isRequired autofocus $dyn=attrs)
 
