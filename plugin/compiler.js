@@ -127,8 +127,13 @@ _.extend(Compiler.prototype, {
     if (! HTML.isTagEnsured(tagName))
       self.throwError("Unknow tag: " + tagName, node);
 
-    // Interpose a new line between children
     content = self._optimize(content, true);
+
+    if (tagName === "textarea") {
+      attrs["value"] = content;
+      content = null;
+    }
+
     if (! _.isArray(content))
       content = content ? [content] : [];
 
