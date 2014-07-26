@@ -18,7 +18,7 @@ Tinytest.add('Jade - Compiled template match Spacebars', function (test) {
     var htmlTplName = ["match", "html", testName].join("-");
 
     if (_.has(Template, htmlTplName))
-      test.equal(tpl2txt(jadeTpl), tpl2txt(Template[htmlTplName]));
+      test.equal(tpl2txt(jadeTpl), tpl2txt(Template[htmlTplName]), testName);
     else
       test.fail("Missing template: " + htmlTplName);
   });
