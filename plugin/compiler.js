@@ -110,15 +110,12 @@ _.extend(Compiler.prototype, {
     var tag = self._spacebarsParse(mustache);
 
     // Optimize arrays
-    if (content.length === 1)
-      tag.content = content[0];
-    else if (content.length > 1)
-      tag.content = self._interposeEOL(content);
-
-    if (elseContent.length === 1)
-      tag.elseContent = elseContent[0];
-    else if (elseContent.length > 1)
-      tag.elseContent = self._interposeEOL(elseContent);
+    content = self._optimize(content, true);
+    elseContent = self._optimize(elseContent, true);
+    if (content)
+      tag.content = content;
+    if (elseContent)
+      tag.elseContent = elseContent;
 
     return tag;
   },
@@ -131,7 +128,9 @@ _.extend(Compiler.prototype, {
       self.throwError("Unknow tag: " + tagName, node);
 
     // Interpose a new line between children
-    self._interposeEOL(content);
+    content = self._optimize(content, true);
+    if (! _.isArray(content))
+      content = content ? [content] : [];
 
     if (! _.isEmpty(attrs))
       content.unshift(attrs);
@@ -261,6 +260,21 @@ _.extend(Compiler.prototype, {
     return array;
   },
 
+  _optimize: function(content, interposeEOL) {
+    var self = this;
+    if (! _.isArray(content))
+      return content;
+
+    if (content.length === 0)
+      return undefined;
+    if (content.length === 1)
+      return self._optimize(content[0]);
+    else if (interposeEOL)
+      return self._interposeEOL(content);
+    else
+      return content;
+  },
+
   registerRootNode: function(node, result) {
     // XXX This is mostly the same code as the `templating` core package
     // The `templating` package should be more generic to allow others templates
@@ -292,7 +306,7 @@ _.extend(Compiler.prototype, {
       if (node.attrs.length !== 0)
         self.throwError("Attributes on " + template + " not supported", node);
 
-      self[template] = result;
+      self[template] = self._optimize(result);
     }
 
     // Templates
@@ -307,7 +321,7 @@ _.extend(Compiler.prototype, {
       if (_.has(self.templates, name))
         self.throwError('Template "' + name + '" is set twice', node);
 
-      self.templates[name] = result;
+      self.templates[name] = self._optimize(result);
     }
 
     // Otherwise this is an error, we do not allow tags, mixins, if, etc.
