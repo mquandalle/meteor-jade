@@ -211,15 +211,17 @@ _.extend(Compiler.prototype, {
       var key = attr.name;
 
       // XXX We need a better handler for JavaScript code
-      if (/^('|")/.test(val) && val.slice(-1) === val.slice(0, 1)) {
+      if (/^('|")/.test(val) && val.slice(-1) === val.slice(0, 1)
+                                                            && val.length > 2) {
         // First case this is a string
         val = self.parseText(val.slice(1, -1));
+
         if (val.type === "DOUBLE") {
           val.position = HTMLTools.TEMPLATE_TAG_POSITION.IN_START_TAG;
         }
       }
 
-      else if (val === true)
+      else if (val === true || val === "''" || val === '""')
         // For cases like <input required> Spacebars compiler expect required
         // attriute to have the value `""` but Jade parser returns `true`
         val = "";
