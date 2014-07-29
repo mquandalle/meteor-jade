@@ -24,12 +24,11 @@ var sourceHandler = function (compileStep) {
 
   // Body
   if (results.body !== null) {
-    jsContent += "\nUI.body.contentParts.push(UI.Component.extend({";
-    jsContent += "render: " + SpacebarsCompiler.codeGen(results.body, { isBody: true });
-    jsContent += "}));\n";
-    jsContent += "\nMeteor.startup(function () { if (! UI.body.INSTANTIATED) {\n";
-    jsContent += "  UI.body.INSTANTIATED = true; UI.materialize(UI.body, document.body);\n";
-    jsContent += "}});\n";
+    jsContent += "\nTemplate.__body__.__contentParts.push(Blaze.View(";
+    jsContent += "'body_content_'+Template.__body__.__contentParts.length, ";
+    jsContent += SpacebarsCompiler.codeGen(results.body, { isBody: true });
+    jsContent += "));\n";
+    jsContent += "Meteor.startup(Template.__body__.__instantiate);\n";
   }
 
   // Templates
