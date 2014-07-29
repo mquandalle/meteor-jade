@@ -48,11 +48,3 @@ var sourceHandler = function (compileStep) {
 };
 
 Plugin.registerSourceHandler("jade", { isTemplate: true }, sourceHandler);
-
-// Backward compatibility with Meteor <= 0.8
-// This is related to the following Meteor hack:
-// https://github.com/meteor/meteor/blob/ae67643a3f2de0dd9fb8db7f7bd8e1c6fe2ba285/tools/files.js#L42
-Plugin.registerSourceHandler("jade.html", function(/* arguments */) {
-  console.warn("The .jade.html extension is deprecated. Use .jade instead.");
-  return sourceHandler(arguments);
-});
