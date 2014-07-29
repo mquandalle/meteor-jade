@@ -27,6 +27,6 @@ Package._transitional_registerBuildPlugin({
 Package.on_test(function (api) {
   api.use("tinytest");
   api.use(["jade", "ui", "spacebars", "templating"]);
-  api.add_files(["tests/match.jade", "tests/match.html"]);
-  api.add_files("tests/match.js", "client");
+  api.add_files(["tests/match.jade", "tests/match.html", "tests/runtime.jade"]);
+  api.add_files(["tests/match.js", "tests/runtime.js"], "client");
 });
