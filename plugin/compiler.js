@@ -130,7 +130,7 @@ _.extend(Compiler.prototype, {
     content = self._optimize(content, true);
 
     if (tagName === "textarea") {
-      attrs["value"] = content;
+      attrs.value = content;
       content = null;
     }
 
@@ -211,8 +211,8 @@ _.extend(Compiler.prototype, {
       var key = attr.name;
 
       // XXX We need a better handler for JavaScript code
-      if (/^('|")/.test(val) && val.slice(-1) === val.slice(0, 1)
-                                                            && val.length > 2) {
+      if (/^('|")/.test(val) && val.slice(-1) === val.slice(0, 1) &&
+                                                               val.length > 2) {
         // First case this is a string
         val = self.parseText(val.slice(1, -1));
 
@@ -221,11 +221,12 @@ _.extend(Compiler.prototype, {
         }
       }
 
-      else if (val === true || val === "''" || val === '""')
+      else if (val === true || val === "''" || val === '""') {
         // For cases like <input required> Spacebars compiler expect required
         // attriute to have the value `""` but Jade parser returns `true`
         val = "";
-      else {
+
+      } else {
         // Otherwise this is some code we need to evaluate
         val = self._spacebarsParse(self.lookup(val, attr.escaped));
         val.position = HTMLTools.TEMPLATE_TAG_POSITION.IN_START_TAG;
@@ -237,7 +238,7 @@ _.extend(Compiler.prototype, {
       // If a user has defined such kind of tag: div.myClass(class="myClass2")
       // we need to concatenate classes (and ids)
       else if ((key === "class" || key === "id") && dict[key])
-      val = [" ", val];
+        val = [" ", val];
 
       dict[key] = concatAttributes(dict[key], val);
     });
