@@ -178,6 +178,10 @@ _.extend(Compiler.prototype, {
       self.throwError("Unknowed filter " + filter.name, filter);
   },
 
+  visitWhen: function (node) {
+    this.throwError("Case statements are not supported in meteor-jade", node);
+  },
+
   visitAttributes: function (attrs) {
     // The jade parser provide an attribute tree of this type:
     // [{name: "class", val: "val1", escaped: true}, {name: "id" val: "val2"}]
