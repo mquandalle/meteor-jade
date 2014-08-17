@@ -1,5 +1,6 @@
 Package.describe({
   summary: "Jade template language for Meteor",
+  git: "https://github.com/mquandalle/meteor-jade.git",
   version: "0.2.6"
 });
 
@@ -26,7 +27,7 @@ Package._transitional_registerBuildPlugin({
 
 Package.on_test(function (api) {
   api.use("tinytest");
-  api.use(["jade", "ui", "spacebars", "templating"]);
+  api.use(["mquandalle:jade", "ui", "spacebars", "templating"]);
   api.add_files(["tests/match.jade", "tests/match.html", "tests/runtime.jade"]);
   api.add_files(["tests/match.js", "tests/runtime.js"], "client");
 });
