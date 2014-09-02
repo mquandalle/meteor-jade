@@ -1,10 +1,4 @@
 var sourceHandler = function (compileStep) {
-
-  // XXX Code copied from
-  // packages/templating/plugin/compile-template.js:6
-  if (! compileStep.arch.match(/^browser(\.|$)/))
-    return;
-
   // Parse and compile the content
   var content = compileStep.read().toString('utf8');
   var parser  = new Parser(content, compileStep.inputPath, { lexer: Lexer });
@@ -47,4 +41,7 @@ var sourceHandler = function (compileStep) {
   }
 };
 
-Plugin.registerSourceHandler("jade", { isTemplate: true }, sourceHandler);
+Plugin.registerSourceHandler("jade", {
+  isTemplate: true,
+  archMatching: "web"
+}, sourceHandler);
