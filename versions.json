@@ -16,13 +16,13 @@
         "spacebars-compiler": "1.0.1",
         "html-tools": "1.0.0",
         "underscore": "1.0.0",
-        "htmljs": "1.0.0",
-        "blaze-tools": "1.0.0",
         "meteor": "1.0.2",
+        "blaze-tools": "1.0.0",
+        "htmljs": "1.0.0",
         "minifiers": "1.0.2"
       }
     ]
   ],
-  "toolVersion": "meteor-tool@1.0.12",
+  "toolVersion": "meteor-tool@1.0.16",
   "format": "1.0"
 }
