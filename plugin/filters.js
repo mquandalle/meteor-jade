@@ -6,6 +6,7 @@ var markdownToHTML = Npm.require("markdown").markdown.toHTML;
 
 Filters = {
   markdown: function (content) {
+    console.warn("jade: markdown server-side filter is deprecated");
     return markdownToHTML(content);
   }
 };

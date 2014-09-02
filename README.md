@@ -166,23 +166,6 @@ else
 Under the hood, those two codes are compiled to the same abstract tree, so there
 are no runtime performance hit.
 
-### Server-side filters
-
-It is possible to use server-side filters in order to use a specific compiler
-for a particular block. For now `:markdown` is the only filter supported.
-
-```jade
-body
-  :markdown
-    # I love writing my docs in markdown
-
-    * Let's compile this text on the server
-    * So the client doesn't have to do it
-```
-
-The difference with the `+markdown` block helper is that the compilation is done
-on the server, not the client.
-
 ### Anonymous helper
 
 This one is not implemented yet but I'd like to write such kind of things:
