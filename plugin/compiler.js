@@ -124,9 +124,6 @@ _.extend(Compiler.prototype, {
     var self = this;
     var tagName = node.name.toLowerCase();
 
-    if (! HTML.isTagEnsured(tagName))
-      self.throwError("Unknow tag: " + tagName, node);
-
     content = self._optimize(content, true);
 
     if (tagName === "textarea") {
@@ -140,7 +137,7 @@ _.extend(Compiler.prototype, {
     if (! _.isEmpty(attrs))
       content.unshift(attrs);
 
-    return HTML[tagName.toUpperCase()].apply(null, content);
+    return HTML.getTag(tagName).apply(null, content);
   },
 
   visitText: function(node) {
