@@ -15,20 +15,24 @@ var sourceHandler = function (compileStep) {
   // Generate the final js file
   // XXX generate a source map
   var jsContent = "";
+  var codeGen = SpacebarsCompiler.codeGen;
 
   // Body
   if (results.body !== null) {
-    jsContent += "\nTemplate.__body__.__contentParts.push(Blaze.View(";
-    jsContent += "'body_content_'+Template.__body__.__contentParts.length, ";
-    jsContent += SpacebarsCompiler.codeGen(results.body, { isBody: true });
-    jsContent += "));\n";
-    jsContent += "Meteor.startup(Template.__body__.__instantiate);\n";
+    jsContent += "\nTemplate.body.addContent(";
+    jsContent += codeGen(results.body, { isBody: true, sourceName: "<body>"});
+    jsContent += ");\n";
+    jsContent += "Meteor.startup(Template.body.renderToDocument);\n";
   }
 
   // Templates
   _.forEach(results.templates, function (tree, tplName) {
-    jsContent += "\nTemplate.__define__(\"" + tplName +"\", ";
-    jsContent += SpacebarsCompiler.codeGen(tree, { isTemplate: true });
+    var nameLiteral = JSON.stringify(tplName);
+    var templateDotNameLiteral = JSON.stringify("Template." + tplName);
+    jsContent += "\nTemplate.__checkName(" + nameLiteral + ");";
+    jsContent += "\nTemplate[" + nameLiteral + "] = new Template(";
+    jsContent += templateDotNameLiteral + ", ";
+    jsContent += codeGen(tree, { isTemplate: true });
     jsContent += ");\n";
   });
 
