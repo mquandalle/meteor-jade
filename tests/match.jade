@@ -15,6 +15,9 @@ template(name="match-jade-tagAttributeWithTextValue-2")
 template(name="match-jade-emptyTagAttribute")
   input(placehover="")
 
+template(name="match-jade-parentContextInTagAttribute")
+  a(href="/users/{{../userId}}/")
+
 template(name="match-jade-helperInTagAttribute")
   input(required=isRequired)
 
