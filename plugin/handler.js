@@ -1,8 +1,15 @@
 var sourceHandler = function (compileStep) {
   // Parse and compile the content
-  var content = compileStep.read().toString('utf8');
-  var parser  = new Parser(content, compileStep.inputPath, { lexer: Lexer });
-  var results = new Compiler(parser.parse()).compile();
+  try {
+    var content = compileStep.read().toString('utf8');
+    var parser  = new Parser(content, compileStep.inputPath, { lexer: Lexer });
+    var results = new Compiler(parser.parse()).compile();
+  } catch (err) {
+    return compileStep.error({
+      message: "Jade syntax error: " + err.message,
+      sourcePath: compileStep.inputPath
+    });
+  }
 
   // Head
   if (results.head !== null) {
