@@ -15,11 +15,12 @@ var sourceHandler = function (compileStep) {
   // Generate the final js file
   // XXX generate a source map
   var jsContent = "";
+  var codeGen = SpacebarsCompiler.codeGen;
 
   // Body
   if (results.body !== null) {
     jsContent += "\nTemplate.body.addContent(";
-    jsContent += SpacebarsCompiler.codeGen(results.body, { isBody: true });
+    jsContent += codeGen(results.body, { isBody: true, sourceName: "<body>"});
     jsContent += ");\n";
     jsContent += "Meteor.startup(Template.body.renderToDocument);\n";
   }
@@ -31,7 +32,7 @@ var sourceHandler = function (compileStep) {
     jsContent += "\nTemplate.__checkName(" + nameLiteral + ");";
     jsContent += "\nTemplate[" + nameLiteral + "] = new Template(";
     jsContent += templateDotNameLiteral + ", ";
-    jsContent += SpacebarsCompiler.codeGen(tree, { isTemplate: true });
+    jsContent += codeGen(tree, { isTemplate: true });
     jsContent += ");\n";
   });
 
