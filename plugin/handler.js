@@ -18,16 +18,19 @@ var sourceHandler = function (compileStep) {
 
   // Body
   if (results.body !== null) {
-    jsContent += "\nTemplate.__body__.__contentParts.push(Blaze.View(";
-    jsContent += "'body_content_'+Template.__body__.__contentParts.length, ";
+    jsContent += "\nTemplate.body.addContent(";
     jsContent += SpacebarsCompiler.codeGen(results.body, { isBody: true });
-    jsContent += "));\n";
-    jsContent += "Meteor.startup(Template.__body__.__instantiate);\n";
+    jsContent += ");\n";
+    jsContent += "Meteor.startup(Template.body.renderToDocument);\n";
   }
 
   // Templates
   _.forEach(results.templates, function (tree, tplName) {
-    jsContent += "\nTemplate.__define__(\"" + tplName +"\", ";
+    var nameLiteral = JSON.stringify(tplName);
+    var templateDotNameLiteral = JSON.stringify("Template." + tplName);
+    jsContent += "\nTemplate.__checkName(" + nameLiteral + ");";
+    jsContent += "\nTemplate[" + nameLiteral + "] = new Template(";
+    jsContent += templateDotNameLiteral + ", ";
     jsContent += SpacebarsCompiler.codeGen(tree, { isTemplate: true });
     jsContent += ");\n";
   });

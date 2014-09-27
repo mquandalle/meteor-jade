@@ -1,12 +1,12 @@
 head
   title Leaderboard
-  meta(name='viewport', content='width=device-width, user-scalable=no')
+  meta(name="viewport" content="width=device-width, user-scalable=no")
 
 body
   .outer
     +leaderboard
 
-template(name='leaderboard')
+template(name="leaderboard")
   .leaderboard
     each players
       +player
@@ -18,7 +18,7 @@ template(name='leaderboard')
   else
     .none Click a player to select
 
-template(name='player')
+template(name="player")
   .player(class=selected)
     span.name= name
     span.score= score
