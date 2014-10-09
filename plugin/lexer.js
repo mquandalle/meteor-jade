@@ -11,7 +11,7 @@ Lexer = Npm.require('jade').Lexer;
 // XXX Remove this function when inline JavaScript expression support lands
 var unwrap = function (value) {
   if (_.isString(value) && value.trim())
-    return /^\(?(.+?)\)?$/.exec(value.trim())[1];
+    return /^\(?(.+?)\)?$/m.exec(value.replace(/\n/g, "").trim())[1];
 };
 
 // Build-in components
@@ -27,15 +27,19 @@ Lexer.prototype.builtInComponents = function () {
   }
 };
 
-// User components, uses the syntax `+componentName(arguments)`
+// User components, uses the syntax `+componentName(arguments)`. Arguments may
+// be written on several lines
 Lexer.prototype.userComponents = function () {
   var self = this;
   var tok;
-  var captures = /^\+([\.\w-]+) *(\(?([^\n\)]+)\)?)?/.exec(self.input);
+  // XXX this is hacky because if a user use a closing bracket `)` in the text
+  // value of an argument, the lexer will consider it as the end of the
+  // component, and the parsing will fail...
+  var captures = /^\+([\.\w-]+) *(\([^\)]+\))?/m.exec(self.input);
   if (captures) {
     self.consume(captures[0].length);
     tok = self.tok('mixin', captures[1]);
-    tok.args = captures[3] || "";
+    tok.args = unwrap(captures[2]) || "";
     return tok;
   }
 };

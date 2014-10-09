@@ -17,11 +17,14 @@ Tinytest.add('Jade - Compiled template match Spacebars', function (test) {
     if (! jadeTplName.match(/^match-jade/))
       continue;
 
-    var testName = jadeTplName.split('-')[2];
+    var parts = jadeTplName.split('-');
+    var testName = parts[2];
+    var testIndex = parts[3];
+    var description = testName + (testIndex ? " (" + testIndex + ")" : "");
     var htmlTplName = ["match", "html", testName].join("-");
 
     if (_.has(Template, htmlTplName))
-      test.equal(tpl2txt(jadeTplName), tpl2txt(htmlTplName), testName);
+      test.equal(tpl2txt(jadeTplName), tpl2txt(htmlTplName), description);
     else
       test.fail("Missing template: " + htmlTplName);
   }
