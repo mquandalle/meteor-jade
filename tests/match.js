@@ -7,7 +7,9 @@ var removeLineComment = function (code) {
 
 var tpl2txt = function(tplName) {
   var tpl = Template[tplName];
-  return tpl.renderFunction && removeLineComment(tpl.renderFunction.toString());
+  if (! tpl.renderFunction)
+    throw Error("The template object does't have a render function");
+  return removeLineComment(tpl.renderFunction.toString());
 };
 
 Tinytest.add('Jade - Compiled template match Spacebars', function (test) {
