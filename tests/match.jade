@@ -45,19 +45,33 @@ template(name="match-jade-inlineBracketsTags")
 template(name="match-jade-iframe")
   iframe(width="13" height="37")
 
+template(name="match-jade-empty-1")
+
+template(name="match-jade-empty-2")
+  = ""
+
 template(name="match-jade-justText-1")
   | Hello world
 
-//- template(name="match-jade-justText-2")
-//-   = "Hello world"
+template(name="match-jade-justText-2")
+  = "Hello world"
 
-//- template(name="match-jade-justText-3")
-//-   = 'Hello world'
+template(name="match-jade-justText-3")
+  = 'Hello world'
+
+template(name="match-jade-justText-4")
+  = 'Hello '
+  = 'world'
 
 template(name="match-jade-multipleChildren")
   p
     | Hello
     | world
+
+template(name="match-jade-noSpaceBetweenChildren")
+  p
+    | Hello
+    = "."
 
 //- Template helpers
 

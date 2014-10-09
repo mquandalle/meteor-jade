@@ -5,6 +5,18 @@
 // XXX Source-mapping: Jade give us the line number, so we could implement a
 // simple line-mapping but it's not yet supported by the spacebars compiler.
 
+
+// Internal identifier to indicate that we should not insert a new line
+// character before a value. This has the side effect that a user cannot start
+// a new line starting with this value in one of its templates.
+var noNewLinePrefix = "__noNewLine__";
+var startsWithNoNewLinePrefix = new RegExp("^" + noNewLinePrefix);
+
+// XXX We really need something better to handle inline JavaScript expressions
+var isStringRepresentation = function(val) {
+  return /^('|")/.test(val) && val.slice(-1) === val.slice(0, 1);
+};
+
 Compiler = function(tree, filename) {
   var self = this;
   self.tree = tree;
@@ -91,7 +103,13 @@ _.extend(Compiler.prototype, {
 
   visitCode: function(code) {
     // XXX Need to improve this for "anonymous helpers"
-    return [ this._spacebarsParse(this.lookup(code.val, code.escape)) ];
+    var val = code.val;
+    if (isStringRepresentation(val)) {
+      // First case this is a string
+      return noNewLinePrefix + val.slice(1, -1);
+    } else {
+      return [ this._spacebarsParse(this.lookup(code.val, code.escape)) ];
+    }
   },
 
   // We interpret "Mixins" as "Components"
@@ -212,8 +230,7 @@ _.extend(Compiler.prototype, {
       var key = attr.name;
 
       // XXX We need a better handler for JavaScript code
-      if (/^('|")/.test(val) && val.slice(-1) === val.slice(0, 1) &&
-                                                               val.length > 2) {
+      if (isStringRepresentation(val) && val.length > 2) {
         // First case this is a string
         val = self.parseText(val.slice(1, -1));
 
@@ -263,25 +280,44 @@ _.extend(Compiler.prototype, {
 
   _spacebarsParse: SpacebarsCompiler.TemplateTag.parse,
 
+  _removeNewLinePrefixes: function(array) {
+    var removeNewLinePrefix = function(val) {
+      if (startsWithNoNewLinePrefix.test(val))
+        return val.slice(noNewLinePrefix.length);
+      else
+        return val;
+    };
+
+    if (! _.isArray(array))
+      return removeNewLinePrefix(array);
+    else
+      return _.map(array, removeNewLinePrefix);
+  },
+
   _interposeEOL: function(array) {
-    for (var i = array.length - 1; i > 0; i--)
-      array.splice(i, 0, "\n");
+    for (var i = array.length - 1; i > 0; i--) {
+      if (! startsWithNoNewLinePrefix.test(array[i]))
+        array.splice(i, 0, "\n");
+    }
     return array;
   },
 
   _optimize: function(content, interposeEOL) {
     var self = this;
+
     if (! _.isArray(content))
-      return content;
+      return self._removeNewLinePrefixes(content);
 
     if (content.length === 0)
       return undefined;
     if (content.length === 1)
-      return self._optimize(content[0]);
+      content = self._optimize(content[0]);
     else if (interposeEOL)
-      return self._interposeEOL(content);
+      content = self._interposeEOL(content);
     else
-      return content;
+      content = content;
+
+    return self._removeNewLinePrefixes(content);
   },
 
   registerRootNode: function(node, result) {
