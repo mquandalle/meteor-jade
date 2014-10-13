@@ -205,7 +205,7 @@ This code is published under the [MIT license](LICENSE).
 Use the following command to run the tests:
 
 ```
-$ mrt test-packages ./
+$ meteor test-packages ./
 ```
 
 ### Tips
