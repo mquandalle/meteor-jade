@@ -105,7 +105,8 @@ _.extend(Compiler.prototype, {
       self.throwError("Unexpected else block", node);
 
     var spacebarsSymbol = content.length === 0 ? ">" : "#";
-    var args = node.args || "";
+    // replace "(", ")", "," and get flat spacebar's lookup expression
+    var args = (node.args || "").replace(/\(|\)|\,/, " ");
     var mustache = "{{" + spacebarsSymbol + componentName + " " + args + "}}";
     var tag = self._spacebarsParse(mustache);
 
@@ -258,6 +259,8 @@ _.extend(Compiler.prototype, {
   },
 
   lookup: function (val, escape) {
+    // replace "(", ")", "," and get flat spacebar's lookup expression
+    var _val = val.replace(/\(|\)|\,/g, " ");
     var mustache = "{{" + val + "}}";
     if (! escape)
       mustache = "{" + mustache + "}";
