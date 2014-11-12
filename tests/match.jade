@@ -187,6 +187,12 @@ template(name="match-jade-inclusionWithKeywordArgs-2")
 template(name="match-jade-dynamicTemplate")
   +Template.dynamic(template=template)
 
+template(name="match-jade-callableInComponentArg-1")
+  +Component test="moo()"
+
+template(name="match-jade-callableInComponentArg-2")
+  +Component(test="moo()")
+
 //- Markdown filter
 
 template(name="match-jade-markdownFilter")

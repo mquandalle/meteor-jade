@@ -31,21 +31,24 @@ Lexer.prototype.builtInComponents = function () {
 // be written on several lines. Parenthesis are optional.
 Lexer.prototype.userComponents = function () {
   var self = this;
-  var tok;
+  var tok, argRegex;
   var captureComponentName = /^\+([\.\w-]+) */.exec(self.input);
   if (captureComponentName) {
     self.consume(captureComponentName[0].length);
     tok = self.tok('mixin', captureComponentName[1]);
     // Case 1: with parenthesis
-    // this is hacky because if a user use a closing bracket `)` in the text
-    // value of an argument, the lexer will consider it as the end of the
-    // component, and the parsing will fail... see #85
     if (self.input[0] === "(") {
-      var capturesArgs = /^\([^\)]+\)?/m.exec(self.input);
-    // Case 2: empty or arguments without parenthesis (on a single line)
+      // We capture everything until the closing parenthese. We do not want to
+      // match a closing parenthese if we are inside a string literal, ie
+      // inside quotes, ie the number of quotes before the parenthis is even.
+      // We use regexp look ahead to model this condition.
+      // see http://stackoverflow.com/a/6464500/1652064
+      argRegex = /^\([\s\S]*?\)(?=(([^"]*"){2})*[^"]*$)/m;
+    // Case 2: no arguments or arguments without parenthesis (on a single line)
     } else {
-      var capturesArgs = /[^\n]*/.exec(self.input);
+      argRegex = /[^\n]*/;
     }
+    var capturesArgs = argRegex.exec(self.input);
     self.consume(capturesArgs[0].length);
     tok.args = unwrap(capturesArgs[0]);
     return tok;
