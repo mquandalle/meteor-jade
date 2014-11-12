@@ -28,18 +28,26 @@ Lexer.prototype.builtInComponents = function () {
 };
 
 // User components, uses the syntax `+componentName(arguments)`. Arguments may
-// be written on several lines
+// be written on several lines. Parenthesis are optional.
 Lexer.prototype.userComponents = function () {
   var self = this;
   var tok;
-  // XXX this is hacky because if a user use a closing bracket `)` in the text
-  // value of an argument, the lexer will consider it as the end of the
-  // component, and the parsing will fail...
-  var captures = /^\+([\.\w-]+) *(\([^\)]+\))?/m.exec(self.input);
-  if (captures) {
-    self.consume(captures[0].length);
-    tok = self.tok('mixin', captures[1]);
-    tok.args = unwrap(captures[2]) || "";
+  var captureComponentName = /^\+([\.\w-]+) */.exec(self.input);
+  if (captureComponentName) {
+    self.consume(captureComponentName[0].length);
+    tok = self.tok('mixin', captureComponentName[1]);
+    // Case 1: with parenthesis
+    // this is hacky because if a user use a closing bracket `)` in the text
+    // value of an argument, the lexer will consider it as the end of the
+    // component, and the parsing will fail... see #85
+    if (self.input[0] === "(") {
+      var capturesArgs = /^\([^\)]+\)?/m.exec(self.input);
+    // Case 2: empty or arguments without parenthesis (on a single line)
+    } else {
+      var capturesArgs = /[^\n]*/.exec(self.input);
+    }
+    self.consume(capturesArgs[0].length);
+    tok.args = unwrap(capturesArgs[0]);
     return tok;
   }
 };
