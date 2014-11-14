@@ -193,6 +193,19 @@ template(name="match-jade-callableInComponentArg-1")
 template(name="match-jade-callableInComponentArg-2")
   +Component(test="moo()")
 
+//- Blocks of text
+
+template(name="match-jade-blockOfText")
+  p.
+    This is a block
+    of text on multiple
+    lines.
+
+template(name="match-jade-textareaContent")
+  textarea.
+    Inside a textarea
+    <i>tags</i> shouldn't be interpreted
+
 //- Markdown filter
 
 template(name="match-jade-markdownFilter")

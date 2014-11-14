@@ -88,11 +88,23 @@ _.extend(Compiler.prototype, {
     return buffer;
   },
 
+  visitTextOnlyBlock: function(block) {
+    var self = this;
+    var parts = _(block.nodes).pluck('val');
+    parts = self._interposeEOL(parts);
+    return parts.reduce(function(a, b) { return a + b}, '');
+  },
+
   visitNode: function(node, elseNode, level) {
     var self = this;
     var attrs = self.visitAttributes(node.attrs);
-    var content = (node.code) ? self.visitCode(node.code) :
-                                             self.visitBlock(node.block, level);
+    if (node.code)
+      var content = self.visitCode(node.code);
+    else if (node.textOnly)
+      var content = self.visitTextOnlyBlock(node.block);
+    else
+      var content = self.visitBlock(node.block, level);
+
     var elseContent = self.visitBlock(elseNode && elseNode.block, level);
 
     if (level === 1)
