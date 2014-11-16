@@ -16,13 +16,11 @@ Package._transitional_registerBuildPlugin({
   sources: [
     "plugin/lexer.js",
     "plugin/parser.js",
-    "plugin/filters.js",
     "plugin/compiler.js",
     "plugin/handler.js",
   ],
   npmDependencies: {
-    "jade": "https://github.com/mquandalle/jade/tarball/f3f956fa1031e05f85be7bc7b67f12e9ec80ba37",
-    "markdown": "0.5.0",
+    "jade": "https://github.com/mquandalle/jade/tarball/f3f956fa1031e05f85be7bc7b67f12e9ec80ba37"
   }
 });
 

@@ -198,11 +198,7 @@ _.extend(Compiler.prototype, {
   },
 
   visitFilter: function (filter, attrs, content) {
-    var self = this;
-    if (Filters[filter.name])
-      return self.parseText(Filters[filter.name](content.join("\n")));
-    else
-      self.throwError("Unknowed filter " + filter.name, filter);
+    this.throwError("Jade filters are not supported in meteor-jade", filter);
   },
 
   visitWhen: function (node) {
