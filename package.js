@@ -5,7 +5,7 @@ Package.describe({
   git: "https://github.com/mquandalle/meteor-jade.git"
 });
 
-Package._transitional_registerBuildPlugin({
+Package.registerBuildPlugin({
   name: "compileJade",
   use: [
     "underscore",
