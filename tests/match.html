@@ -73,6 +73,8 @@ world</p></template>
 
 <template name="match-html-inclusion">{{> myTemplate}}</template>
 
+<template name="match-html-inclusionWithContent">{{# myTemplate}}this is some {{content}}{{/myTemplate}}</template>
+
 <template name="match-html-contentsInclusion">{{> UI.content}}{{> UI.elseContent}}</template>
 
 <template name="match-html-inclusionWithPositionalArgs">{{> myTemplate arg1 arg2}}</template>
@@ -91,4 +93,10 @@ lines.
 </p></template>
 
 <template name="match-html-textareaContent"><textarea>Inside a textarea
-<i>tags</i> shouldn't be interpreted</textarea></template>
+<i>tags</i> shouldn't be interpreted
+</textarea></template>
+
+<template name="match-html-specialMarkdownComponent">{{#markdown}}This is my email: <address@example.com>
+{{/markdown}}</template>
+
+<template name="match-html-specialMarkdownComponentWithHelper">{{#markdown}}This is my email: {{email}}{{/markdown}}</template>

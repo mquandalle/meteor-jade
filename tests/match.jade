@@ -158,6 +158,10 @@ template(name="match-jade-elseif")
 template(name="match-jade-inclusion")
   +myTemplate
 
+template(name="match-jade-inclusionWithContent")
+  +myTemplate
+    | this is some {{content}}
+
 template(name="match-jade-contentsInclusion")
   +UI.content
   +UI.elseContent
@@ -205,3 +209,11 @@ template(name="match-jade-textareaContent")
   textarea.
     Inside a textarea
     <i>tags</i> shouldn't be interpreted
+
+template(name="match-jade-specialMarkdownComponent")
+  +markdown
+    This is my email: <address@example.com>
+
+template(name="match-jade-specialMarkdownComponentWithHelper")
+  +markdown
+    This is my email: {{email}}

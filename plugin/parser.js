@@ -20,3 +20,25 @@ Parser = function Parser(str, filename, options){
 };
 
 Parser.prototype = Npm.require('jade').Parser.prototype;
+
+var nodes = Npm.require('jade').nodes;
+
+// XXX Horrible hack
+// We overwrite the `parseMixin` function to introduce a special case for the
+// `markdown` component.
+var _super = Parser.prototype.parseMixin;
+Parser.prototype.parseMixin = function() {
+  var tok = this.peek();
+  var mixin;
+
+  if (tok.type === "mixin" && tok.val === "markdown") {
+    this.advance();
+    this.lexer.pipeless = true;
+    var mixin = new nodes.Mixin("markdown", "", this.parseTextBlock(), false);
+    this.lexer.pipeless = false;
+    return mixin;
+
+  } else {
+    return _super.call(this);
+  }
+};

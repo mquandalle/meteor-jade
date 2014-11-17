@@ -5,7 +5,6 @@
 // XXX Source-mapping: Jade give us the line number, so we could implement a
 // simple line-mapping but it's not yet supported by the spacebars compiler.
 
-
 // Internal identifier to indicate that we should not insert a new line
 // character before a value. This has the side effect that a user cannot start
 // a new line starting with this value in one of its templates.
@@ -15,6 +14,11 @@ var startsWithNoNewLinePrefix = new RegExp("^" + noNewLinePrefix);
 // XXX We really need something better to handle inline JavaScript expressions
 var isStringRepresentation = function(val) {
   return /^('|")/.test(val) && val.slice(-1) === val.slice(0, 1);
+};
+
+// XXX Obiously we shouldn't have a special case for the markdown component
+var isSpecialMarkdownComponent = function(node) {
+  return node.type === "Mixin" && node.name === "markdown";
 };
 
 Compiler = function(tree, filename) {
@@ -98,12 +102,17 @@ _.extend(Compiler.prototype, {
   visitNode: function(node, elseNode, level) {
     var self = this;
     var attrs = self.visitAttributes(node.attrs);
-    if (node.code)
-      var content = self.visitCode(node.code);
-    else if (node.textOnly)
-      var content = self.visitTextOnlyBlock(node.block);
-    else
-      var content = self.visitBlock(node.block, level);
+    var content;
+    if (node.code) {
+      content = self.visitCode(node.code);
+    } else if (node.textOnly || isSpecialMarkdownComponent(node)) {
+      content = self.visitTextOnlyBlock(node.block);
+      if (isSpecialMarkdownComponent(node)) {
+        content = self.parseText(content, {textMode: HTML.TEXTMODE.STRING});
+      }
+    } else {
+      content = self.visitBlock(node.block, level);
+    }
 
     var elseContent = self.visitBlock(elseNode && elseNode.block, level);
 
@@ -140,8 +149,8 @@ _.extend(Compiler.prototype, {
     var tag = self._spacebarsParse(mustache);
 
     // Optimize arrays
-    content = self._optimize(content, true);
-    elseContent = self._optimize(elseContent, true);
+    content = self._optimize(content);
+    elseContent = self._optimize(elseContent);
     if (content)
       tag.content = content;
     if (elseContent)
@@ -175,14 +184,18 @@ _.extend(Compiler.prototype, {
     return node.val ? self.parseText(node.val) : null;
   },
 
-  parseText: function(text) {
+  parseText: function(text, options) {
     // The parser doesn't parse #{expression} and !{unescapedExpression}
     // syntaxes. So let's do it.
     // Since we rely on the Spacebars parser for this, we support the
     // {{mustache}} and {{unescapedMustache}} syntaxes as well.
     text = text.replace(/#\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g, "{{$1}}");
     text = text.replace(/!\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g, "{{{$1}}}");
-    return SpacebarsCompiler.parse(text);
+
+    options = options || {};
+    options.getTemplateTag = SpacebarsCompiler.TemplateTag.parseCompleteTag;
+
+    return HTMLTools.parseFragment(text, options);
   },
 
   visitComment: function (comment) {
