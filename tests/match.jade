@@ -125,11 +125,20 @@ template(name="match-jade-if-5")
   +if (weAreTheWorld)
     | hello world
 
+template(name="match-jade-ifWithHelper-1")
+  if helper arg1 arg2
+    | hello world
+
+template(name="match-jade-ifWithHelper-2")
+  if(helper arg1 arg2)
+    | hello world
+
 template(name="match-jade-ifAndElse")
   if weAreTheWorld
     | hello world
   else
     | we are the children
+
 
 template(name="match-jade-with")
   with user
