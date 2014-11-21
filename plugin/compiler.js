@@ -188,7 +188,7 @@ _.extend(Compiler.prototype, {
     // The parser doesn't parse #{expression} and !{unescapedExpression}
     // syntaxes. So let's do it.
     // Since we rely on the Spacebars parser for this, we support the
-    // {{mustache}} and {{unescapedMustache}} syntaxes as well.
+    // {{mustache}} and {{{unescapedMustache}}} syntaxes as well.
     text = text.replace(/#\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g, "{{$1}}");
     text = text.replace(/!\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g, "{{{$1}}}");
 
