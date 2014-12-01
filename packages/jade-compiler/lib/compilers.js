@@ -21,20 +21,30 @@ var isSpecialMarkdownComponent = function(node) {
   return node.type === "Mixin" && node.name === "markdown";
 };
 
-Compiler = function(tree, filename) {
+// Helper function to generation an error from a message and a node
+var throwError = function (message, node) {
+  message = message || "Syntax error";
+  if (node.line)
+    message += " on line " + node.line;
+
+  throw new Error(message);
+};
+
+FileCompiler = function(tree, filename) {
   var self = this;
-  self.tree = tree;
+  self.nodes = tree.nodes;
   self.filename = filename;
   self.head = null;
   self.body = null;
   self.templates = {};
 };
 
-_.extend(Compiler.prototype, {
-
+_.extend(FileCompiler.prototype, {
   compile: function () {
     var self = this;
-    self.visitBlock(self.tree, 0);
+    for (var i = 0; i < self.nodes.length; i++)
+      self.registerRootNode(self.nodes[i]);
+
     return {
       head: self.head,
       body: self.body,
@@ -42,7 +52,72 @@ _.extend(Compiler.prototype, {
     };
   },
 
-  visitBlock: function (block, level) {
+  registerRootNode: function(node) {
+    // XXX This is mostly the same code as the `templating` core package
+    // The `templating` package should be more generic to allow others templates
+    // engine to use its methods.
+
+    var self = this;
+
+    // Ignore top level comments
+    if (node.type === "Comment" || node.type === "BlockComment" ||
+        node.type === "TAG" && _.isUndefined(node.name)) {
+      return;
+    }
+
+    // Doctypes
+    else if (node.type === "Doctype") {
+      throwError("Meteor sets the doctype for you", node);
+    }
+
+    // There are two specials templates: head and body
+    else if (node.name === "body" || node.name === "head") {
+      var template = node.name;
+
+      if (self[template] !== null)
+        throwError(template + " is set twice", node);
+      if (node.attrs.length !== 0)
+        throwError("Attributes on " + template + " not supported", node);
+
+      self[template] = new TemplateCompiler(node.block).compile();
+    }
+
+    // Templates
+    else if (node.name === "template") {
+      if (node.attrs.length !== 1 || node.attrs[0].name !== 'name')
+        throwError('Templates must only have a "name" attribute', node);
+
+      var name = node.attrs[0].val.slice(1, -1);
+
+      if (name === "content")
+        throwError('Template can\'t be named "content"', node);
+      if (_.has(self.templates, name))
+        throwError('Template "' + name + '" is set twice', node);
+
+      self.templates[name] = new TemplateCompiler(node.block).compile();
+    }
+
+    // Otherwise this is an error, we do not allow tags, mixins, if, etc.
+    // outside templates
+    else
+      throwError(node.type + ' must be in a template', node);
+  }
+});
+
+
+
+TemplateCompiler = function(tree) {
+  var self = this;
+  self.tree = tree;
+};
+
+_.extend(TemplateCompiler.prototype, {
+  compile: function () {
+    var self = this;
+    return self._optimize(self.visitBlock(self.tree));
+  },
+
+  visitBlock: function (block) {
     if (_.isUndefined(block) || _.isNull(block) || ! _.has(block, 'nodes'))
       return [];
 
@@ -86,7 +161,7 @@ _.extend(Compiler.prototype, {
         }
       }
 
-      buffer.push(self.visitNode(currentNode, elseNode, level + 1));
+      buffer.push(self.visitNode(currentNode, elseNode));
     }
 
     return buffer;
@@ -99,7 +174,7 @@ _.extend(Compiler.prototype, {
     return parts.reduce(function(a, b) { return a + b}, '');
   },
 
-  visitNode: function(node, elseNode, level) {
+  visitNode: function(node, elseNode) {
     var self = this;
     var attrs = self.visitAttributes(node.attrs);
     var content;
@@ -111,15 +186,12 @@ _.extend(Compiler.prototype, {
         content = self.parseText(content, {textMode: HTML.TEXTMODE.STRING});
       }
     } else {
-      content = self.visitBlock(node.block, level);
+      content = self.visitBlock(node.block);
     }
 
-    var elseContent = self.visitBlock(elseNode && elseNode.block, level);
+    var elseContent = self.visitBlock(elseNode && elseNode.block);
 
-    if (level === 1)
-      return self.registerRootNode(node, content);
-    else
-      return self['visit' + node.type](node, attrs, content, elseContent);
+    return self['visit' + node.type](node, attrs, content, elseContent);
   },
 
   visitCode: function(code) {
@@ -141,7 +213,7 @@ _.extend(Compiler.prototype, {
     var componentName = node.name;
 
     if (componentName === "else")
-      self.throwError("Unexpected else block", node);
+      throwError("Unexpected else block", node);
 
     var spacebarsSymbol = content.length === 0 ? ">" : "#";
     var args = node.args || "";
@@ -211,11 +283,11 @@ _.extend(Compiler.prototype, {
   },
 
   visitFilter: function (filter, attrs, content) {
-    this.throwError("Jade filters are not supported in meteor-jade", filter);
+    throwError("Jade filters are not supported in meteor-jade", filter);
   },
 
   visitWhen: function (node) {
-    this.throwError("Case statements are not supported in meteor-jade", node);
+    throwError("Case statements are not supported in meteor-jade", node);
   },
 
   visitAttributes: function (attrs) {
@@ -339,68 +411,5 @@ _.extend(Compiler.prototype, {
       content = content;
 
     return self._removeNewLinePrefixes(content);
-  },
-
-  registerRootNode: function(node, result) {
-    // XXX This is mostly the same code as the `templating` core package
-    // The `templating` package should be more generic to allow others templates
-    // engine to use its methods.
-
-    var self = this;
-
-    // Don't use an array if there is only one node
-    if (result.length === 1)
-      result = result[0];
-
-    // Ignore top level comments
-    if (node.type === "Comment" || node.type === "BlockComment" ||
-        node.type === "TAG" && _.isUndefined(node.name)) {
-      return;
-    }
-
-    // Doctypes
-    else if (node.type === "Doctype") {
-      self.throwError("Meteor sets the doctype for you", node);
-    }
-
-    // There are two specials templates: head and body
-    else if (node.name === "body" || node.name === "head") {
-      var template = node.name;
-
-      if (self[template] !== null)
-        self.throwError(template + " is set twice", node);
-      if (node.attrs.length !== 0)
-        self.throwError("Attributes on " + template + " not supported", node);
-
-      self[template] = self._optimize(result);
-    }
-
-    // Templates
-    else if (node.name === "template") {
-      if (node.attrs.length !== 1 || node.attrs[0].name !== 'name')
-        self.throwError('Templates must only have a "name" attribute', node);
-
-      var name = self.visitAttributes(node.attrs).name;
-
-      if (name === "content")
-        self.throwError('Template can\'t be named "content"', node);
-      if (_.has(self.templates, name))
-        self.throwError('Template "' + name + '" is set twice', node);
-
-      self.templates[name] = self._optimize(result);
-    }
-
-    // Otherwise this is an error, we do not allow tags, mixins, if, etc.
-    // outside templates
-    else
-      self.throwError(node.type + ' must be in a template', node);
-  },
-
-  throwError: function (message, node) {
-    message = message || "Syntax error";
-    if (node.line)
-      message += " on line " + node.line;
-
-    throw new Error(message);
   }
 });

@@ -8,7 +8,7 @@ var removeLineComment = function (code) {
 var tpl2txt = function(tplName) {
   var tpl = Template[tplName];
   if (! tpl.renderFunction)
-    throw Error("The template object does't have a render function");
+    throw Error("The template object doesn't have a render function");
   return removeLineComment(tpl.renderFunction.toString());
 };
 

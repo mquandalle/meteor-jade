@@ -1,0 +1,153 @@
+{
+  "dependencies": {
+    "jade": {
+      "version": "https://github.com/mquandalle/jade/tarball/f3f956fa1031e05f85be7bc7b67f12e9ec80ba37",
+      "dependencies": {
+        "commander": {
+          "version": "2.1.0"
+        },
+        "mkdirp": {
+          "version": "0.3.5"
+        },
+        "transformers": {
+          "version": "2.1.0",
+          "dependencies": {
+            "promise": {
+              "version": "2.0.0",
+              "dependencies": {
+                "is-promise": {
+                  "version": "1.0.1"
+                }
+              }
+            },
+            "css": {
+              "version": "1.0.8",
+              "dependencies": {
+                "css-parse": {
+                  "version": "1.0.4"
+                },
+                "css-stringify": {
+                  "version": "1.0.5"
+                }
+              }
+            },
+            "uglify-js": {
+              "version": "2.2.5",
+              "dependencies": {
+                "source-map": {
+                  "version": "0.1.40",
+                  "dependencies": {
+                    "amdefine": {
+                      "version": "0.1.0"
+                    }
+                  }
+                },
+                "optimist": {
+                  "version": "0.3.7",
+                  "dependencies": {
+                    "wordwrap": {
+                      "version": "0.0.2"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "character-parser": {
+          "version": "1.2.0"
+        },
+        "monocle": {
+          "version": "1.1.51",
+          "dependencies": {
+            "readdirp": {
+              "version": "0.2.5",
+              "dependencies": {
+                "minimatch": {
+                  "version": "2.0.0",
+                  "dependencies": {
+                    "brace-expansion": {
+                      "version": "1.0.0",
+                      "dependencies": {
+                        "balanced-match": {
+                          "version": "0.2.0"
+                        },
+                        "concat-map": {
+                          "version": "0.0.0"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "with": {
+          "version": "3.0.1",
+          "dependencies": {
+            "uglify-js": {
+              "version": "2.4.15",
+              "dependencies": {
+                "async": {
+                  "version": "0.2.10"
+                },
+                "source-map": {
+                  "version": "0.1.34",
+                  "dependencies": {
+                    "amdefine": {
+                      "version": "0.1.0"
+                    }
+                  }
+                },
+                "optimist": {
+                  "version": "0.3.7",
+                  "dependencies": {
+                    "wordwrap": {
+                      "version": "0.0.2"
+                    }
+                  }
+                },
+                "uglify-to-browserify": {
+                  "version": "1.0.2"
+                }
+              }
+            }
+          }
+        },
+        "constantinople": {
+          "version": "2.0.1",
+          "dependencies": {
+            "uglify-js": {
+              "version": "2.4.15",
+              "dependencies": {
+                "async": {
+                  "version": "0.2.10"
+                },
+                "source-map": {
+                  "version": "0.1.34",
+                  "dependencies": {
+                    "amdefine": {
+                      "version": "0.1.0"
+                    }
+                  }
+                },
+                "optimist": {
+                  "version": "0.3.7",
+                  "dependencies": {
+                    "wordwrap": {
+                      "version": "0.0.2"
+                    }
+                  }
+                },
+                "uglify-to-browserify": {
+                  "version": "1.0.2"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

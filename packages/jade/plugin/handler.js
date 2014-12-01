@@ -2,8 +2,7 @@ var sourceHandler = function (compileStep) {
   // Parse and compile the content
   try {
     var content = compileStep.read().toString('utf8');
-    var parser  = new Parser(content, compileStep.inputPath, { lexer: Lexer });
-    var results = new Compiler(parser.parse()).compile();
+    var results = Jade.compile(content, {filename: compileStep.inputPath});
   } catch (err) {
     return compileStep.error({
       message: "Jade syntax error: " + err.message,
