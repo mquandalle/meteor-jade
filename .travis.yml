@@ -5,5 +5,4 @@ install:
   - "curl https://install.meteor.com | /bin/sh"
   - "npm install -g spacejam"
 script:
-  - "cd packages/jade && spacejam test-packages ./"
-  - "cd ../jade-compiler && spacejam test-packages ./"
+  - "spacejam test-packages --test-app-path . packages/*"
