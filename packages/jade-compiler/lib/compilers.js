@@ -30,10 +30,10 @@ var throwError = function (message, node) {
   throw new Error(message);
 };
 
-FileCompiler = function(tree, filename) {
+FileCompiler = function(tree, options) {
   var self = this;
   self.nodes = tree.nodes;
-  self.filename = filename;
+  self.filename = options && options.filename || "";
   self.head = null;
   self.body = null;
   self.templates = {};
@@ -106,9 +106,10 @@ _.extend(FileCompiler.prototype, {
 
 
 
-TemplateCompiler = function(tree) {
+TemplateCompiler = function(tree, options) {
   var self = this;
   self.tree = tree;
+  self.filename = options && options.filename || "";
 };
 
 _.extend(TemplateCompiler.prototype, {
