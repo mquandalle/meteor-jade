@@ -25,7 +25,7 @@ var templateGen = function (tree, tplName) {
 var getCompilerResult = function (compileStep, fileMode) {
   var content = compileStep.read().toString('utf8');
   try {
-    return Jade.compile(content, {
+    return JadeCompiler.compile(content, {
       filename: compileStep.inputPath,
       fileMode: fileMode
     });

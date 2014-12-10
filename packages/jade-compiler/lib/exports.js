@@ -1,4 +1,4 @@
-Jade = {
+JadeCompiler = {
   compile: function(source, options) {
     options = options || {};
     var parser, Compiler;

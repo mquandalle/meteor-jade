@@ -23,7 +23,7 @@ Package.onUse(function(api) {
     'lib/compilers.js',
     'lib/exports.js'
   ]);
-  api.export('Jade');
+  api.export('JadeCompiler');
 });
 
 Package.onTest(function (api) {

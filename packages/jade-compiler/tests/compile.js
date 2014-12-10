@@ -6,17 +6,17 @@ var wrapInTemplate = function(tplName, template) {
   return "template(name='"+tplName+"')\n  " + template.replace("\n", "\n  ");
 };
 
-Tinytest.add("Jade-Compiler - Templates compilation", function(test) {
-  test.equal(Jade.compile(template), { children: ["hello world"] });
+Tinytest.add("JadeCompiler - Templates compilation", function(test) {
+  test.equal(JadeCompiler.compile(template), { children: ["hello world"] });
 });
 
-Tinytest.add("Jade-Compiler - Files compilation", function(test) {
+Tinytest.add("JadeCompiler - Files compilation", function(test) {
   test.throws(
-    function(){ Jade.compile(template, {fileMode: true}) },
+    function(){ JadeCompiler.compile(template, {fileMode: true}) },
     "Tag must be in a template on line 1");
 
   var template2 = wrapInTemplate("hello", template);
-  test.equal(Jade.compile(template2, {fileMode: true}), {
+  test.equal(JadeCompiler.compile(template2, {fileMode: true}), {
     head: null,
     body: null,
     templates: {
