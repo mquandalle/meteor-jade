@@ -21,6 +21,12 @@ Package.onTest(function (api) {
   api.versionsFrom("METEOR@0.9.0");
   api.use("tinytest");
   api.use(["mquandalle:jade", "ui", "spacebars", "templating"]);
-  api.addFiles(["tests/match.jade", "tests/match.html", "tests/runtime.jade"]);
+  api.addFiles([
+    "tests/match.jade",
+    "tests/match.html",
+    "tests/runtime.jade",
+    "tests/body.tpl.jade",
+    "tests/img_tag_here.tpl.jade"
+  ]);
   api.addFiles(["tests/match.js", "tests/runtime.js"], "client");
 });
