@@ -10,7 +10,7 @@ Package.registerBuildPlugin({
   use: [
     "underscore",
     "spacebars-compiler",
-    "mquandalle:jade-compiler@0.4.0"
+    "mquandalle:jade-compiler@0.4.0_3"
   ],
   sources: [
     "plugin/handler.js",

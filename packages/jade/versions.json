@@ -14,7 +14,7 @@
       "compileJade",
       {
         "spacebars-compiler": "1.0.3",
-        "mquandalle:jade-compiler": "0.4.0",
+        "mquandalle:jade-compiler": "0.4.0_3",
         "deps": "1.0.5",
         "tracker": "1.0.3",
         "html-tools": "1.0.2",

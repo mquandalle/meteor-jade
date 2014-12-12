@@ -1,5 +1,7 @@
+var codeGen = SpacebarsCompiler.codeGen;
+
 JadeCompiler = {
-  compile: function(source, options) {
+  parse: function(source, options) {
     options = options || {};
     var parser, Compiler;
 
@@ -11,5 +13,10 @@ JadeCompiler = {
     } catch (err) {
       throw err;
     }
+  },
+
+  compile: function(source) {
+    var ast = JadeCompiler.parse(source, { fileMode: false });
+    return codeGen(ast);
   }
 };

@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Compiler for the meteor-jade template language",
-  version: "0.4.0",
+  version: "0.4.0_3",
   name: "mquandalle:jade-compiler",
   git: "https://github.com/mquandalle/meteor-jade.git"
 });
@@ -20,7 +20,7 @@ Package.onUse(function(api) {
   api.addFiles([
     'lib/lexer.js',
     'lib/parser.js',
-    'lib/compilers.js',
+    'lib/transpilers.js',
     'lib/exports.js'
   ]);
   api.export('JadeCompiler');
@@ -30,5 +30,5 @@ Package.onTest(function (api) {
   api.versionsFrom("METEOR@0.9.0");
   api.use("tinytest");
   api.use("mquandalle:jade-compiler", "server");
-  api.addFiles(["tests/compile.js"], "server");
+  api.addFiles(["tests/tests.js"], "server");
 });
