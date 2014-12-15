@@ -166,6 +166,27 @@ else
 Under the hood, those two codes are compiled to the same abstract tree, so there
 are no runtime performance hit.
 
+### Unwrapped templates
+
+Putting each template in its own separate file and naming the file
+after the template it contains is becoming a followed pattern among
+Meteor developers. See for instance [this article](http://joshowens.me/how-to-organize-your-meteor-js-app/)
+from Josh Owens.
+
+But as it stands today, this pattern doesn't respect the “don't repeat yourself”
+(DRY) philosophy. Indeed you have to wrap your template in a
+`<template name="myTemplate>` tag and saving it in a `myTemplate.html` file,
+effectively writing the name of the template twice. If those two names doesn't
+match Meteor will consider the name of the `<template>` tag and will ignore the
+file name. So if you follow this pattern you have to take care of keeping the
+file name and the template tag name in sync (manually).
+
+We solve this problem using a new the `.tpl.jade` file extension. With it you
+can only define one template per file and you don't need to wrap your template
+in a tag. The template will be named after the file name. We handle special
+`head.tpl.jade` and `body.tpl.jade` templates as expected.
+
+
 ### Anonymous helper
 
 This one is not implemented yet but I'd like to write such kind of things:
