@@ -11,9 +11,13 @@
 var noNewLinePrefix = "__noNewLine__";
 var startsWithNoNewLinePrefix = new RegExp("^" + noNewLinePrefix);
 
-// XXX We really need something better to handle inline JavaScript expressions
-var isStringRepresentation = function(val) {
-  return /^('|")/.test(val) && val.slice(-1) === val.slice(0, 1);
+var stringRepresentationToLiteral = function(val) {
+  if (! _.isString(val))
+    return null;
+
+  var scanner = new HTMLTools.Scanner(val);
+  var parsed = BlazeTools.parseStringLiteral(scanner);
+  return parsed ? parsed.value : null;
 };
 
 // XXX Obiously we shouldn't have a special case for the markdown component
@@ -198,9 +202,10 @@ _.extend(TemplateCompiler.prototype, {
   visitCode: function(code) {
     // XXX Need to improve this for "anonymous helpers"
     var val = code.val;
-    if (isStringRepresentation(val)) {
-      // First case this is a string
-      return noNewLinePrefix + val.slice(1, -1);
+    // First case this is a string
+    var strLiteral = stringRepresentationToLiteral(val);
+    if (strLiteral !== null) {
+      return noNewLinePrefix + strLiteral;
     } else {
       return [ this._spacebarsParse(this.lookup(code.val, code.escape)) ];
     }
@@ -324,28 +329,28 @@ _.extend(TemplateCompiler.prototype, {
       var key = attr.name;
 
       // XXX We need a better handler for JavaScript code
-      if (isStringRepresentation(val) && val.length > 2) {
-        // First case this is a string
-        val = self.parseText(val.slice(1, -1));
-
-        if (val.type === "DOUBLE") {
-          val.position = HTMLTools.TEMPLATE_TAG_POSITION.IN_START_TAG;
-        }
+      // First case this is a string
+      var strLiteral = stringRepresentationToLiteral(val);
+      if (strLiteral) {
+        val = self.parseText(strLiteral);
+        val.position = HTMLTools.TEMPLATE_TAG_POSITION.IN_ATTRIBUTE;
       }
 
+      // For cases like <input required> Spacebars compiler expect the attribute
+      // to have the value `""` but Jade parser returns `true`
       else if (val === true || val === "''" || val === '""') {
-        // For cases like <input required> Spacebars compiler expect required
-        // attriute to have the value `""` but Jade parser returns `true`
         val = "";
 
+      // Otherwise this is some code we need to evaluate
       } else {
-        // Otherwise this is some code we need to evaluate
         val = self._spacebarsParse(self.lookup(val, attr.escaped));
-        val.position = HTMLTools.TEMPLATE_TAG_POSITION.IN_START_TAG;
+        val.position = HTMLTools.TEMPLATE_TAG_POSITION.IN_ATTRIBUTE;
       }
 
-      if (key === "$dyn")
+      if (key === "$dyn") {
+        val.position = HTMLTools.TEMPLATE_TAG_POSITION.IN_START_TAG;
         return dynamicAttrs.push(val);
+      }
 
       // If a user has defined such kind of tag: div.myClass(class="myClass2")
       // we need to concatenate classes (and ids)

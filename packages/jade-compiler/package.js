@@ -15,6 +15,7 @@ Package.onUse(function(api) {
     'underscore',
     'htmljs',
     'html-tools',
+    'blaze-tools',
     'spacebars-compiler'
   ]);
   api.addFiles([
