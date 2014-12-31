@@ -8,10 +8,8 @@ ending with `.html` and Jade will take care of those ending with `.jade`.
 
 ## Examples
 
-Meteor comes with some examples such as
-[leaderboard](https://www.meteor.com/examples/leaderboard) or
-[todos](https://www.meteor.com/examples/todos). You'll find jade versions of
-thoses examples templates and even more in the [examples directory](examples/).
+Meteor comes with some examples such as leaderboard or todos. You'll find jade
+versions of those examples templates and even more in the [examples directory](examples/).
 
 ## Usage
 
@@ -28,7 +26,7 @@ following syntax:
 
 ```jade
 template(name="myTemplate")
-  p This paragraphe is inside my template
+  p This paragraph is inside my template
 ```
 
 There are two particular templates that are automatically rendered inside the
@@ -170,7 +168,8 @@ are no runtime performance hit.
 
 Putting each template in its own separate file and naming the file
 after the template it contains is becoming a followed pattern among
-Meteor developers. See for instance [this article](http://joshowens.me/how-to-organize-your-meteor-js-app/)
+Meteor developers. See for instance
+[this article](http://joshowens.me/how-to-organize-your-meteor-js-app/)
 from Josh Owens.
 
 But as it stands today, this pattern doesn't respect the “don't repeat yourself”
