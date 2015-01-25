@@ -3,13 +3,22 @@
 This [Meteor](https://www.meteor.com/) smart package provides support for
 the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative.
 
-Spacebars and Jade packages can coexist, Spacebars will continue to compile files
-ending with `.html` and Jade will take care of those ending with `.jade`.
+Spacebars and Jade packages can coexist, Spacebars will continue to compile
+files ending with `.html` and Jade will take care of those ending with `.jade`.
+
+## Installation
+
+Meteor-jade is installable from atmosphere, the meteor package system:
+
+```sh
+$ meteor add mquandalle:jade
+```
 
 ## Examples
 
 Meteor comes with some examples such as leaderboard or todos. You'll find jade
-versions of those examples templates and even more in the [examples directory](examples/).
+versions of those examples templates and even more in the
+[examples directory](examples/).
 
 ## Usage
 
@@ -130,8 +139,6 @@ ul
       li= name
 ```
 
-[Learn more about components](https://github.com/meteor/meteor/wiki/Using-Blaze#new-pattern-for-defining-custom-block-helpers)
-
 ## Additional features
 
 We have some additional features over Spacebars.
@@ -231,4 +238,6 @@ $ meteor test-packages --test-app-path . packages/*
 ### Tips
 
 If you want to buy me a beer, I proudly accept bitcoin tips:
-[1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy](https://blockchain.info/address/1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy)
+[1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy][blockchain]
+
+[blockchain]: https://blockchain.info/address/1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy
