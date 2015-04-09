@@ -48,6 +48,7 @@ FileCompiler = function(tree, options) {
   self.filename = options && options.filename || "";
   self.head = null;
   self.body = null;
+  self.bodyAttrs = {};
   self.templates = {};
 };
 
@@ -60,6 +61,7 @@ _.extend(FileCompiler.prototype, {
     return {
       head: self.head,
       body: self.body,
+      bodyAttrs: self.bodyAttrs,
       templates: self.templates
     };
   },
@@ -88,8 +90,10 @@ _.extend(FileCompiler.prototype, {
 
       if (self[template] !== null)
         throwError(template + " is set twice", node);
-      if (node.attrs.length !== 0)
-        throwError("Attributes on " + template + " not supported", node);
+      if (node.name === "head" && node.attrs.length > 0)
+        throwError("Attributes on head are not supported", node);
+      else if(node.name === "body" && node.attrs.length > 0)
+        self.bodyAttrs = self.formatBodyAttrs(node.attrs);
 
       self[template] = new TemplateCompiler(node.block).compile();
     }
@@ -113,6 +117,16 @@ _.extend(FileCompiler.prototype, {
     // outside templates
     else
       throwError(node.type + ' must be in a template', node);
+  },
+
+  formatBodyAttrs: function(attrsList) {
+    var attrsDict = {};
+    _.each(attrsList, function(attr) {
+      if (attr.escaped)
+        attr.val = attr.val.slice(1, -1);
+      attrsDict[attr.name] = attr.val;
+    });
+    return attrsDict;
   }
 });
 

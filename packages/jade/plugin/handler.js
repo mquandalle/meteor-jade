@@ -1,8 +1,12 @@
 var path = Npm.require('path');
 
 // XXX Handle body attributes
-var bodyGen = function (tpl) {
+var bodyGen = function (tpl, attrs) {
   var res = "";
+  if (attrs !== {}) {
+    res += "\nMeteor.startup(function() { $('body').attr(";
+    res += JSON.stringify(attrs) + "); });\n";
+  }
   res += "\nTemplate.body.addContent(";
   res += SpacebarsCompiler.codeGen(tpl, {
     isBody: true,
@@ -56,7 +60,7 @@ var fileModeHandler = function (compileStep) {
 
   var jsContent = "";
   if (results.body !== null) {
-    jsContent += bodyGen(results.body);
+    jsContent += bodyGen(results.body, results.bodyAttrs);
   }
   if (! _.isEmpty(results.templates)) {
     jsContent += _.map(results.templates, templateGen).join("");

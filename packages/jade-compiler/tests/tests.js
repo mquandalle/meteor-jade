@@ -19,6 +19,7 @@ Tinytest.add("JadeCompiler - parse files", function(test) {
   test.equal(JadeCompiler.parse(template2, {fileMode: true}), {
     head: null,
     body: null,
+    bodyAttrs: {},
     templates: {
       hello: { children: ["hello world"] }
     }
