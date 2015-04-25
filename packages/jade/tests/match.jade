@@ -142,6 +142,11 @@ template(name="match-jade-ifAndElse")
   else
     | we are the children
 
+template(name="match-jade-ifSubscriptionReady")
+  if Template.subscriptionsReady
+    | ready
+  else
+    | loading
 
 template(name="match-jade-with")
   with user
