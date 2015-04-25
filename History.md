@@ -1,3 +1,7 @@
+## v0.4.2
+
+* Fix tags support inside “dot-notation” blocks #92 #109
+
 ## v0.4.1
 
 * Fix a package dependency issue #104
