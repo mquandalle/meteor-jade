@@ -203,7 +203,7 @@ if player.score > 10
 ```
 
 It'll be useful for conditions (`if`, `else if` and `unless`) and inside
-attributes (see the [Components inside tags section](#components-inside-tags)).
+attributes.
 
 See [related issue](https://github.com/mquandalle/meteor-jade/issues/1)
 
