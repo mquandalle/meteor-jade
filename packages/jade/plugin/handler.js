@@ -1,10 +1,13 @@
 var path = Npm.require('path');
-var codeGen = SpacebarsCompiler.codeGen;
 
+// XXX Handle body attributes
 var bodyGen = function (tpl) {
   var res = "";
   res += "\nTemplate.body.addContent(";
-  res += codeGen(tpl, { isBody: true, sourceName: "<body>"});
+  res += SpacebarsCompiler.codeGen(tpl, {
+    isBody: true,
+    sourceName: "<body>"
+  });
   res += ");\n";
   res += "Meteor.startup(Template.body.renderToDocument);\n";
   return res;
@@ -17,7 +20,10 @@ var templateGen = function (tree, tplName) {
   res += "\nTemplate.__checkName(" + nameLiteral + ");";
   res += "\nTemplate[" + nameLiteral + "] = new Template(";
   res += templateDotNameLiteral + ", ";
-  res += codeGen(tree, { isTemplate: true });
+  res += SpacebarsCompiler.codeGen(tree, {
+    isTemplate: true,
+    sourceName: 'Template "' + tplName + '"'
+  });
   res += ");\n";
   return res;
 };

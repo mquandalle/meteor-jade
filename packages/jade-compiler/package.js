@@ -18,6 +18,7 @@ Package.onUse(function(api) {
     'blaze-tools',
     'spacebars-compiler'
   ]);
+  api.use('minifiers', ['server'], { weak: true });
   api.addFiles([
     'lib/lexer.js',
     'lib/parser.js',
@@ -30,6 +31,7 @@ Package.onUse(function(api) {
 Package.onTest(function (api) {
   api.versionsFrom("METEOR@0.9.0");
   api.use("tinytest");
+  api.use("minifiers");
   api.use("mquandalle:jade-compiler", "server");
   api.addFiles(["tests/tests.js"], "server");
 });

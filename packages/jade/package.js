@@ -9,7 +9,8 @@ Package.registerBuildPlugin({
   name: "compileJade",
   use: [
     "underscore",
-    'htmljs',
+    "htmljs",
+    "minifiers",
     "spacebars-compiler",
     "mquandalle:jade-compiler@0.4.1"
   ],
