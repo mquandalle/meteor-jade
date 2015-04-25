@@ -25,6 +25,14 @@ var isSpecialMarkdownComponent = function(node) {
   return node.type === "Mixin" && node.name === "markdown";
 };
 
+var isTextOnlyNode = function(node) {
+  // XXX Is this list defined somewhere in spacebars-compiler?
+  var textOnlyTags = ['textarea', 'script', 'style'];
+  return node.textOnly &&
+         node.type === "Tag" &&
+         textOnlyTags.indexOf(node.name) !== -1;
+};
+
 // Helper function to generation an error from a message and a node
 var throwError = function (message, node) {
   message = message || "Syntax error";
@@ -169,10 +177,11 @@ _.extend(TemplateCompiler.prototype, {
       buffer.push(self.visitNode(currentNode, elseNode));
     }
 
+
     return buffer;
   },
 
-  visitTextOnlyBlock: function(block) {
+  getRawText: function(block) {
     var self = this;
     var parts = _(block.nodes).pluck('val');
     parts = self._interposeEOL(parts);
@@ -183,10 +192,11 @@ _.extend(TemplateCompiler.prototype, {
     var self = this;
     var attrs = self.visitAttributes(node.attrs);
     var content;
+
     if (node.code) {
       content = self.visitCode(node.code);
-    } else if (node.textOnly || isSpecialMarkdownComponent(node)) {
-      content = self.visitTextOnlyBlock(node.block);
+    } else if (isTextOnlyNode(node) || isSpecialMarkdownComponent(node)) {
+      content = self.getRawText(node.block);
       if (isSpecialMarkdownComponent(node)) {
         content = self.parseText(content, {textMode: HTML.TEXTMODE.STRING});
       }
