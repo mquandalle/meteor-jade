@@ -151,6 +151,13 @@ template(name="match-jade-each")
   each users
     = name
 
+template(name="match-jade-eachIn-1")
+  each u in users
+    = u.name
+
+template(name="match-jade-eachIn-2")
+  +each(u in users)
+    = u.name
 
 //- else if syntaxic sugar
 
