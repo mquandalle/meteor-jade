@@ -319,6 +319,7 @@ _.extend(TemplateCompiler.prototype, {
     if (_.isString(attrs))
       return attrs;
 
+
     var self = this;
     var dict = {};
 
@@ -370,14 +371,12 @@ _.extend(TemplateCompiler.prototype, {
       dict[key] = concatAttributes(dict[key], val);
     });
 
-    if (dynamicAttrs.length === 0)
+    if (dynamicAttrs.length === 0) {
       return dict;
-    else {
+    } else {
       dynamicAttrs.unshift(dict);
       return HTML.Attrs.apply(null, dynamicAttrs);
     }
-
-    return dict;
   },
 
   lookup: function (val, escape) {

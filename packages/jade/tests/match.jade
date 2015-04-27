@@ -33,8 +33,11 @@ template(name="match-jade-multipleTagAttributes-1")
 template(name="match-jade-multipleTagAttributes-2")
   input(type="password", required=isRequired, autofocus, $dyn=attrs)
 
-template(name="match-jade-cssClasses")
+template(name="match-jade-classNames")
   div.class1.class2(class="class3")
+
+template(name="match-jade-classNamesMerging")
+  .sixteen.wide.mobile.twelve.wide.computer.column
 
 template(name="match-jade-inlineColonTags")
   form: input
