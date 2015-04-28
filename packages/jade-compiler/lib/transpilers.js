@@ -270,6 +270,8 @@ _.extend(TemplateCompiler.prototype, {
     if (tagName === "textarea") {
       attrs.value = content;
       content = null;
+    } else if (tagName === "style") {
+      content = self.parseText(content);
     }
 
     if (! _.isArray(content))
