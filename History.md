@@ -1,3 +1,9 @@
+## v0.4.3
+
+* Support body attributes #121
+* Support reactives mustaches in “style” tags #102
+* Fix char reference handling in tag attributes #106
+
 ## v0.4.2
 
 * Fix tags support inside “dot-notation” blocks #92 #109
