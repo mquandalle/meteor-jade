@@ -359,7 +359,7 @@ _.extend(TemplateCompiler.prototype, {
       // First case this is a string
       var strLiteral = stringRepresentationToLiteral(val);
       if (strLiteral) {
-        val = self.parseText(strLiteral);
+        val = self.parseText(strLiteral, { textMode: HTML.TEXTMODE.STRING });
         val.position = HTMLTools.TEMPLATE_TAG_POSITION.IN_ATTRIBUTE;
       }
 
