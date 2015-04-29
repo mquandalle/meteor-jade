@@ -34,7 +34,7 @@ Parser.prototype.parseMixin = function() {
   if (tok.type === "mixin" && tok.val === "markdown") {
     this.advance();
     this.lexer.pipeless = true;
-    var mixin = new nodes.Mixin("markdown", "", this.parseTextBlock(), false);
+    mixin = new nodes.Mixin("markdown", "", this.parseTextBlock(), false);
     this.lexer.pipeless = false;
     return mixin;
 

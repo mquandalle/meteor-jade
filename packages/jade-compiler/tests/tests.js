@@ -12,7 +12,7 @@ Tinytest.add("JadeCompiler - parse templates", function(test) {
 
 Tinytest.add("JadeCompiler - parse files", function(test) {
   test.throws(
-    function(){ JadeCompiler.parse(template, {fileMode: true}) },
+    function(){ JadeCompiler.parse(template, {fileMode: true}); },
     "Tag must be in a template on line 1");
 
   var template2 = wrapInTemplate("hello", template);

@@ -199,7 +199,7 @@ _.extend(TemplateCompiler.prototype, {
     var self = this;
     var parts = _(block.nodes).pluck('val');
     parts = self._interposeEOL(parts);
-    return parts.reduce(function(a, b) { return a + b}, '');
+    return parts.reduce(function(a, b) { return a + b; }, '');
   },
 
   visitNode: function(node, elseNode) {

@@ -45,7 +45,7 @@ var getCompilerResult = function (compileStep, fileMode) {
       sourcePath: compileStep.inputPath
     });
   }
-}
+};
 
 var fileModeHandler = function (compileStep) {
   var results = getCompilerResult(compileStep, true);
