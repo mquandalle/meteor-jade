@@ -6,6 +6,26 @@ the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative.
 Spacebars and Jade packages can coexist, Spacebars will continue to compile
 files ending with `.html` and Jade will take care of those ending with `.jade`.
 
+## Table of Contents
+
+* [Installation](#installation)
+* [Examples](#examples)
+* [Usage](#usage)
+	* [Templates](#templates)
+	* [HTML Tag attributes](#html-tag-attributes)
+	* [Components](#components)
+* [Additional features](#additional-features)
+	* [else if](#else-if)
+	* [Unwrapped templates](#unwrapped-templates)
+	* [Anonymous helper](#anonymous-helper)
+* [Contributing](#contributing)
+	* [Implementation](#implementation)
+	* [License](#license)
+	* [Tests](#tests)
+	* [Tips](#tips)
+* [Known bugs](#known-bugs)
+  * [Using Jade in a package](#using-jade-in-a-package)
+
 ## Installation
 
 Meteor-jade is installable from atmosphere, the meteor package system:
@@ -241,3 +261,15 @@ If you want to buy me a beer, I proudly accept bitcoin tips:
 [1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy][blockchain]
 
 [blockchain]: https://blockchain.info/address/1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy
+
+## Known bugs
+
+### Using Jade in a package
+
+When using Jade in a package you need to lock the version to the [latest version](https://github.com/mquandalle/meteor-jade/blob/master/packages/jade/package.js#L3) manually. See [issue #83](https://github.com/mquandalle/meteor-jade/issues/83).
+```javascript
+api.use([
+    "templating",
+    "mquandalle:jade@0.4.1"
+], "client");
+```
