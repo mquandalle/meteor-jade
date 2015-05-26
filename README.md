@@ -147,7 +147,7 @@ Brackets are optional:
 +myComponent arg1 arg2 arg3 key1=val1 key2=val2
 ```
 
-For the four build-in components (`if`, `unless`, `each` and `with`) the `+`
+For the four built-in components (`if`, `unless`, `each` and `with`) the `+`
 is also optional:
 
 ```jade
