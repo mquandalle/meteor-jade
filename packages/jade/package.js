@@ -7,7 +7,7 @@ Package.describe({
 });
 
 Package.registerBuildPlugin({
-  name: "compileJade",
+  name: "compileJadeBatch",
   use: [
     "underscore@1.0.0",
     "htmljs@1.0.0",
@@ -17,7 +17,14 @@ Package.registerBuildPlugin({
   ],
   sources: [
     "plugin/handler.js",
-  ]
+  ],
+  npmDependencies: {
+    "lru-cache": "2.6.4"
+  }
+});
+
+Package.onUse(function (api) {
+  api.use("isobuild:compiler-plugin@1.0.0");
 });
 
 Package.onTest(function (api) {

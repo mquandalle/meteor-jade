@@ -1,4 +1,7 @@
 var path = Npm.require('path');
+var LRU = Npm.require('lru-cache');
+
+var CACHE_SIZE = process.env.METEOR_JADE_CACHE_SIZE || 1024*1024*10;
 
 // XXX Handle body attributes
 var bodyGen = function (tpl, attrs) {
@@ -32,27 +35,18 @@ var templateGen = function (tree, tplName) {
   return res;
 };
 
-var getCompilerResult = function (compileStep, fileMode) {
-  var content = compileStep.read().toString('utf8');
-  try {
-    return JadeCompiler.parse(content, {
-      filename: compileStep.inputPath,
-      fileMode: fileMode
-    });
-  } catch (err) {
-    return compileStep.error({
-      message: "Jade syntax error: " + err.message,
-      sourcePath: compileStep.inputPath
-    });
-  }
-};
+var fileModeHandler = function (inputFile) {
+  var contents = inputFile.getContentsAsString();
+  var filepath = inputFile.getPathInPackage();
 
-var fileModeHandler = function (compileStep) {
-  var results = getCompilerResult(compileStep, true);
+  var results = JadeCompiler.parse(contents, {
+    filename: filepath,
+    fileMode: true
+  });
 
   // Head
   if (results.head !== null) {
-    compileStep.appendDocument({
+    inputFile.addHtml({
       section: "head",
       data: HTML.toHTML(results.head)
     });
@@ -67,21 +61,27 @@ var fileModeHandler = function (compileStep) {
   }
 
   if (jsContent !== "") {
-    compileStep.addJavaScript({
-      path: compileStep.inputPath + '.js',
-      sourcePath: compileStep.inputPath,
+    inputFile.addJavaScript({
+      path: filepath + '.js',
       data: jsContent
     });
   }
 };
 
-var templateModeHandler = function (compileStep) {
-  var result = getCompilerResult(compileStep, false);
-  var templateName = path.basename(compileStep.inputPath, '.tpl.jade');
+var templateModeHandler = function (inputFile) {
+  var contents = inputFile.getContentsAsString();
+  var filepath = inputFile.getPathInPackage();
+
+  var result = JadeCompiler.parse(contents, {
+    filename: filepath,
+    fileMode: false
+  });
+
+  var templateName = path.basename(filepath, '.tpl.jade');
   var jsContent;
 
   if (templateName === "head") {
-    compileStep.appendDocument({
+    inputFile.addHtml({
       section: "head",
       data: HTML.toHTML(result)
     });
@@ -93,18 +93,50 @@ var templateModeHandler = function (compileStep) {
     else
       jsContent = templateGen(result, templateName);
 
-    compileStep.addJavaScript({
-      path: compileStep.inputPath + '.js',
-      sourcePath: compileStep.inputPath,
+    inputFile.addJavaScript({
+      path: filepath + '.js',
       data: jsContent
     });
   }
 };
 
-var pluginOptions = {
-  isTemplate: true,
-  archMatching: "web"
-};
+Plugin.registerCompiler({
+  extensions: ['jade', 'tpl.jade'],
+  archMatching: 'web',
+  isTemplate: true
+}, function () {
+  return new JadeCompilerPlugin();
+});
 
-Plugin.registerSourceHandler("jade", pluginOptions, fileModeHandler);
-Plugin.registerSourceHandler("tpl.jade", pluginOptions, templateModeHandler);
+function JadeCompilerPlugin () {
+  function length (x) { return x ? x.length : 0; }
+  this._cache = new LRU({
+    max: CACHE_SIZE,
+    length: function (value) {
+      return length(value.head) + length(value.body) + length(value.js);
+    }
+  });
+}
+
+JadeCompilerPlugin.prototype.processFilesForTarget = function (files) {
+  var self = this;
+
+  files.forEach(function (file) {
+    var ext = file.getExtension();
+    var content = file.getContentsAsString();
+    var hash = file.getSourceHash();
+    var filepath = file.getPathInPackage();
+
+    try {
+      if (ext === 'jade') {
+        fileModeHandler(file);
+      } else {
+        templateModeHandler(file);
+      }
+    } catch (err) {
+      file.error({
+        message: "Jade syntax error: " + err.message
+      });
+    }
+  });
+};
