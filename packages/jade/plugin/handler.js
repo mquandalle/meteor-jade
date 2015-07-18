@@ -36,6 +36,8 @@ var templateGen = function (tree, tplName) {
 };
 
 var fileModeHandler = function (inputFile) {
+  var ret = {};
+
   var contents = inputFile.getContentsAsString();
   var filepath = inputFile.getPathInPackage();
 
@@ -46,10 +48,7 @@ var fileModeHandler = function (inputFile) {
 
   // Head
   if (results.head !== null) {
-    inputFile.addHtml({
-      section: "head",
-      data: HTML.toHTML(results.head)
-    });
+    ret.head = HTML.toHTML(results.head);
   }
 
   var jsContent = "";
@@ -61,14 +60,14 @@ var fileModeHandler = function (inputFile) {
   }
 
   if (jsContent !== "") {
-    inputFile.addJavaScript({
-      path: filepath + '.js',
-      data: jsContent
-    });
+    ret.js = jsContent;
   }
+
+  return ret;
 };
 
 var templateModeHandler = function (inputFile) {
+  var ret = {};
   var contents = inputFile.getContentsAsString();
   var filepath = inputFile.getPathInPackage();
 
@@ -81,23 +80,17 @@ var templateModeHandler = function (inputFile) {
   var jsContent;
 
   if (templateName === "head") {
-    inputFile.addHtml({
-      section: "head",
-      data: HTML.toHTML(result)
-    });
-
+    ret.head = HTML.toHTML(result);
   } else {
-
     if (templateName === "body")
       jsContent = bodyGen(result);
     else
       jsContent = templateGen(result, templateName);
 
-    inputFile.addJavaScript({
-      path: filepath + '.js',
-      data: jsContent
-    });
+    ret.js =jsContent;
   }
+
+  return ret;
 };
 
 Plugin.registerCompiler({
@@ -127,15 +120,38 @@ JadeCompilerPlugin.prototype.processFilesForTarget = function (files) {
     var hash = file.getSourceHash();
     var filepath = file.getPathInPackage();
 
-    try {
-      if (ext === 'jade') {
-        fileModeHandler(file);
-      } else {
-        templateModeHandler(file);
+    var cacheKey = JSON.stringify([file.getPackageName || '__app__', filepath]);
+    
+    var ret = self._cache.get(cacheKey);
+
+    if (! ret || ret.hash !== hash) {
+      try {
+        ret = (ext === 'jade') ?
+              fileModeHandler(file) :
+              templateModeHandler(file);
+
+        ret.hash = hash;
+        ret.filepath = filepath;
+
+        self._cache.set(cacheKey, ret);
+      } catch (err) {
+        file.error({
+          message: "Jade syntax error: " + err.message
+        });
       }
-    } catch (err) {
-      file.error({
-        message: "Jade syntax error: " + err.message
+    }
+
+    if (ret.head) {
+      file.addHtml({
+        section: 'head',
+        data: ret.head
+      });
+    }
+
+    if (ret.js) {
+      file.addJavaScript({
+        path: ret.filepath + '.js',
+        data: ret.js
       });
     }
   });
