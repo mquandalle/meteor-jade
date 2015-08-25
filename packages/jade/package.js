@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Jade template language",
-  version: "0.4.3",
+  version: "0.4.3_1",
   name: "mquandalle:jade",
   git: "https://github.com/mquandalle/meteor-jade.git",
   documentation: "../../README.md"
@@ -18,6 +18,10 @@ Package.registerBuildPlugin({
   sources: [
     "plugin/handler.js",
   ]
+});
+
+Package.onUse(function (api) {
+  api.use("blaze@2.0.0");
 });
 
 Package.onTest(function (api) {
