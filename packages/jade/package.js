@@ -27,6 +27,7 @@ Package.onUse(function (api) {
 Package.onTest(function (api) {
   api.versionsFrom("METEOR@0.9.0");
   api.use("tinytest");
+  api.use("underscore@1.0.0")
   api.use(["mquandalle:jade", "ui", "spacebars", "templating"]);
   api.addFiles([
     "tests/match.jade",
