@@ -42,6 +42,12 @@ var throwError = function (message, node) {
   throw new Error(message);
 };
 
+// Recursively search for anonymous helper functions and
+// record them
+// Arguments:
+// value: the tree created by the transpiler.
+// found: a map from helper function names to
+//    their function body.
 function searchNewArgs(value, found) {
   if(value==null) {
     return;
@@ -65,8 +71,12 @@ function searchNewArgs(value, found) {
       searchNewArgs(value.attrs[attr], found)
     }
   }
-
 }
+
+// Recursively search for anonymous helper functions and
+// record them. The input is a tree and it returns
+// a map from helper function names to
+//    their function body.
 var genHelpers = function(body) {
       found={};
       searchNewArgs(body, found);
@@ -102,6 +112,10 @@ _.extend(FileCompiler.prototype, {
       bodyAttrs: self.bodyAttrs,
       templates: self.templates,
     };
+    // We actually wouldn't need bodyHelpers and templatesHelpers as
+    // there is a helpers attribute written in the root of the body
+    // and every template. Should we get rid of bodyHelpers and
+    // templatesHelpers (which is currently used by the file handler)?
     if(!_.isEmpty(self.bodyHelpers))
       r.bodyHelpers=self.bodyHelpers;
     if(!_.isEmpty(self.templatesHelpers))
@@ -109,6 +123,7 @@ _.extend(FileCompiler.prototype, {
     return r;
   },
 
+  // Generate template helpers for every template.
   genTemplateHelpers: function(templates) {
     r={}
     for (var key in templates) {
@@ -188,6 +203,14 @@ _.extend(FileCompiler.prototype, {
   }
 });
 
+// Find #{ - } and !{ - } pairs and call back a function (fn) that
+// returns the replacement value for them.
+// Args:
+//   text: input text
+//   start: #{ or !{
+//   fn: callback function
+// Returns:
+//   Replaced text
 function replaceExpression(text, start, fn) {
   spos=text.indexOf(start);
   if(spos<0) {
@@ -210,8 +233,10 @@ function replaceExpression(text, start, fn) {
   r = text.substr(0, spos-start.length)+fn(text.substr(spos, end-spos-1))+
          replaceExpression(text.substr(end), start, fn);
   return r
-
 }
+
+// This is used for creating anonymous helper function name if
+//   there is no line number available.
 this.globalParsedCounter=0;
 
 TemplateCompiler = function(tree, options) {
@@ -224,6 +249,8 @@ _.extend(TemplateCompiler.prototype, {
   compile: function () {
     var self = this;
     r = self._optimize(self.visitBlock(self.tree));
+    // We write helpers attribute at the root of the output parse tree
+    //   without changing it when there is no anonymous helper needed.
     if(r) {
       helpers = genHelpers(r);
       if(!_.isEmpty(helpers))
@@ -335,6 +362,7 @@ _.extend(TemplateCompiler.prototype, {
 
     var spacebarsSymbol = content.length === 0 ? ">" : "#";
     var args = node.args || "";
+    // Create anonymous helper if needed
     var origArgs=null;
     if(node.name.match(/^if|else|else if$/) && args.length > 0 && args.match(/[^_a-zA-Z0-9 .]/)) {
       origArgs=args
@@ -394,6 +422,7 @@ _.extend(TemplateCompiler.prototype, {
     // {{mustache}} and {{{unescapedMustache}}} syntaxes as well.
     anonFuncs={}
     var helperIndex=0;
+    // Generate a new name for each new anonymous helper function.
     var getHelperName=function() {
       var base;
       if(node==null) {
@@ -433,6 +462,7 @@ _.extend(TemplateCompiler.prototype, {
     options = options || {};
     options.getTemplateTag = SpacebarsCompiler.TemplateTag.parseCompleteTag;
     
+    // Put helpers attribute anywhere in the output of parseFragement
     r = HTMLTools.parseFragment(text, options);
     if(!_.isEmpty(anonFuncs)) {
       if(Array.isArray(r)) {

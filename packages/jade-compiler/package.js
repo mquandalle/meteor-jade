@@ -35,5 +35,4 @@ Package.onTest(function (api) {
   api.use("minifiers");
   api.use("mquandalle:jade-compiler", "server");
   api.addFiles(["tests/tests.js"], "server");
-
 });

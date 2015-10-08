@@ -14,6 +14,10 @@ var unwrap = function (value) {
     return /^\(?(.+?)\)?$/m.exec(value.replace(/\n/g, "").trim())[1];
 };
 
+// We need this instead of unwrap so that we don't remove only one parantheses.
+// For a line like
+//    if hello.world()
+//  the argument is hello.world(), and unwrap would remove the last ).
 var unwrapSimple = function (value) {
   if (_.isString(value) && value.trim())
     value=value.trim()

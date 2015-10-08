@@ -47,6 +47,8 @@ var getCompilerResult = function (compileStep, fileMode) {
   }
 };
 
+// Generate helper functions using function name - function body map
+//   in the input.
 var templateHelperGen = function (helpers, tplName) {
   var nameLiteral = JSON.stringify(tplName);
   var templateDotNameLiteral = JSON.stringify("Template." + tplName);

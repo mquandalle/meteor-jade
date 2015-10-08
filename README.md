@@ -215,7 +215,7 @@ in a tag. The template will be named after the file name. We handle special
 
 ### Anonymous helper
 
-This one is not implemented yet but I'd like to write such kind of things:
+There is experimental support for such kind of things:
 
 ```jade
 if player.score > 10
