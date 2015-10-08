@@ -14,6 +14,7 @@ Package.onUse(function(api) {
   api.versionsFrom("METEOR@1.2.0.1");
   api.use([
     'underscore',
+    'htmljs',
     'html-tools',
     'blaze-tools',
     'spacebars-compiler'
