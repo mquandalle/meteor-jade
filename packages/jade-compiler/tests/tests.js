@@ -1,4 +1,3 @@
-console.log("Testing")
 
 var template = ["p",
                 "  | hello world"].join("\n");
