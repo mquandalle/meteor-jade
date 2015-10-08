@@ -42,6 +42,39 @@ var throwError = function (message, node) {
   throw new Error(message);
 };
 
+function searchNewArgs(value, found) {
+  if(value==null) {
+    console.log("null value")
+    return;
+  }
+
+  if(value.newArgs) {
+      found[value.newArgs]=value.origArgs
+  }
+  if(value.helpers) {
+    console.log("found helpers: ", value.helpers)
+    for(key in value.helpers) {
+      found[key]=value.helpers[key];
+    }
+  }
+  if(value.children) {
+    for(var i=0; i<value.children.length; i++) {
+      searchNewArgs(value.children[i], found)
+    }
+  }
+  if(value.attrs) {
+    for(var attr in value.attrs) {
+      searchNewArgs(value.attrs[attr], found)
+    }
+  }
+
+}
+var genHelpers = function(body) {
+      found={};
+      searchNewArgs(body, found);
+      return found;
+}
+
 FileCompiler = function(tree, options) {
   var self = this;
   self.nodes = tree.nodes;
@@ -58,12 +91,33 @@ _.extend(FileCompiler.prototype, {
     for (var i = 0; i < self.nodes.length; i++)
       self.registerRootNode(self.nodes[i]);
 
+    console.log("body: ", JSON.stringify(self.body))
+    self.templatesHelpers=self.genTemplateHelpers(self.templates);
+    self.bodyHelpers=genHelpers(self.body);
+
     return {
       head: self.head,
       body: self.body,
       bodyAttrs: self.bodyAttrs,
-      templates: self.templates
+      templates: self.templates,
+      templatesHelpers: self.templatesHelpers,
+      bodyHelpers: self.bodyHelpers
     };
+  },
+
+  genTemplateHelpers: function(templates) {
+    r={}
+    for (key in templates) {
+      value=templates[key]
+      // search for newArgs - origArgs
+      found=genHelpers(value)
+      for(f in found) { // check if found is empty
+        r[key]=found
+        break;
+      }
+    }
+    return r;
+
   },
 
   registerRootNode: function(node) {
@@ -130,7 +184,31 @@ _.extend(FileCompiler.prototype, {
   }
 });
 
+function replaceExpression(text, start, fn) {
+  spos=text.indexOf(start);
+  if(spos<0) {
+    return text;
+  }
+  spos=spos+start.length;
+  // find end
+  end = spos;
+  var i=0;
+  while(i>=0 && end < text.length) {
+    if(text[end]=='{')
+      i=i+1;
+    if(text[end]=='}')
+      i=i-1;
+    end=end+1;
+  }
+  if(i>=0) {
+    throw new Error("not found } for text "+text)
+  }
+  r = text.substr(0, spos-start.length)+fn(text.substr(spos, end-spos-1))+
+         replaceExpression(text.substr(end), start, fn);
+  return r
 
+}
+this.globalParsedCounter=0;
 
 TemplateCompiler = function(tree, options) {
   var self = this;
@@ -141,7 +219,9 @@ TemplateCompiler = function(tree, options) {
 _.extend(TemplateCompiler.prototype, {
   compile: function () {
     var self = this;
-    return self._optimize(self.visitBlock(self.tree));
+    r = self._optimize(self.visitBlock(self.tree));
+    r.helpers = genHelpers(r);
+    return r;
   },
 
   visitBlock: function (block) {
@@ -228,6 +308,7 @@ _.extend(TemplateCompiler.prototype, {
     var val = code.val;
     // First case this is a string
     var strLiteral = stringRepresentationToLiteral(val);
+    console.log("visitCode ", code, strLiteral)
     if (strLiteral !== null) {
       return noNewLinePrefix + strLiteral;
     } else {
@@ -247,8 +328,19 @@ _.extend(TemplateCompiler.prototype, {
 
     var spacebarsSymbol = content.length === 0 ? ">" : "#";
     var args = node.args || "";
+    var origArgs=null;
+    if(node.name.match(/^if|else|else if$/) && args.length > 0 && args.match(/[^_a-zA-Z0-9 .]/)) {
+      origArgs=args
+      args="_jade_line"+node.block.line  // No line number was generated
+    }
+
+
     var mustache = "{{" + spacebarsSymbol + componentName + " " + args + "}}";
     var tag = self._spacebarsParse(mustache);
+    if(origArgs) {
+      tag.origArgs=origArgs
+      tag.newArgs=args
+    }
 
     // Optimize arrays
     content = self._optimize(content);
@@ -285,21 +377,70 @@ _.extend(TemplateCompiler.prototype, {
 
   visitText: function(node) {
     var self = this;
-    return node.val ? self.parseText(node.val) : null;
+    return node.val ? self.parseText(node.val, null, node) : null;
   },
 
-  parseText: function(text, options) {
+  parseText: function(text, options, node) {
     // The parser doesn't parse #{expression} and !{unescapedExpression}
     // syntaxes. So let's do it.
     // Since we rely on the Spacebars parser for this, we support the
     // {{mustache}} and {{{unescapedMustache}}} syntaxes as well.
+    anonFuncs={}
+    var helperIndex=0;
+    var getHelperName=function() {
+      var base;
+      if(node==null) {
+        base="complexParsed"+globalParsedCounter;
+        globalParsedCounter++;
+      } else {
+        base="_jade_line"+node.line;
+        if(helperIndex>0) {
+          base=base+"_"+helperIndex;
+        }
+        helperIndex++;
+      }
+      return base;
+    }
+    // Search for #{
+    text=replaceExpression(text, '#{', function(innerExpr) {
+      if(innerExpr.match(/^\s*((\.{1,2}\/)*[\w\.-]+)\s*$/)) {
+        return "{{"+innerExpr+"}}";
+      }
+      // complex expression
+      var helperName=getHelperName();
+      anonFuncs[helperName]=innerExpr;
+      return "{{"+helperName+"}}"
+    })
+    text=replaceExpression(text, '!{', function(innerExpr) {
+      if(innerExpr.match(/^\s*((\.{1,2}\/)*[\w\.-]+)\s*$/)) {
+        return "{{{"+innerExpr+"}}}";
+      }
+      // complex expression
+      var helperName=getHelperName();
+      anonFuncs[helperName]=innerExpr;
+      return "{{{"+helperName+"}}}"
+    })
     text = text.replace(/#\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g, "{{$1}}");
     text = text.replace(/!\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g, "{{{$1}}}");
 
     options = options || {};
     options.getTemplateTag = SpacebarsCompiler.TemplateTag.parseCompleteTag;
-
-    return HTMLTools.parseFragment(text, options);
+    
+    r = HTMLTools.parseFragment(text, options);
+    if(!_.isEmpty(anonFuncs)) {
+      if(Array.isArray(r)) {
+        for(var j=0; j<r.length; j++) {
+          if(typeof(r[j])=='object') {
+            r[j].helpers=anonFuncs;
+            break;
+          }
+        }
+      } else {
+        r.helpers=anonFuncs;
+      }
+      console.log("parseText: from ", text, " to: ", JSON.stringify(r,null,2))
+    }
+    return r;
   },
 
   visitComment: function (comment) {

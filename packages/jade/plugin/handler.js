@@ -47,8 +47,34 @@ var getCompilerResult = function (compileStep, fileMode) {
   }
 };
 
+var templateHelperGen = function (helpers, tplName) {
+  var nameLiteral = JSON.stringify(tplName);
+  var templateDotNameLiteral = JSON.stringify("Template." + tplName);
+  var res = "";
+
+  for(key in helpers) {
+     res += "\nTemplate[" + nameLiteral + "].helpers({\n  "+key+
+       ": function() {\n    return (" + helpers[key] + ");\n  }\n});\n";
+  }
+  console.log(res);
+  return res;
+};
+var bodyHelperGen = function (helpers) {
+
+  var res = "";
+
+  for(key in helpers) {
+     res += "\nTemplate.body.helpers({\n  "+key+
+       ": function() {\n    return (" + helpers[key] + ");\n  }\n});\n";
+  }
+  console.log(res);
+  return res;
+};
+
+
 var fileModeHandler = function (compileStep) {
   var results = getCompilerResult(compileStep, true);
+  console.log("file mode result: ", results)
 
   // Head
   if (results.head !== null) {
@@ -62,9 +88,17 @@ var fileModeHandler = function (compileStep) {
   if (results.body !== null) {
     jsContent += bodyGen(results.body, results.bodyAttrs);
   }
+  if (! _.isEmpty(results.bodyHelpers)) {
+    jsContent += bodyHelperGen(results.bodyHelpers);
+  }
   if (! _.isEmpty(results.templates)) {
     jsContent += _.map(results.templates, templateGen).join("");
   }
+  if (! _.isEmpty(results.templatesHelpers)) {
+    jsContent += _.map(results.templatesHelpers, templateHelperGen).join("");
+  }
+
+  console.log("created filemode "+jsContent)
 
   if (jsContent !== "") {
     compileStep.addJavaScript({
@@ -77,6 +111,7 @@ var fileModeHandler = function (compileStep) {
 
 var templateModeHandler = function (compileStep) {
   var result = getCompilerResult(compileStep, false);
+  console.log("templateModeHandler result", result)
   var templateName = path.basename(compileStep.inputPath, '.tpl.jade');
   var jsContent;
 
@@ -88,10 +123,18 @@ var templateModeHandler = function (compileStep) {
 
   } else {
 
-    if (templateName === "body")
+    if (templateName === "body") {
       jsContent = bodyGen(result);
-    else
+      if(result.helpers)
+        jsContent += bodyHelperGen(result.helpers)
+    }
+    else {
       jsContent = templateGen(result, templateName);
+      if(result.helpers)
+        jsContent += templateHelperGen(result.helpers, templateName)
+
+    }
+    console.log("created template mode "+jsContent)
 
     compileStep.addJavaScript({
       path: compileStep.inputPath + '.js',

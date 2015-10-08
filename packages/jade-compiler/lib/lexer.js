@@ -14,6 +14,15 @@ var unwrap = function (value) {
     return /^\(?(.+?)\)?$/m.exec(value.replace(/\n/g, "").trim())[1];
 };
 
+var unwrapSimple = function (value) {
+  if (_.isString(value) && value.trim())
+    value=value.trim()
+    if(m=value.match(/^\((.*)\)/)) {
+      value=m[1];
+    }
+  return value;
+};
+
 // Build-in components
 Lexer.prototype.builtInComponents = function () {
   var self = this;
@@ -22,7 +31,7 @@ Lexer.prototype.builtInComponents = function () {
   if (captures) {
     self.consume(captures[0].length);
     tok = self.tok('mixin', captures[1]);
-    tok.args = unwrap(captures[2]);
+    tok.args = unwrapSimple(captures[2]);
     return tok;
   }
 };
