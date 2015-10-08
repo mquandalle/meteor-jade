@@ -118,6 +118,9 @@ lines.
 <template name="match-html-specialMarkdownComponent">{{#markdown}}This is my email: <address@example.com>
 {{/markdown}}</template>
 
-<template name="match-html-specialMarkdownComponentWithHelper">{{#markdown}}This is my email: {{email}}{{/markdown}}</template>
+<template name="match-html-specialMarkdownComponentWithHelper">{{#markdown}}This is my email: {{email}}
+{{/markdown}}</template>
 
-<template name="match-html-s2">{{#if genhelper258}}hello world{{/if}}</template>
+<template name="match-html-anonymousIfHelper">{{#if _jade_line258}}hello world{{/if}}</template>
+
+<template name="match-html-anonymousTextHelper">This is {{_jade_line261}}</template>

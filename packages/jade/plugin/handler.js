@@ -56,7 +56,6 @@ var templateHelperGen = function (helpers, tplName) {
      res += "\nTemplate[" + nameLiteral + "].helpers({\n  "+key+
        ": function() {\n    return (" + helpers[key] + ");\n  }\n});\n";
   }
-  console.log(res);
   return res;
 };
 var bodyHelperGen = function (helpers) {
@@ -67,14 +66,12 @@ var bodyHelperGen = function (helpers) {
      res += "\nTemplate.body.helpers({\n  "+key+
        ": function() {\n    return (" + helpers[key] + ");\n  }\n});\n";
   }
-  console.log(res);
   return res;
 };
 
 
 var fileModeHandler = function (compileStep) {
   var results = getCompilerResult(compileStep, true);
-  console.log("file mode result: ", results)
 
   // Head
   if (results.head !== null) {
@@ -98,8 +95,6 @@ var fileModeHandler = function (compileStep) {
     jsContent += _.map(results.templatesHelpers, templateHelperGen).join("");
   }
 
-  console.log("created filemode "+jsContent)
-
   if (jsContent !== "") {
     compileStep.addJavaScript({
       path: compileStep.inputPath + '.js',
@@ -111,7 +106,6 @@ var fileModeHandler = function (compileStep) {
 
 var templateModeHandler = function (compileStep) {
   var result = getCompilerResult(compileStep, false);
-  console.log("templateModeHandler result", result)
   var templateName = path.basename(compileStep.inputPath, '.tpl.jade');
   var jsContent;
 
@@ -134,8 +128,6 @@ var templateModeHandler = function (compileStep) {
         jsContent += templateHelperGen(result.helpers, templateName)
 
     }
-    console.log("created template mode "+jsContent)
-
     compileStep.addJavaScript({
       path: compileStep.inputPath + '.js',
       sourcePath: compileStep.inputPath,

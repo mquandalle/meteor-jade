@@ -257,6 +257,9 @@ template(name="match-jade-specialMarkdownComponentWithHelper")
   +markdown
     This is my email: {{email}}
 
-template(name="match-jade-s2")
+template(name="match-jade-anonymousIfHelper")
  if complex > 2
   | hello world
+
+template(name="match-jade-anonymousTextHelper")
+  | This is #{complex > {a: 4}}

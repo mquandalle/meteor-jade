@@ -16,19 +16,6 @@ JadeCompiler = {
     }
   },
 
-  preparse: function(source, options) {
-    options = options || {};
-    var parser, Compiler;
-
-    try {
-      parser = new Parser(source, options.filename || "", { lexer: Lexer });
-      return parser.parse();
-
-    } catch (err) {
-      throw err;
-    }
-  },
-
   compile: function(source) {
     var ast = JadeCompiler.parse(source, { fileMode: false });
     return codeGen(ast);

@@ -44,7 +44,6 @@ var throwError = function (message, node) {
 
 function searchNewArgs(value, found) {
   if(value==null) {
-    console.log("null value")
     return;
   }
 
@@ -52,8 +51,7 @@ function searchNewArgs(value, found) {
       found[value.newArgs]=value.origArgs
   }
   if(value.helpers) {
-    console.log("found helpers: ", value.helpers)
-    for(key in value.helpers) {
+    for(var key in value.helpers) {
       found[key]=value.helpers[key];
     }
   }
@@ -91,23 +89,29 @@ _.extend(FileCompiler.prototype, {
     for (var i = 0; i < self.nodes.length; i++)
       self.registerRootNode(self.nodes[i]);
 
-    console.log("body: ", JSON.stringify(self.body))
     self.templatesHelpers=self.genTemplateHelpers(self.templates);
     self.bodyHelpers=genHelpers(self.body);
+      self.bodyHelpers=null;
+    if(!_.isEmpty(self.bodyHelpers))
+      self.bodyHelpers=null;
 
-    return {
+
+    r = {
       head: self.head,
       body: self.body,
       bodyAttrs: self.bodyAttrs,
       templates: self.templates,
-      templatesHelpers: self.templatesHelpers,
-      bodyHelpers: self.bodyHelpers
     };
+    if(!_.isEmpty(self.bodyHelpers))
+      r.bodyHelpers=self.bodyHelpers;
+    if(!_.isEmpty(self.templatesHelpers))
+      r.templatesHelpers=self.templatesHelpers
+    return r;
   },
 
   genTemplateHelpers: function(templates) {
     r={}
-    for (key in templates) {
+    for (var key in templates) {
       value=templates[key]
       // search for newArgs - origArgs
       found=genHelpers(value)
@@ -220,7 +224,11 @@ _.extend(TemplateCompiler.prototype, {
   compile: function () {
     var self = this;
     r = self._optimize(self.visitBlock(self.tree));
-    r.helpers = genHelpers(r);
+    if(r) {
+      helpers = genHelpers(r);
+      if(!_.isEmpty(helpers))
+        r.helpers = helpers;
+    }
     return r;
   },
 
@@ -308,7 +316,6 @@ _.extend(TemplateCompiler.prototype, {
     var val = code.val;
     // First case this is a string
     var strLiteral = stringRepresentationToLiteral(val);
-    console.log("visitCode ", code, strLiteral)
     if (strLiteral !== null) {
       return noNewLinePrefix + strLiteral;
     } else {
@@ -430,15 +437,15 @@ _.extend(TemplateCompiler.prototype, {
     if(!_.isEmpty(anonFuncs)) {
       if(Array.isArray(r)) {
         for(var j=0; j<r.length; j++) {
-          if(typeof(r[j])=='object') {
+          if(typeof(r[j])=='object' && !_.isEmpty(anonFuncs)) {
             r[j].helpers=anonFuncs;
             break;
           }
         }
       } else {
-        r.helpers=anonFuncs;
+        if(r && !_.isEmpty(anonFuncs))
+          r.helpers=anonFuncs;
       }
-      console.log("parseText: from ", text, " to: ", JSON.stringify(r,null,2))
     }
     return r;
   },

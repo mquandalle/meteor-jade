@@ -43,7 +43,10 @@ Tinytest.add("JadeCompiler - parse if with named helper", function(test) {
     body: null,
     bodyAttrs: {},
     templates: {
-      hello: {"type":"BLOCKOPEN","path":["if"],"args":[["PATH",["helper arg1 arg2"]]],"content":"hello world"}
+      hello: {"type":"BLOCKOPEN","path":["if"],
+      "path":["if"],
+      "args":[["PATH",["helper"]],["PATH",["arg1"]],["PATH",["arg2"]]],
+      "content":"hello world"}
     }
   });
 });
@@ -54,17 +57,22 @@ var template4 = wrapInTemplate("hello",
    "  | hello world"].join("\n"));
 
 
-Tinytest.add("JadeCompiler2 - parse if with named helper2", function(test) {
+Tinytest.add("JadeCompiler - parse anonymous function", function(test) {
   test.equal(JadeCompiler.parse(template4, {fileMode: true}), {
     head: null,
     body: null,
     bodyAttrs: {},
     templates: {
-      hello: {"type":"BLOCKOPEN","path":["if"],"args":[["PATH",["genhelper"]]],"content":"hello world"}
-    }
-    templateHelpers: {
+      hello: {"type":"BLOCKOPEN","path":["if"],
+      "args":[["PATH",["_jade_line3"]]],
+      "origArgs":"nohelper > 2","newArgs":"_jade_line3",
+      "content":"hello world",
+      "helpers":{"_jade_line3":"nohelper > 2"}
+      }
+    },
+    templatesHelpers: {
       hello: {
-        "genhelper": {origArgs: "nohelper > 2"} 
+        "_jade_line3": "nohelper > 2"
       }
     }
   });
