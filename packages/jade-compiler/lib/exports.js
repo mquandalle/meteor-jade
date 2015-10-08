@@ -8,8 +8,7 @@ JadeCompiler = {
     try {
       parser = new Parser(source, options.filename || "", { lexer: Lexer });
       Compiler = (options.fileMode) ? FileCompiler : TemplateCompiler;
-      compiled = new Compiler(parser.parse(), options).compile();
-      return compiled;
+      return new Compiler(parser.parse(), options).compile();
 
     } catch (err) {
       throw err;
