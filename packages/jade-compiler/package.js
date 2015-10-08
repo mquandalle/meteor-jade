@@ -33,6 +33,8 @@ Package.onTest(function (api) {
   api.versionsFrom("METEOR@0.9.0");
   api.use("tinytest");
   api.use("minifiers");
+  api.use("ecmascript")
+  api.use("underscore")
   api.use("mquandalle:jade-compiler", "server");
   api.addFiles(["tests/tests.js"], "server");
 });

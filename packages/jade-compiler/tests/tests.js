@@ -1,10 +1,6 @@
 
-var template = ["p",
-                "  | hello world"].join("\n");
-
-var wrapInTemplate = function(tplName, template) {
-  return "template(name='"+tplName+"')\n  " + template.replace("\n", "\n  ");
-};
+var template = `p
+  | hello world`;
 
 Tinytest.add("JadeCompiler - parse templates", function(test) {
   test.equal(JadeCompiler.parse(template), { children: ["hello world"] });
@@ -15,7 +11,9 @@ Tinytest.add("JadeCompiler - parse files", function(test) {
     function(){ JadeCompiler.parse(template, {fileMode: true}); },
     "Tag must be in a template on line 1");
 
-  var template2 = wrapInTemplate("hello", template);
+  var template2 = `template(name='hello')
+  p
+    | hello world`;
   test.equal(JadeCompiler.parse(template2, {fileMode: true}), {
     head: null,
     body: null,
@@ -31,10 +29,10 @@ Tinytest.add("JadeCompiler - compile templates", function(test) {
   "(function() {\n  return HTML.P(\"hello world\");\n})");
 });
 
-var template3 = wrapInTemplate("hello",
-  ["if helper arg1 arg2",
-   "  | hello world"].join("\n"));
 
+var template3 = `template(name='hello')
+  if helper arg1 arg2
+    | hello world`;
 
 Tinytest.add("JadeCompiler - parse if with named helper", function(test) {
   test.equal(JadeCompiler.parse(template3, {fileMode: true}), {
@@ -50,10 +48,9 @@ Tinytest.add("JadeCompiler - parse if with named helper", function(test) {
   });
 });
 
-
-var template4 = wrapInTemplate("hello",
-  ["if (nohelper > 2)",
-   "  | hello world"].join("\n"));
+var template4 = `template(name='hello')
+  if (nohelper > 2)
+    | hello world`;
 
 
 Tinytest.add("JadeCompiler - parse anonymous function", function(test) {
