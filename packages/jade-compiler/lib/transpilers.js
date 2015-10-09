@@ -68,10 +68,12 @@ function searchNewArgs(value, found) {
     }
   }
   if(value.children) {
-    for(var i=0; i<value.children.length; i++) {
-      searchNewArgs(value.children[i], found)
-    }
+    searchNewArgs(value.children, found)
   }
+  if(value.content) {
+    searchNewArgs(value.content, found)
+  }
+
   if(value.attrs) {
     for(var attr in value.attrs) {
       searchNewArgs(value.attrs[attr], found)
@@ -378,9 +380,11 @@ _.extend(TemplateCompiler.prototype, {
     var args = node.args || "";
     // Create anonymous helper if needed
     var origArgs=null;
+
     if(node.name.match(/^if|else if|unless|each$/) && args.length > 0 && args.match(/[^_a-zA-Z0-9 .]/)) {
+      console.log("Setting origArgs to ", args)
       origArgs=args
-      args="_jade_line"+node.block.line  // No line number was generated
+      args="_jade_line"+(node.block.line-1)  // No line number was generated
     }
 
 
