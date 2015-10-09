@@ -364,7 +364,7 @@ _.extend(TemplateCompiler.prototype, {
     var args = node.args || "";
     // Create anonymous helper if needed
     var origArgs=null;
-    if(node.name.match(/^if|else|else if$/) && args.length > 0 && args.match(/[^_a-zA-Z0-9 .]/)) {
+    if(node.name.match(/^if|else if|unless|each$/) && args.length > 0 && args.match(/[^_a-zA-Z0-9 .]/)) {
       origArgs=args
       args="_jade_line"+node.block.line  // No line number was generated
     }
