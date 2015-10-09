@@ -52,6 +52,12 @@ function searchNewArgs(value, found) {
   if(value==null) {
     return;
   }
+  if(Array.isArray(value)) {
+    for(var i=0; i<value.length; i++) {
+      searchNewArgs(value[i], found)
+    }
+
+  }
 
   if(value.newArgs) {
       found[value.newArgs]=value.origArgs
@@ -254,7 +260,15 @@ _.extend(TemplateCompiler.prototype, {
     if(r) {
       helpers = genHelpers(r);
       if(!_.isEmpty(helpers))
-        r.helpers = helpers;
+        if(Array.isArray(r)) {
+          for(var i=0; i<r.length; i++) {
+            if(typeof(r[i])=='object') {
+              r[i].helpers = helpers;
+              break;
+            }
+          }
+        } else
+          r.helpers = helpers;
     }
     return r;
   },

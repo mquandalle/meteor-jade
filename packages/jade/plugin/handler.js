@@ -105,7 +105,16 @@ var fileModeHandler = function (compileStep) {
     });
   }
 };
-
+var findHelpers = function(result) {
+  if(!result)
+    return null;
+  if(result.helpers)
+    return result.helpers;
+  for(var i=0; i<result.length; i++) {
+    if(typeof(result[i])=='object'&&result[i].helpers)
+      return result[i].helpers;
+  }
+}
 var templateModeHandler = function (compileStep) {
   var result = getCompilerResult(compileStep, false);
   var templateName = path.basename(compileStep.inputPath, '.tpl.jade');
@@ -118,18 +127,20 @@ var templateModeHandler = function (compileStep) {
     });
 
   } else {
+    var helpers = findHelpers(result); 
 
     if (templateName === "body") {
       jsContent = bodyGen(result);
-      if(result.helpers)
-        jsContent += bodyHelperGen(result.helpers)
+      if(helpers)
+        jsContent += bodyHelperGen(helpers)
     }
     else {
       jsContent = templateGen(result, templateName);
-      if(result.helpers)
-        jsContent += templateHelperGen(result.helpers, templateName)
+      if(helpers)
+        jsContent += templateHelperGen(helpers, templateName)
 
     }
+    //console.log("result: ", JSON.stringify(result, null, 2), ", template output: ", jsContent)
     compileStep.addJavaScript({
       path: compileStep.inputPath + '.js',
       sourcePath: compileStep.inputPath,
