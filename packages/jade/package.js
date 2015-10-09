@@ -9,10 +9,10 @@ Package.describe({
 Package.registerBuildPlugin({
   name: "compileJade",
   use: [
-    "underscore",
-    "htmljs",
-    "minifiers",
-    "spacebars-compiler",
+    "underscore@1.0.0",
+    "htmljs@1.0.0",
+    "minifiers@1.0.0",
+    "spacebars-compiler@1.0.0",
     "mquandalle:jade-compiler@0.4.4"
   ],
   sources: [
@@ -21,7 +21,7 @@ Package.registerBuildPlugin({
 });
 
 Package.onUse(function (api) {
-  api.use("blaze");
+  api.use("blaze@2.0.0");
 });
 
 Package.onTest(function (api) {
