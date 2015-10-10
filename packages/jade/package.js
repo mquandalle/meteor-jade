@@ -1,8 +1,8 @@
 Package.describe({
   summary: "Jade template language",
-  version: "0.4.3_1",
-  name: "mquandalle:jade",
-  git: "https://github.com/mquandalle/meteor-jade.git",
+  version: "0.4.3",
+  name: "dalgard:jade",
+  git: "https://github.com/dalgard/meteor-jade.git",
   documentation: "../../README.md"
 });
 
@@ -13,7 +13,7 @@ Package.registerBuildPlugin({
     "htmljs@1.0.0",
     "minifiers@1.0.0",
     "spacebars-compiler@1.0.0",
-    "mquandalle:jade-compiler@0.4.3"
+    "dalgard:jade-compiler@0.4.3"
   ],
   sources: [
     "plugin/handler.js",
@@ -27,7 +27,7 @@ Package.onUse(function (api) {
 Package.onTest(function (api) {
   api.versionsFrom("METEOR@0.9.0");
   api.use("tinytest");
-  api.use(["mquandalle:jade", "ui", "spacebars", "templating"]);
+  api.use(["dalgard:jade", "ui", "spacebars", "templating"]);
   api.addFiles([
     "tests/match.jade",
     "tests/match.html",
