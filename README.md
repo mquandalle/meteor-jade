@@ -37,7 +37,7 @@ body
 
 #### Arguments in attributes
 
-Positional and keyword arguments can now also be passed to helpers that are used in attributes:
+Positional and keyword arguments can be passed to helpers that are used in attributes:
 
 ```jade
 input(type='text' placeholder=person(name prefix='Lord'))
@@ -51,9 +51,7 @@ Dynamic attributes were added to the Meteor version of Jade using the `$dyn` syn
 input(type='text' $dyn=bind('value: value'))
 ```
 
-This package introduces the concept of using a dollar sign (`$`) in front of an attribute name as a shorthand for designating a dynamic attribute helper.
-
-These two examples are thus equivalent:
+This package introduces the concept of using a dollar sign (`$`) in front of an attribute name as a shorthand for designating a dynamic attribute helper. These two examples are equivalent:
 
 ```jade
 div($attr)
