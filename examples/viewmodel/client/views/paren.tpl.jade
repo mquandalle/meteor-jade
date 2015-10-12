@@ -1,0 +1,6 @@
+// Parenthesis style
+div
+  input(type='text' placeholder=name('two (throttle)') $bind('value: name2' throttle=1500))
+
+  if name2
+    | #{person(name2 color=color)}

@@ -1,36 +1,77 @@
-dalgard:jade 0.4.3
+dalgard:jade 0.5.0
 ==================
 
-This is a direct fork of [`mquandalle:jade`](https://github.com/mquandalle/meteor-jade) merged with [pull request #165](https://github.com/mquandalle/meteor-jade/pull/165).
+This package is a fork of [`mquandalle:jade`](https://github.com/mquandalle/meteor-jade).
 
-### Rationale
+While not intending to take over the maintenance of Jade for Meteor, I will keep this package in sync with the original.
 
-The latest development on the `mquandalle:jade` package was on 29 April 2015. Judging from that and the lack of responsiveness in the issues forum, it looks like development may have halted.
+#### Rationale
 
-My ambition is not to continue development of the package, only to add the desired addition to the syntax, in order to better support the [`dalgard:viewmodel`](https://github.com/dalgard/meteor-viewmodel/) package.
+The latest development on the `mquandalle:jade` package was on 29 April 2015. Judging from the lack of responsiveness in the issues forum, it looks like the project have been set on stand-by.
 
-### The added syntax
+Until development is resumed, this package may improve things a bit in some areas, including in relation to the [`dalgard:viewmodel`](https://github.com/dalgard/meteor-viewmodel/) package.
 
-Dynamic attributes were added to the Meteor version of Jade using the `$dyn` syntax. However, when passing arguments to a helper, the syntax becomes cluttered:
+
+## Changes
+
+Although only a few lines of code have been added to the package, some useful features have been enabled.
+
+Like the existing, the new syntax comes in two variants – space separated or with parentheses. I recommend using the parenthesized version, since this is the only available style for attribute helpers.
+
+### Extrapolation arguments
+
+Positional and keyword arguments have been missing from Jade's extrapolation syntax, but may now be used in one of the two mentioned forms, alleviating the need for Blaze syntax:
 
 ```jade
-// Old, cluttered syntax
-input(type='text' $dyn='{{bind "value: value"}}')
+body
+  // Space separated version – similar to Blaze
+  | Hello #{person name prefix='Lord'}
+
+  // Parenthesis version – similar to attribute helpers
+  | Hello #{person(name prefix='Lord')}
 ```
 
-The problem is having to use Spacebars curly braces syntax inside the Jade attribute syntax.
+### Attribute arguments
 
-To alleviate this problem, `dalgard:jade` introduces the concept of using a dollar sign (`$`) in front of an attribute name to designate a dynamic attribute helper.
-
-The value of the attribute becomes the first positional argument to the helper.
-
-The example above can now be written like this:
+Positional and keyword arguments can now also be passed to helpers that are used in attributes:
 
 ```jade
-// New, shiny syntax
+input(type='text' placeholder=person(name prefix='Lord'))
+```
+
+### Dollar attributes
+
+Dynamic attributes were added to the Meteor version of Jade using the `$dyn` syntax:
+
+```jade
+input(type='text' $dyn=bind('value: value'))
+```
+
+This package introduces the concept of using a dollar sign (`$`) in front of an attribute name as a shorthand for designating a dynamic attribute helper.
+
+These two examples are thus equivalent:
+
+```jade
+div($attr)
+```
+
+```html
+<div {{attr}}></div>
+```
+
+If a *value* is set on the attribute, it becomes the first positional argument for the helper. Consequently, the `$dyn` example may be rewritten in two ways:
+
+```jade
 input(type='text' $bind='value: value')
 ```
 
-### Compatibility
+Or, when more arguments are needed:
 
-I consider this addition fully backwards compatible, since attributes beginning with dollar sign were not allowed before – with the exception of `$dyn`, which this package leaves untouched.
+```jade
+input(type='text' $bind('value: value' throttle=500))
+```
+
+
+## Compatibility
+
+So far, these improvements should be considered fully backwards compatible, as the new syntax simply resulted in an error previously (with the exception of `$dyn`, which this package leaves untouched).
