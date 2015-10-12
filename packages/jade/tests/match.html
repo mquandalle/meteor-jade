@@ -66,7 +66,7 @@ world</p></template>
 <template name="match-html-tagAttributeInterpolation"><button class="btn {{btnKind}}"></button></template>
 
 
-<!-- Build-in components -->
+<!-- Built-in components -->
 
 <template name="match-html-if">{{#if weAreTheWorld}}hello world{{/if}}</template>
 
@@ -82,9 +82,7 @@ world</p></template>
 
 <template name="match-html-eachIn">{{#each u in users}}{{u.name}}{{/each}}</template>
 
-
 <!-- else if syntaxic sugar -->
-
 <template name="match-html-elseif">{{#if condA}}<h1>hello A</h1>{{else}}{{#if condB}}<h2>hello B</h2>{{else}}{{#if condC}}<h3>hello C</h3>{{else}}<h4>goodbye</h4>{{/if}}{{/if}}{{/if}}</template>
 
 
@@ -104,6 +102,7 @@ world</p></template>
 
 <template name="match-html-callableInComponentArg">{{> Component test="moo()"}}</template>
 
+
 <!-- Blocks of text -->
 
 <template name="match-html-blockOfText"><p>This <b>is</b> a block
@@ -119,3 +118,32 @@ lines.
 {{/markdown}}</template>
 
 <template name="match-html-specialMarkdownComponentWithHelper">{{#markdown}}This is my email: {{email}}{{/markdown}}</template>
+
+
+<!-- Added syntax in dalgard:jade -->
+
+<template name="match-html-inclusionWithParenthesisPositionalArg">{{> myTemplate helper arg1}}</template>
+
+<template name="match-html-inclusionWithParenthesisPositionalAndKeywordArgs">{{> myTemplate helper arg1 key1=arg2}}</template>
+
+<template name="match-html-inclusionWithParenthesisPositionalArgsWithStringParen">{{> myTemplate helper '()'}}</template>
+
+<template name="match-html-inclusionWithParenthesisPositionalArgsWithStringParenAndKeyword">{{> myTemplate helper arg1 key1=')'}}</template>
+
+<template name="match-html-extrapolationWithSpacesArgs">{{helper arg1 key1=arg2}}</template>
+
+<template name="match-html-extrapolationWithSpacesArgsWithStringBraces">{{helper '}' key1=arg1}}</template>
+
+<template name="match-html-extrapolationWithParenthesisArgs">{{helper arg1 key1=arg2}}</template>
+
+<template name="match-html-extrapolationWithParenthesisArgsWithStringBraces">{{helper '})' key1=arg1}}</template>
+
+<template name="match-html-attributesWithParenthesisArgs"><input type="text" placeholder="{{helper arg1 key1=arg2}}"></template>
+
+<template name="match-html-attributesWithParenthesisArgsWithStringParen"><input type="text" placeholder="{{helper ')' key1='()'}}"></template>
+
+<template name="match-html-dynamicAttributeWithDollarSign"><input {{attr true}}></template>
+
+<template name="match-html-dynamicAttributeWithDollarSignAndSingleArg"><input {{attr arg1}}></template>
+
+<template name="match-html-dynamicAttributeWithDollarSignAndParenthesisArgs"><input {{attr arg1 key1=')'}}></template>

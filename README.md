@@ -1,4 +1,4 @@
-dalgard:jade 0.5.1
+dalgard:jade 0.5.2
 ==================
 
 This package is a fork of [`mquandalle:jade`](https://github.com/mquandalle/meteor-jade).
@@ -22,7 +22,7 @@ Although only a few lines of code have been added to the package, they enable so
 
 Like the existing syntax, the new syntax comes in two variants – space separated or with parentheses. I recommend using the parenthesized version, since this is the only available style for attribute helpers.
 
-The parenthesis format for helper arguments may also be used after includes, components, and built-ins (`if helper(args)`).
+**Note:** The parenthesis format for helper arguments may also be used after includes, components, and built-ins (`if helper(args)`).
 
 #### Arguments in extrapolation
 
@@ -83,5 +83,6 @@ So far, I believe these improvements can be considered fully backwards compatibl
 
 ## History
 
+- 0.5.2  –  Bug fix: Broken multiline component arguments.
 - 0.5.1  –  Extended parenthesis syntax to includes, components, and built-ins.
 - 0.5.0  –  Arguments for attributes and extrapolation.

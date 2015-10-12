@@ -1,6 +1,6 @@
 Package.describe({
   name: "dalgard:jade",
-  version: "0.5.1",
+  version: "0.5.2_1",
   summary: "Jade template engine for Meteor",
   git: "https://github.com/dalgard/meteor-jade.git",
   documentation: "../../README.md"
@@ -13,7 +13,7 @@ Package.registerBuildPlugin({
     "htmljs@1.0.0",
     "minifiers@1.0.0",
     "spacebars-compiler@1.0.0",
-    "dalgard:jade-compiler@0.5.1"
+    "dalgard:jade-compiler@0.5.2_1"
   ],
   sources: [
     "plugin/handler.js",
@@ -27,7 +27,7 @@ Package.onUse(function (api) {
 Package.onTest(function (api) {
   api.versionsFrom("METEOR@0.9.0");
   api.use("tinytest");
-  api.use(["dalgard:jade@0.5.1", "ui", "spacebars", "templating"]);
+  api.use(["dalgard:jade@0.5.2_1", "ui", "underscore", "jquery", "spacebars", "templating"]);
   api.addFiles([
     "tests/match.jade",
     "tests/match.html",

@@ -91,6 +91,7 @@ template(name="match-jade-noSpaceBetweenChildren")
     | Hello
     = "."
 
+
 //- Template helpers
 
 template(name="match-jade-tagHelper")
@@ -121,7 +122,7 @@ template(name="match-jade-tagAttributeInterpolation")
   button(class="btn #{btnKind}")
 
 
-//- Build-in components
+//- Built-in components
 
 template(name="match-jade-if-1")
   if weAreTheWorld
@@ -180,7 +181,6 @@ template(name="match-jade-eachIn-2")
     = u.name
 
 //- else if syntaxic sugar
-
 template(name="match-jade-elseif")
   if condA
     h1 hello A
@@ -236,6 +236,7 @@ template(name="match-jade-callableInComponentArg-1")
 template(name="match-jade-callableInComponentArg-2")
   +Component(test="moo()")
 
+
 //- Blocks of text
 
 template(name="match-jade-blockOfText")
@@ -256,3 +257,46 @@ template(name="match-jade-specialMarkdownComponent")
 template(name="match-jade-specialMarkdownComponentWithHelper")
   +markdown
     This is my email: {{email}}
+//- end of template
+
+
+//- Added syntax in dalgard:jade
+
+template(name="match-jade-inclusionWithParenthesisPositionalArg")
+  +myTemplate(helper(arg1))
+
+template(name="match-jade-inclusionWithParenthesisPositionalAndKeywordArgs")
+  +myTemplate helper(arg1 key1=arg2)
+
+template(name="match-jade-inclusionWithParenthesisPositionalArgsWithStringParen")
+  +myTemplate(helper('()'))
+
+template(name="match-jade-inclusionWithParenthesisPositionalArgsWithStringParenAndKeyword")
+  +myTemplate helper(arg1 key1=')')
+
+template(name="match-jade-extrapolationWithSpacesArgs")
+  | #{helper arg1 key1=arg2}
+
+template(name="match-jade-extrapolationWithSpacesArgsWithStringBraces")
+  | #{helper '}' key1=arg1}
+
+template(name="match-jade-extrapolationWithParenthesisArgs")
+  | #{helper(arg1 key1=arg2)}
+
+template(name="match-jade-extrapolationWithParenthesisArgsWithStringBraces")
+  | #{helper('})' key1=arg1)}
+
+template(name="match-jade-attributesWithParenthesisArgs")
+  input(type='text' placeholder=helper(arg1 key1=arg2))
+
+template(name="match-jade-attributesWithParenthesisArgsWithStringParen")
+  input(type='text' placeholder=helper(')' key1="()"))
+
+template(name="match-jade-dynamicAttributeWithDollarSign")
+  input($attr)
+
+template(name="match-jade-dynamicAttributeWithDollarSignAndSingleArg")
+  input($attr=arg1)
+
+template(name="match-jade-dynamicAttributeWithDollarSignAndParenthesisArgs")
+  input($attr(arg1 key1=')'))
