@@ -5,15 +5,15 @@ This package is a fork of [`mquandalle:jade`](https://github.com/mquandalle/mete
 
 I don't have any ambitions of taking on the maintenance of the canonical Jade package for Meteor, but will keep this package in sync with the original.
 
+#### Install
+
+`meteor add dalgard:jade`
+
 #### Rationale
 
 The latest development on the `mquandalle:jade` package was on 29 April 2015. Judging from the lack of responsiveness in the issues forum, it looks like the project have been set on stand-by.
 
 Until development is resumed, this package may improve things a bit in some areas, including in relation to the [`dalgard:viewmodel`](https://github.com/dalgard/meteor-viewmodel/) package.
-
-#### Install
-
-`meteor add dalgard:jade`
 
 
 ## Changes
