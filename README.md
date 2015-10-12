@@ -11,6 +11,10 @@ The latest development on the `mquandalle:jade` package was on 29 April 2015. Ju
 
 Until development is resumed, this package may improve things a bit in some areas, including in relation to the [`dalgard:viewmodel`](https://github.com/dalgard/meteor-viewmodel/) package.
 
+#### Install
+
+`meteor add dalgard:jade`
+
 
 ## Changes
 
