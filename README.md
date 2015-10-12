@@ -1,4 +1,4 @@
-dalgard:jade 0.5.0
+dalgard:jade 0.5.1
 ==================
 
 This package is a fork of [`mquandalle:jade`](https://github.com/mquandalle/meteor-jade).
@@ -21,6 +21,8 @@ Until development is resumed, this package may improve things a bit in some area
 Although only a few lines of code have been added to the package, they enable some useful features.
 
 Like the existing syntax, the new syntax comes in two variants – space separated or with parentheses. I recommend using the parenthesized version, since this is the only available style for attribute helpers.
+
+The parenthesis format for helper arguments may also be used after includes, components, and built-ins (`if helper(args)`).
 
 #### Arguments in extrapolation
 
@@ -77,3 +79,9 @@ input(type='text' $bind('value: value' throttle=500))
 ## Compatibility
 
 So far, I believe these improvements can be considered fully backwards compatible, since the new syntax would previously result in an error (with the exception of `$dyn`, which this package leaves untouched).
+
+
+## History
+
+- 0.5.1  –  Extended parenthesis syntax to includes, components, and built-ins.
+- 0.5.0  –  Arguments for attributes and extrapolation.

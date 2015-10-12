@@ -2,5 +2,5 @@
 div
   input(type='text' placeholder=name('one') $bind='value: name1')
   
-  if name1
+  if isNonEmpty name1
     | #{person name1 color=color}

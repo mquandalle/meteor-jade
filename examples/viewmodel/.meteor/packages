@@ -12,6 +12,7 @@ blaze-html-templates
 reload
 spacebars
 jquery
+underscore
 
 dalgard:jade
 dalgard:viewmodel

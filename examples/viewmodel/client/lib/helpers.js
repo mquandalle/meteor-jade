@@ -8,3 +8,7 @@ Template.registerHelper("person", (name, kw) => {
 
   return intro;
 });
+
+Template.registerHelper("isNonEmpty", function (arg) {
+  return _.isString(arg) && !!arg;
+});
