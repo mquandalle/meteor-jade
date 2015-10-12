@@ -1,0 +1,1 @@
+ViewModel.registerHelper("bind");
