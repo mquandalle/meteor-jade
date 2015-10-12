@@ -3,7 +3,7 @@ dalgard:jade 0.5.0
 
 This package is a fork of [`mquandalle:jade`](https://github.com/mquandalle/meteor-jade).
 
-While not intending to take over the maintenance of Jade for Meteor, I will keep this package in sync with the original.
+I don't have any ambitions of taking on the maintenance of the canonical Jade package for Meteor, but will keep this package in sync with the original.
 
 #### Rationale
 
@@ -14,9 +14,9 @@ Until development is resumed, this package may improve things a bit in some area
 
 ## Changes
 
-Although only a few lines of code have been added to the package, some useful features have been enabled.
+Although only a few lines of code have been added to the package, they enable some rather useful features.
 
-Like the existing, the new syntax comes in two variants – space separated or with parentheses. I recommend using the parenthesized version, since this is the only available style for attribute helpers.
+Like the existing syntax, the new syntax comes in two variants – space separated or with parentheses. I recommend using the parenthesized version, since this is the only available style for attribute helpers.
 
 ### Extrapolation arguments
 
