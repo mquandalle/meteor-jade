@@ -1,7 +1,7 @@
 Package.describe({
-  summary: "Compiler for the meteor-jade template language",
-  version: "0.4.3",
   name: "dalgard:jade-compiler",
+  version: "0.5.0",
+  summary: "Improved Jade compiler for Meteor",
   git: "https://github.com/dalgard/meteor-jade.git",
   documentation: "../../README.md"
 });
@@ -33,6 +33,6 @@ Package.onTest(function (api) {
   api.versionsFrom("METEOR@0.9.0");
   api.use("tinytest");
   api.use("minifiers");
-  api.use("dalgard:jade-compiler", "server");
+  api.use("dalgard:jade-compiler@0.5.0", "server");
   api.addFiles(["tests/tests.js"], "server");
 });
