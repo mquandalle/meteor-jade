@@ -11,10 +11,10 @@ caching-compiler@1.0.0
 caching-html-compiler@1.0.2
 callback-hook@1.0.4
 check@1.0.6
-dalgard:jade@0.4.3
-dalgard:jade-compiler@0.4.3
+dalgard:jade@0.5.0
+dalgard:jade-compiler@0.5.0
 dalgard:reactive-map@0.1.0
-dalgard:viewmodel@0.9.0_1
+dalgard:viewmodel@0.9.1
 ddp@1.2.2
 ddp-client@1.2.1
 ddp-common@1.2.1
