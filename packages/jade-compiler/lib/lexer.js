@@ -6,30 +6,41 @@
 // 1. a name
 // 2. some arguments (optionnal)
 
-Lexer = Npm.require('jade').Lexer;
+Lexer = Npm.require("jade").Lexer;
 
-
-// XXX Remove this function when inline JavaScript expression support lands
-var unwrap = function (value) {
-  if (_.isString(value) && value.trim())
-    return value.replace(/^\((.+?)\)$/, "$1").trim();
-};
 
 // Blaze helper used as a component
 Lexer.prototype.blazeComponent = function () {
-  var self = this;
-  var tok;
-  var captures = /^(\+[\.\w-]+|if|unless|else if|else|with|each)\b(.*)/.exec(self.input);
-  if (captures) {
-    self.consume(captures[0].length);
-    tok = self.tok('mixin', captures[1].replace(/^\+/, ""));
-    tok.args = unwrap(captures[2]);
+  var key = this.input.match(/^(\+[\.\w-]+|if|unless|else if|else|with|each)\b/);
 
-    var regex = /((?:\.{1,2}\/)?[\w\.-]+)\(((?:(['"])\3|(['"]).*?[^\\]\4|[^)]*[^\\](['"])\5|[^)]*?[^\\](['"]).*[^\\]\6)*[^)]*?)\)/g;
+  if (key) {
+    this.consume(key[0].length);
 
-    tok.args = tok.args.replace(regex, function (match, helper, args) {
-      return helper + " " + args;
-    });
+    var tok = this.tok("mixin", key[1].replace(/^\+/, "")),
+        is_paren = this.input.charAt(0) === "(",
+        args = this.input.match(/^\((.*)\)\s*$/m),
+        is_singleline = !is_paren || args;
+
+    if (is_singleline) {
+      if (!args)
+        args = this.input.match(/([^\n]*)/);
+
+      var parens_re = /((?:\.{1,2}\/)?[\w\.-]+)\(((?:(['"])\3|(['"]).*?[^\\]\4|[^)]*[^\\](['"])\5|[^)]*?[^\\](['"]).*[^\\]\6)*[^)]*?)\)/g;
+
+      tok.args = args[1].replace(parens_re, function (match, helper, args) {
+        return helper + " " + args;
+      });
+    }
+    else {
+      var multi_re = /^\(((?:(['"])\2|(['"]).*?[^\\]\3|[^)]*[^\\](['"])\4|[^)]*?[^\\](['"]).*[^\\]\5)*[^)]*?)\)/;
+
+      args = this.input.match(multi_re);
+
+      if (args)
+        tok.args = args[1].replace(/\n/g, "");
+    }
+
+    this.consume(args[0].length);
 
     return tok;
   }
