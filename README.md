@@ -22,7 +22,7 @@ Although only a few lines of code have been added to the package, they enable so
 
 Like the existing syntax, the new syntax comes in two variants – space separated or with parentheses. I recommend using the parenthesized version, since this is the only available style for attribute helpers.
 
-### Extrapolation arguments
+### Arguments in extrapolation
 
 Positional and keyword arguments have been missing from Jade's extrapolation syntax, but may now be used in one of the two mentioned forms, alleviating the need for Blaze syntax:
 
@@ -35,7 +35,7 @@ body
   | Hello #{person(name prefix='Lord')}
 ```
 
-### Attribute arguments
+### Arguments in attributes
 
 Positional and keyword arguments can now also be passed to helpers that are used in attributes:
 
@@ -43,7 +43,7 @@ Positional and keyword arguments can now also be passed to helpers that are used
 input(type='text' placeholder=person(name prefix='Lord'))
 ```
 
-### Dollar attributes
+### Dollar sign attributes
 
 Dynamic attributes were added to the Meteor version of Jade using the `$dyn` syntax:
 
