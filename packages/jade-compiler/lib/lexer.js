@@ -25,9 +25,12 @@ Lexer.prototype.blazeComponent = function () {
       if (!args)
         args = this.input.match(/([^\n]*)/);
 
-      var parens_re = /((?:\.{1,2}\/)?[\w\.-]+)\(((?:(['"])\3|(['"]).*?[^\\]\4|[^)]*[^\\](['"])\5|[^)]*?[^\\](['"]).*[^\\]\6)*[^)]*?)\)/g;
+      var parens_re = /(?:(['"])\1|(['"]).*?[^\\]\2)|((?:\.{1,2}\/)?[\w\.-]+)\(((?:(['"])\5|(['"]).*?[^\\]\6|[^)]*(['"])\7|[^)]*(['"]).*?[^\\]\8)*[^)]*)\)/g;
 
-      tok.args = args[1].replace(parens_re, function (match, helper, args) {
+      tok.args = args[1].replace(parens_re, function (match, $1, $2, helper, args) {
+        if (_.isString($2))
+          return match;
+        
         return helper + " " + args;
       });
     }
