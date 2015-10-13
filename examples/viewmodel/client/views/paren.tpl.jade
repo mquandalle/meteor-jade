@@ -1,6 +1,6 @@
 // Parenthesis style
 div
-  input(type='text' placeholder=name('two (throttled)') $bind('value: name2' throttle=1500))
+  input(type='text' placeholder=$name('two (throttled)') $bind('value: name2' throttle=1500))
 
   if isNonEmpty(name2)
     | #{person(name2 color=color)}

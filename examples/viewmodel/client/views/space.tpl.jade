@@ -1,6 +1,6 @@
 // Space separated style
 div
-  input(type='text' placeholder=name('one') $bind='value: name1')
+  input(type='text' placeholder=$name('one') $bind='value: name1')
   
   if isNonEmpty name1
     | #{person name1 color=color}

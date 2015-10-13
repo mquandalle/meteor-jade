@@ -58,13 +58,20 @@ Lexer.prototype.attrs = function (push) {
   if (this.input.charAt(0) === "(") {
     var range = this.bracketExpression(),
         attrs_str = this.input.slice(range.start, range.end),
-        regex = /(!?[$=])((?:\.{1,2}\/)?[\w\.-]+)\(((?:(['"])\4|(['"]).*?[^\\]\5|[^)]*[^\\](['"])\6|[^)]*?[^\\](['"]).*[^\\]\7)*[^)]*?)\)/g;
+        regex = /(!?=?[$=])((?:\.{1,2}\/)?[\w\.-]+)\(((?:(['"])\4|(['"]).*?[^\\]\5|[^)]*[^\\](['"])\6|[^)]*?[^\\](['"]).*[^\\]\7)*[^)]*?)\)/g;
 
     attrs_str = attrs_str.replace(regex, function (match, prefix, helper, args) {
+      var helper_pre = "";
+
+      if (prefix.slice(-2) == "=$") {
+        prefix = prefix.slice(0, -1);
+        helper_pre = "$";
+      }
+
       var begin = (prefix === "$" ? "$dyn='" : (prefix === "!=" ? "!='{" : "='")) + "{{",
           end = "}}" + (prefix === "!=" ? "}'" : "'");
 
-      return begin + helper + " " + args.replace(/(^|[^\\])'/g, "$1\\'") + end;
+      return begin + helper_pre + helper + " " + args.replace(/(^|[^\\])'/g, "$1\\'") + end;
     });
 
     this.input = "(" + attrs_str + this.input.slice(range.end);

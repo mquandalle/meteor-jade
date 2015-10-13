@@ -138,12 +138,16 @@ lines.
 
 <template name="match-html-extrapolationWithParenthesisArgsWithStringBraces">{{helper '})' key1=arg1}}</template>
 
-<template name="match-html-attributesWithParenthesisArgs"><input type="text" placeholder="{{helper arg1 key1=arg2}}"></template>
+<template name="match-html-attributesWithHelperAndParenthesisArgs"><input type="text" placeholder="{{helper arg1 key1=arg2}}"></template>
+
+<template name="match-html-attributesWithDollarHelperAndParenthesisArgs"><input type="text" placeholder="{{$helper arg1 key1=arg2}}"></template>
 
 <template name="match-html-attributesWithParenthesisArgsWithStringParen"><input type="text" placeholder="{{helper ')' key1='()'}}"></template>
 
 <template name="match-html-dynamicAttributeWithDollarSign"><input {{attr true}}></template>
 
-<template name="match-html-dynamicAttributeWithDollarSignAndSingleArg"><input {{attr arg1}}></template>
+<template name="match-html-dynamicAttributeWithDollarSignAndSingleArg"><input {{attr arg}}></template>
 
-<template name="match-html-dynamicAttributeWithDollarSignAndParenthesisArgs"><input {{attr arg1 key1=')'}}></template>
+<template name="match-html-dynamicAttributeWithDollarSignAndSingleDollarArg"><input {{attr $arg}}></template>
+
+<template name="match-html-dynamicAttributeWithDollarSignAndParenthesisArgs"><input {{attr arg key1=')'}}></template>
