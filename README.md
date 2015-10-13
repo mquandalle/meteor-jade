@@ -1,9 +1,7 @@
 dalgard:jade 0.5.3
 ==================
 
-This package is a fork of [`mquandalle:jade`](https://github.com/mquandalle/meteor-jade).
-
-I don't have any ambitions of taking on the maintenance of the canonical Jade package for Meteor, but will keep this package in sync with the original.
+This package is a fork of [`mquandalle:jade`](https://github.com/mquandalle/meteor-jade) and will be kept in sync with the original.
 
 #### Install
 
