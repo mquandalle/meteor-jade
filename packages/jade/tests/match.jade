@@ -282,8 +282,11 @@ template(name="match-jade-extrapolationWithParenthesisArgs")
 template(name="match-jade-extrapolationWithParenthesisArgsWithStringBraces")
   | #{helper('})' key1=arg1)}
 
-template(name="match-jade-attributesWithParenthesisArgs")
+template(name="match-jade-attributesWithHelperAndParenthesisArgs")
   input(type='text' placeholder=helper(arg1 key1=arg2))
+
+template(name="match-jade-attributesWithDollarHelperAndParenthesisArgs")
+  input(type='text' placeholder=$helper(arg1 key1=arg2))
 
 template(name="match-jade-attributesWithParenthesisArgsWithStringParen")
   input(type='text' placeholder=helper(')' key1="()"))
@@ -292,7 +295,10 @@ template(name="match-jade-dynamicAttributeWithDollarSign")
   input($attr)
 
 template(name="match-jade-dynamicAttributeWithDollarSignAndSingleArg")
-  input($attr=arg1)
+  input($attr=arg)
+
+template(name="match-jade-dynamicAttributeWithDollarSignAndSingleDollarArg")
+  input($attr=$arg)
 
 template(name="match-jade-dynamicAttributeWithDollarSignAndParenthesisArgs")
-  input($attr(arg1 key1=')'))
+  input($attr(arg key1=')'))

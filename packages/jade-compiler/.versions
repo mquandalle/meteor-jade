@@ -7,7 +7,7 @@ blaze-tools@1.0.4
 boilerplate-generator@1.0.4
 callback-hook@1.0.4
 check@1.0.6
-dalgard:jade-compiler@0.5.3
+dalgard:jade-compiler@0.5.3_1
 ddp@1.2.2
 ddp-client@1.2.1
 ddp-common@1.2.1
@@ -22,7 +22,7 @@ html-tools@1.0.5
 htmljs@1.0.5
 id-map@1.0.4
 jquery@1.11.4
-local-test:dalgard:jade-compiler@0.5.3
+local-test:dalgard:jade-compiler@0.5.3_1
 logging@1.0.8
 meteor@1.1.9
 minifiers@1.1.7

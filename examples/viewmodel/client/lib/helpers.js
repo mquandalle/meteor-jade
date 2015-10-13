@@ -1,4 +1,4 @@
-Template.registerHelper("name", numeral => "Name " + numeral);
+Template.registerHelper("$name", numeral => "Name " + numeral);
 
 Template.registerHelper("person", (name, kw) => {
   let intro = "Hi, my name is " + name;
