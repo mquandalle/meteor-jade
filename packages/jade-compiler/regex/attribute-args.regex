@@ -1,8 +1,3 @@
-# This regex throws away anything between quotes at the root level, and captures
-# anything between parentheses preceded by a keyword at the root level
-
-# It uses this technique: http://www.rexegg.com/regex-best-trick.html
-
 /
   (?:                           # Group
     (                   \1        # Capturing group
@@ -19,6 +14,11 @@
   )
 |                             # Or
   (                     \3      # Capturing group
+    !?                            # Zero or one exclamation mark
+    =?                            # Zero or one equals sign
+    [$=]                          # One dollar sign or equals sign
+  )
+  (                     \4      # Capturing group
     (?:                           # Optional group
       \.{1,2}                       # One or two periods
       \/                            # One slash
@@ -26,33 +26,33 @@
     [\w\.-]+                      # One or more characters
   )
   \(                            # Start parenthesis
-  (                     \4      # Capturing group
+  (                     \5      # Capturing group
     (?:                           # Zero or more of group
-      (                 \5          # Capturing group
-        ['"]                          # Quotation mark
-      )
-      \5                            # Previous quotation mark
-    |                             # Or
       (                 \6          # Capturing group
         ['"]                          # Quotation mark
       )
-      .*?                           # Lazy zero or more characters
-      [^\\]                         # Any character except backslash
       \6                            # Previous quotation mark
     |                             # Or
-      [^)]*?                        # Lazy zero or more characters except end parenthesis
       (                 \7          # Capturing group
         ['"]                          # Quotation mark
       )
+      .*?                           # Lazy zero or more characters
+      [^\\]                         # Any character except backslash
       \7                            # Previous quotation mark
     |                             # Or
-      [^)]*?                         # Lazy zero or more characters except end parenthesis
+      [^)]*?                        # Lazy zero or more characters except end parenthesis
       (                 \8          # Capturing group
+        ['"]                          # Quotation mark
+      )
+      \8                            # Previous quotation mark
+    |                             # Or
+      [^)]*?                         # Lazy zero or more characters except end parenthesis
+      (                 \9          # Capturing group
         ['"]                          # Quotation mark
       )
       .*?                           # Lazy zero or more characters
       [^\\]                         # Any character except backslash
-      \8                            # Previous quotation mark
+      \9                            # Previous quotation mark
     )*
     [^)]*                         # Zero or more characters except end parenthesis
   )
