@@ -1,7 +1,9 @@
-dalgard:jade 0.5.3
+dalgard:jade 0.5.4
 ==================
 
 This package is a fork of [`mquandalle:jade`](https://github.com/mquandalle/meteor-jade) and will be kept in sync with the original.
+
+Hopefully, the two packages can be merged at some point.
 
 #### Install
 
