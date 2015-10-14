@@ -25,10 +25,10 @@ Lexer.prototype.blazeComponent = function () {
       if (!args)
         args = this.input.match(/([^\n]*)/);
 
-      var parens_re = /(?:(['"])\1|(['"]).*?[^\\]\2)|((?:\.{1,2}\/)?[\w\.-]+)\(((?:(['"])\5|(['"]).*?[^\\]\6|[^)]*(['"])\7|[^)]*(['"]).*?[^\\]\8)*[^)]*)\)/g;
+      var parens_re = /(?:(['"])\1|(['"]).*?[^\\]\2)|((?:\.{1,2}\/)?[\w\.-]+)\(((?:(['"])\5|(['"]).*?[^\\]\6|[^)]*?(['"])\7|[^)]*?(['"]).*?[^\\]\8)*[^)]*)\)/g;
 
       tok.args = args[1].replace(parens_re, function (match, $1, $2, helper, args) {
-        if (_.isString($2))
+        if (_.isString($1) || _.isString($2))
           return match;
         
         return helper + " " + args;
@@ -58,9 +58,12 @@ Lexer.prototype.attrs = function (push) {
   if (this.input.charAt(0) === "(") {
     var range = this.bracketExpression(),
         attrs_str = this.input.slice(range.start, range.end),
-        regex = /(!?=?[$=])((?:\.{1,2}\/)?[\w\.-]+)\(((?:(['"])\4|(['"]).*?[^\\]\5|[^)]*[^\\](['"])\6|[^)]*?[^\\](['"]).*[^\\]\7)*[^)]*?)\)/g;
+        regex = /(?:(['"])\1|(['"]).*?[^\\]\2)|(!?=?[$=])((?:\.{1,2}\/)?[\w\.-]+)\(((?:(['"])\6|(['"]).*?[^\\]\7|[^)]*?(['"])\8|[^)]*?(['"]).*?[^\\]\9)*[^)]*)\)/g;
 
-    attrs_str = attrs_str.replace(regex, function (match, prefix, helper, args) {
+    attrs_str = attrs_str.replace(regex, function (match, $1, $2, prefix, helper, args) {
+      if (_.isString($1) || _.isString($2))
+        return match;
+
       var helper_pre = "";
 
       if (prefix.slice(-2) == "=$") {

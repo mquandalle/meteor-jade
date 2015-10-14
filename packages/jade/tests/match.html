@@ -138,11 +138,27 @@ lines.
 
 <template name="match-html-extrapolationWithParenthesisArgsWithStringBraces">{{helper '})' key1=arg1}}</template>
 
-<template name="match-html-attributesWithHelperAndParenthesisArgs"><input type="text" placeholder="{{helper arg1 key1=arg2}}"></template>
+<template name="match-html-attributeWithHelperAndParenthesisArgs"><input type="{{helper arg1 key1=arg2}}"></template>
 
-<template name="match-html-attributesWithDollarHelperAndParenthesisArgs"><input type="text" placeholder="{{$helper arg1 key1=arg2}}"></template>
+<template name="match-html-attributeWithHelperAndParenthesisArgsEmptyString"><input type="{{helper ''}}"></template>
 
-<template name="match-html-attributesWithParenthesisArgsWithStringParen"><input type="text" placeholder="{{helper ')' key1='()'}}"></template>
+<template name="match-html-attributeWithDollarHelperAndParenthesisArgs"><input type="{{$helper arg1 key1=arg2}}"></template>
+
+<template name="match-html-attributeWithParenthesisArgsWithStringParen"><input type="{{helper ')' key1='()'}}"></template>
+
+<template name="match-html-attributesWithParenthesisArgsWithStrings"><input type="{{helper1 key1='string'}}" placeholder="{{helper2 'string'}}"></template>
+
+<template name="match-html-attributeExtremeString">
+  <input type="type=helper1(key1=&quot;string&quot;) placeholder=helper2(&quot;string&quot;)">
+</template>
+
+<template name="match-html-attributeExtremeStringDouble">
+  <input type="type=helper1(key1='string') placeholder=helper2('string')">
+</template>
+
+<template name="match-html-attributeExtremeStringEscaped">
+  <input type="type=helper1(key1='string') placeholder=helper2('string')">
+</template>
 
 <template name="match-html-dynamicAttributeWithDollarSign"><input {{attr true}}></template>
 
