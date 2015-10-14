@@ -1,5 +1,37 @@
 var path = Npm.require('path');
 
+
+var templateEventsGen = function(events, tplName) {
+  var nameLiteral = JSON.stringify(tplName);
+  var templateDotNameLiteral = JSON.stringify("Template." + tplName);
+  var res = "";
+
+  for(key in events) {
+     res += "\nTemplate[" + nameLiteral + "].events({\n  '"+key+
+       "': function(event) {\n    " + events[key] + "\n  }\n});\n";
+  }
+  return res;
+}
+
+var findEvents = function(result) {
+  if(!result)
+    return null;
+  if(result.events)
+    return result.events;
+  for(var i=0; i<result.length; i++) {
+    if(typeof(result[i])=='object'&&result[i].events)
+      return result[i].events;
+  }
+}
+var eventGen = function(template, templateName) {
+  var events = findEvents(template); 
+    if(events)
+      return templateEventsGen(events, templateName);
+    return "";
+}
+
+
+
 // XXX Handle body attributes
 var bodyGen = function (tpl, attrs) {
   var res = "";
@@ -14,7 +46,8 @@ var bodyGen = function (tpl, attrs) {
   });
   res += ");\n";
   res += "Meteor.startup(Template.body.renderToDocument);\n";
-  return res;
+  res += eventGen(tpl, "body");
+ return res;
 };
 
 var templateGen = function (tree, tplName) {
@@ -29,6 +62,8 @@ var templateGen = function (tree, tplName) {
     sourceName: 'Template "' + tplName + '"'
   });
   res += ");\n";
+  res += eventGen(tree, tplName);
+
   return res;
 };
 
@@ -60,17 +95,6 @@ var templateHelperGen = function (helpers, tplName) {
   }
   return res;
 };
-var bodyHelperGen = function (helpers) {
-
-  var res = "";
-
-  for(key in helpers) {
-     res += "\nTemplate.body.helpers({\n  "+key+
-       ": function() {\n    return (" + helpers[key] + ");\n  }\n});\n";
-  }
-  return res;
-};
-
 
 var fileModeHandler = function (compileStep) {
   var results = getCompilerResult(compileStep, true);
@@ -88,7 +112,7 @@ var fileModeHandler = function (compileStep) {
     jsContent += bodyGen(results.body, results.bodyAttrs);
   }
   if (! _.isEmpty(results.bodyHelpers)) {
-    jsContent += bodyHelperGen(results.bodyHelpers);
+    jsContent += templateHelperGen(results.bodyHelpers, 'body');
   }
   if (! _.isEmpty(results.templates)) {
     jsContent += _.map(results.templates, templateGen).join("");
@@ -97,7 +121,8 @@ var fileModeHandler = function (compileStep) {
     jsContent += _.map(results.templatesHelpers, templateHelperGen).join("");
   }
 
-  //console.log("results: ", JSON.stringify(results), ", jsContent: ", jsContent);
+
+  //console.log("result: ", JSON.stringify(result, null, 2), ", template output: ", jsContent)
 
   if (jsContent !== "") {
     compileStep.addJavaScript({
@@ -129,20 +154,18 @@ var templateModeHandler = function (compileStep) {
     });
 
   } else {
-    var helpers = findHelpers(result); 
 
     if (templateName === "body") {
       jsContent = bodyGen(result);
-      if(helpers)
-        jsContent += bodyHelperGen(helpers)
     }
     else {
       jsContent = templateGen(result, templateName);
-      if(helpers)
-        jsContent += templateHelperGen(helpers, templateName)
-
     }
-    //console.log("result: ", JSON.stringify(result, null, 2), ", template output: ", jsContent)
+    var helpers = findHelpers(result); 
+    if(helpers)
+      jsContent += templateHelperGen(helpers, templateName)
+
+    // console.log("result: ", JSON.stringify(result, null, 2), ", template output: ", jsContent)
     compileStep.addJavaScript({
       path: compileStep.inputPath + '.js',
       sourcePath: compileStep.inputPath,

@@ -48,13 +48,13 @@ var throwError = function (message, node) {
 // value: the tree created by the transpiler.
 // found: a map from helper function names to
 //    their function body.
-function searchNewArgs(value, found) {
+function searchNewArgs(value, found, foundEvents) {
   if(value==null) {
     return;
   }
   if(Array.isArray(value)) {
     for(var i=0; i<value.length; i++) {
-      searchNewArgs(value[i], found)
+      searchNewArgs(value[i], found, foundEvents)
     }
 
   }
@@ -67,16 +67,21 @@ function searchNewArgs(value, found) {
       found[key]=value.helpers[key];
     }
   }
+  if(value.events && !_.isEmpty(value.events)) {
+    for(var key in value.events) {
+      foundEvents[key+" ."+value.eventClass]=value.events[key];
+    }
+  }
   if(value.children) {
-    searchNewArgs(value.children, found)
+    searchNewArgs(value.children, found, foundEvents)
   }
   if(value.content) {
-    searchNewArgs(value.content, found)
+    searchNewArgs(value.content, found, foundEvents)
   }
 
   if(value.attrs) {
     for(var attr in value.attrs) {
-      searchNewArgs(value.attrs[attr], found)
+      searchNewArgs(value.attrs[attr], found, foundEvents)
     }
   }
 }
@@ -87,9 +92,18 @@ function searchNewArgs(value, found) {
 //    their function body.
 var genHelpers = function(body) {
       found={};
-      searchNewArgs(body, found);
+      foundEvents={}
+      searchNewArgs(body, found, foundEvents);
       return found;
 }
+
+var genEvents = function(body) {
+      found={};
+      foundEvents={}
+      searchNewArgs(body, found, foundEvents);
+      return foundEvents;
+}
+
 
 FileCompiler = function(tree, options) {
   var self = this;
@@ -257,16 +271,23 @@ _.extend(TemplateCompiler.prototype, {
     //   without changing it when there is no anonymous helper needed.
     if(r) {
       helpers = genHelpers(r);
-      if(!_.isEmpty(helpers))
+      events = genEvents(r);
+      if(!_.isEmpty(helpers) || !_.isEmpty(events))
         if(Array.isArray(r)) {
           for(var i=0; i<r.length; i++) {
             if(typeof(r[i])=='object') {
-              r[i].helpers = helpers;
+              if(!_.isEmpty(helpers))
+                r[i].helpers = helpers;
+              if(!_.isEmpty(events))
+                r[i].events = events;
               break;
             }
           }
         } else
-          r.helpers = helpers;
+          if(!_.isEmpty(helpers))
+            r.helpers = helpers;
+          if(!_.isEmpty(events))
+            r.events = events;
     }
     return r;
   },
@@ -331,7 +352,16 @@ _.extend(TemplateCompiler.prototype, {
 
   visitNode: function(node, elseNode) {
     var self = this;
-    var attrs = self.visitAttributes(node.attrs);
+    var attrs = self.visitAttributes(node.attrs, node);
+
+    // attrs may have created events with mt-...
+    if(node.events) {
+      if(attrs.class==null)
+        attrs.class="";
+      node.eventClass="_event_line"+node.line;
+      attrs.class=attrs.class+" "+node.eventClass;
+    }
+
     var content;
 
     if (node.code) {
@@ -420,7 +450,12 @@ _.extend(TemplateCompiler.prototype, {
     if (! _.isEmpty(attrs))
       content.unshift(attrs);
 
-    return HTML.getTag(tagName).apply(null, content);
+    var r = HTML.getTag(tagName).apply(null, content);
+    if(node.events && !_.isEmpty(node.events)) {
+      r.events=node.events;
+      r.eventClass=node.eventClass;
+    }
+    return r;
   },
 
   visitText: function(node) {
@@ -513,7 +548,7 @@ _.extend(TemplateCompiler.prototype, {
     throwError("Case statements are not supported in meteor-jade", node);
   },
 
-  visitAttributes: function (attrs) {
+  visitAttributes: function (attrs, node) {
     // The jade parser provide an attribute tree of this type:
     // [{name: "class", val: "val1", escaped: true}, {name: "id" val: "val2"}]
     // Let's transform that into:
@@ -546,6 +581,8 @@ _.extend(TemplateCompiler.prototype, {
       var val = attr.val;
       var key = attr.name;
 
+
+
       // XXX We need a better handler for JavaScript code
       // First case this is a string
       var strLiteral = stringRepresentationToLiteral(val);
@@ -564,6 +601,15 @@ _.extend(TemplateCompiler.prototype, {
         val = self._spacebarsParse(self.lookup(val, attr.escaped));
         val.position = HTMLTools.TEMPLATE_TAG_POSITION.IN_ATTRIBUTE;
       }
+
+
+      if(key.indexOf("mt-")==0) {
+        // Create event
+        if(node.events==null) {
+          node.events={}
+        }
+        node.events[key.substr(3)]=val;
+       }
 
       if (key === "$dyn") {
         val.position = HTMLTools.TEMPLATE_TAG_POSITION.IN_START_TAG;
