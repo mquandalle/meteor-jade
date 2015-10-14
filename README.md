@@ -81,7 +81,7 @@ input(type='text' $bind('value: value' throttle=500))
 
 The special `@index` variable inside `each` loops may now be used in interpolation or as an argument to a helper.
 
-The only limitation is direct attribute assignment, which should be written as `attr='#{@index}'` and **not** as `attr=@index`.
+The only limitation is direct attribute assignment, which should be written as `attr='#{@index}'`, not as `attr=@index`.
 
 
 ## Compatibility
