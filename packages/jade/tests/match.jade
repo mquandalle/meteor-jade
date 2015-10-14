@@ -176,6 +176,31 @@ template(name='match-jade-eachIn-2')
   +each(u in users)
     = u.name
 
+template(name='match-jade-eachIndex')
+  each users
+    | #{@index}
+
+template(name='match-jade-eachInIndex')
+  each u in users
+    | #{@index}
+
+template(name='match-jade-eachHelperIndex')
+  each users
+    | #{helper @index}
+
+template(name='match-jade-eachIncludeIndex')
+  each users
+    +myTemplate(index=@index)
+
+template(name='match-jade-eachIfIndex')
+  each users
+    if helper(@index)
+      | #{@index}
+
+template(name='match-jade-eachAttributeIndex')
+  each users
+    input(index=helper(@index))
+
 //- else if syntaxic sugar
 template(name='match-jade-elseif')
   if condA

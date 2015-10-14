@@ -82,6 +82,18 @@ world</p></template>
 
 <template name="match-html-eachIn">{{#each u in users}}{{u.name}}{{/each}}</template>
 
+<template name="match-html-eachIndex">{{#each users}}{{@index}}{{/each}}</template>
+
+<template name="match-html-eachInIndex">{{#each u in users}}{{@index}}{{/each}}</template>
+
+<template name="match-html-eachHelperIndex">{{#each users}}{{helper @index}}{{/each}}</template>
+
+<template name="match-html-eachIncludeIndex">{{#each users}}{{> myTemplate index=@index}}{{/each}}</template>
+
+<template name="match-html-eachIfIndex">{{#each users}}{{#if helper @index}}{{@index}}{{/if}}{{/each}}</template>
+
+<template name="match-html-eachAttributeIndex">{{#each users}}<input index="{{helper @index}}">{{/each}}</template>
+
 <!-- else if syntaxic sugar -->
 <template name="match-html-elseif">{{#if condA}}<h1>hello A</h1>{{else}}{{#if condB}}<h2>hello B</h2>{{else}}{{#if condC}}<h3>hello C</h3>{{else}}<h4>goodbye</h4>{{/if}}{{/if}}{{/if}}</template>
 
