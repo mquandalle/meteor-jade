@@ -289,6 +289,9 @@ _.extend(TemplateCompiler.prototype, {
   },
 
   parseText: function(text, options) {
+    // Solve problem with @index not being a correct javascript identifier
+    text = text.replace(/[#!]\{\s*@index\s*\}/g, "{{@index}}");
+
     // The parser doesn't parse #{expression} and !{unescapedExpression}
     // syntaxes. So let's do it.
     // Since we rely on the Spacebars parser for this, we support the
