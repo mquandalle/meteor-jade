@@ -21,7 +21,7 @@ var unwrap = function (value) {
 var unwrapSimple = function (value) {
   if (_.isString(value) && value.trim())
     value=value.trim()
-    if(m=value.match(/^\((.*)\)/)) {
+    if(m=value.match(/^\((.*)\)$/)) {
       value=m[1];
     }
   return value;

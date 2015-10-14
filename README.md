@@ -215,14 +215,15 @@ in a tag. The template will be named after the file name. We handle special
 
 ### Anonymous helper
 
-There is experimental support for such kind of things:
+There is experimental support for helper functions inside the templates:
 
 ```jade
 if player.score > 10
-  p Well done!
+  p Well done, you have #{player.score} points!
+
 ```
 
-It'll be useful for conditions (`if`, `else if` and `unless`) and inside
+It can be useful for conditions (`if`, `else if` and `unless`) and inside
 attributes.
 
 See [related issue](https://github.com/mquandalle/meteor-jade/issues/1)

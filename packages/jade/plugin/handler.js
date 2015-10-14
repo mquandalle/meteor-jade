@@ -97,6 +97,8 @@ var fileModeHandler = function (compileStep) {
     jsContent += _.map(results.templatesHelpers, templateHelperGen).join("");
   }
 
+  //console.log("results: ", JSON.stringify(results), ", jsContent: ", jsContent);
+
   if (jsContent !== "") {
     compileStep.addJavaScript({
       path: compileStep.inputPath + '.js',

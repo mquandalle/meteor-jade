@@ -60,15 +60,15 @@ Tinytest.add("JadeCompiler - parse anonymous function", function(test) {
     bodyAttrs: {},
     templates: {
       hello: {"type":"BLOCKOPEN","path":["if"],
-      "args":[["PATH",["_jade_line3"]]],
-      "origArgs":"nohelper > 2","newArgs":"_jade_line3",
+      "args":[["PATH",["_jade_line2"]]],
+      "origArgs":"nohelper > 2","newArgs":"_jade_line2",
       "content":"hello world",
-      "helpers":{"_jade_line3":"nohelper > 2"}
+      "helpers":{"_jade_line2":"nohelper > 2"}
       }
     },
     templatesHelpers: {
       hello: {
-        "_jade_line3": "nohelper > 2"
+        "_jade_line2": "nohelper > 2"
       }
     }
   });

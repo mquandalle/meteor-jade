@@ -109,10 +109,6 @@ _.extend(FileCompiler.prototype, {
 
     self.templatesHelpers=self.genTemplateHelpers(self.templates);
     self.bodyHelpers=genHelpers(self.body);
-      self.bodyHelpers=null;
-    if(!_.isEmpty(self.bodyHelpers))
-      self.bodyHelpers=null;
-
 
     r = {
       head: self.head,
@@ -382,7 +378,6 @@ _.extend(TemplateCompiler.prototype, {
     var origArgs=null;
 
     if(node.name.match(/^if|else if|unless|each$/) && args.length > 0 && args.match(/[^_a-zA-Z0-9 .]/)) {
-      console.log("Setting origArgs to ", args)
       origArgs=args
       args="_jade_line"+(node.block.line-1)  // No line number was generated
     }

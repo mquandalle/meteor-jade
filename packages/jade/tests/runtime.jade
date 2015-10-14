@@ -4,6 +4,20 @@ head
 body(data-test="value")
   #myUniqueJadeIdentifier
     +insert_a_PRE_tag_here
+  #otherUnique Evaluated content: #{(2+3)*3}
+  #inlineEval(content="c#{function(){return 2+(2+2)}()}")
+  #ifEvalTest
+    if 5>4
+        | 9
+    else
+        | 10
+    if (1+4)-function(){return 0}()<4
+        | 8
+    else
+        | 12
+
 
 template(name="insert_a_PRE_tag_here")
   pre
+    #templateChildEval #{function() {return 1+2}()}
+  #templateEval #{1+2+2}
