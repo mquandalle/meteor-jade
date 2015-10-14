@@ -1,4 +1,109 @@
-# Jade for Meteor
+# Jade for Meteor with anonymous helpers and event support
+
+With this version of meteor-jade you can cut down a lot of code.
+Here is how you can write the whole simple-todos app:
+
+simple-todos.jade:
+```jade
+head
+  title Todo List
+
+body
+  .container
+    header
+      h1 Todo List (#{Tasks.find({checked: {$ne: true}}).count()})
+      label.hide-completed(mt-change="Session.set('hideCompleted', event.target.checked)")
+        input(type="checkbox" checked="#{Session.get('hideCompleted')}")
+        | Hide Completed Tasks
+
+      +loginButtons
+      if currentUser
+        form.new-task
+          input(type="text" name="text" placeholder="Type to add new tasks!")
+    ul
+      each shownTasks()
+        +task
+
+```
+
+task.tpl.jade:
+```jade
+li(class="{{#if checked}}checked{{/if}} {{#if private}}private{{/if}}")
+    button.delete(mt-click="Meteor.call('deleteTask', this._id)") &times;
+    input(type="checkbox" checked=checked
+        mt-click="Meteor.call('setChecked', this.id, !this.checked)")
+    if this.owner==Meteor.userId()
+      button(mt-click="Meteor.call('setPrivate', this._id, !this.private)")
+        if private
+          | Private
+        else
+          | Public
+    span.text <strong>#{username}</strong> - #{text}
+```
+
+simple-todos.coffee:
+```jade
+Tasks = new (Mongo.Collection)('tasks')
+@shownTasks=->
+  if Session.get('hideCompleted')
+    # If hide completed is checked, filter tasks
+    Tasks.find { checked: $ne: true }, sort: createdAt: -1
+  else
+    # Otherwise, return all of the tasks
+    Tasks.find {}, sort: createdAt: -1
+
+if Meteor.isServer
+  # This code only runs on the server
+  # Only publish tasks that are public or belong to the current user
+  Meteor.publish 'tasks', ->
+    Tasks.find $or: [
+      { private: $ne: true }
+      { owner: @userId }
+    ]
+if Meteor.isClient
+  # This code only runs on the client
+  Meteor.subscribe 'tasks'
+  Template.body.events
+    'submit .new-task': (event) ->
+      # Prevent default browser form submit
+      event.preventDefault()
+      # Get value from form element
+      text = event.target.text.value
+      # Insert a task into the collection
+      Meteor.call 'addTask', text
+      # Clear form
+      event.target.text.value = ''
+  Accounts.ui.config passwordSignupFields: 'USERNAME_ONLY'
+Meteor.methods
+  addTask: (text) ->
+    # Make sure the user is logged in before inserting a task
+    if !Meteor.userId()
+      throw new (Meteor.Error)('not-authorized')
+    Tasks.insert
+      text: text
+      createdAt: new Date
+      owner: Meteor.userId()
+      username: Meteor.user().username
+  deleteTask: (taskId) ->
+    task = Tasks.findOne(taskId)
+    if task.private and task.owner != Meteor.userId()
+      # If the task is private, make sure only the owner can delete it
+      throw new (Meteor.Error)('not-authorized')
+    Tasks.remove taskId
+  setChecked: (taskId, setChecked) ->
+    task = Tasks.findOne(taskId)
+    if task.private and task.owner != Meteor.userId()
+      # If the task is private, make sure only the owner can check it off
+      throw new (Meteor.Error)('not-authorized')
+    Tasks.update taskId, $set: checked: setChecked
+  setPrivate: (taskId, setToPrivate) ->
+    task = Tasks.findOne(taskId)
+    # Make sure only the task owner can make a task private
+    if task.owner != Meteor.userId()
+      throw new (Meteor.Error)('not-authorized')
+    Tasks.update taskId, $set: private: setToPrivate
+
+```
 
 This [Meteor](https://www.meteor.com/) smart package provides support for
 the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative.
