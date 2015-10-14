@@ -105,8 +105,6 @@ _.extend(FileCompiler.prototype, {
 
       var name = node.attrs[0].val.slice(1, -1);
 
-      if (name === "content")
-        throwError('Template can\'t be named "content"', node);
       if (_.has(self.templates, name))
         throwError('Template "' + name + '" is set twice', node);
 
