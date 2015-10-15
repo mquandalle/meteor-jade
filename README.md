@@ -1,7 +1,7 @@
 # Jade for Meteor with anonymous helpers and event support
 
 With this version of meteor-jade you can cut down a lot of code.
-Here is how you can write the whole simple-todos app in 95 lines of code:
+Here is how you can write the whole simple-todos app (except the unmodified css) in 95 lines of code:
 
 simple-todos.jade:
 ```jade
