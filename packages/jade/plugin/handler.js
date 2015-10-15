@@ -1,6 +1,7 @@
 var path = Npm.require('path');
 
 
+// Generate event function
 var templateEventsGen = function(events, tplName) {
   var nameLiteral = JSON.stringify(tplName);
   var templateDotNameLiteral = JSON.stringify("Template." + tplName);
@@ -23,6 +24,7 @@ var findEvents = function(result) {
       return result[i].events;
   }
 }
+
 var eventGen = function(template, templateName) {
   var events = findEvents(template); 
     if(events)
@@ -30,6 +32,37 @@ var eventGen = function(template, templateName) {
     return "";
 }
 
+// Generate helper functions using function name - function body map
+//   in the input.
+var templateHelpersGen = function (helpers, tplName) {
+  var nameLiteral = JSON.stringify(tplName);
+  var templateDotNameLiteral = JSON.stringify("Template." + tplName);
+  var res = "";
+
+  for(key in helpers) {
+     res += "\nTemplate[" + nameLiteral + "].helpers({\n  "+key+
+       ": function() {\n    return (" + helpers[key] + ");\n  }\n});\n";
+  }
+  return res;
+};
+
+var findHelpers = function(result) {
+  if(!result)
+    return null;
+  if(result.helpers)
+    return result.helpers;
+  for(var i=0; i<result.length; i++) {
+    if(typeof(result[i])=='object'&&result[i].helpers)
+      return result[i].helpers;
+  }
+}
+
+var helperGen = function(template, templateName) {
+  var helpers = findHelpers(template); 
+    if(helpers)
+      return templateHelpersGen(helpers, templateName);
+    return "";
+}
 
 
 // XXX Handle body attributes
@@ -47,8 +80,10 @@ var bodyGen = function (tpl, attrs) {
   res += ");\n";
   res += "Meteor.startup(Template.body.renderToDocument);\n";
   res += eventGen(tpl, "body");
+  res += helperGen(tpl, "body");
  return res;
 };
+
 
 var templateGen = function (tree, tplName) {
   var nameLiteral = JSON.stringify(tplName);
@@ -63,6 +98,7 @@ var templateGen = function (tree, tplName) {
   });
   res += ");\n";
   res += eventGen(tree, tplName);
+  res += helperGen(tree, tplName);
 
   return res;
 };
@@ -82,19 +118,7 @@ var getCompilerResult = function (compileStep, fileMode) {
   }
 };
 
-// Generate helper functions using function name - function body map
-//   in the input.
-var templateHelperGen = function (helpers, tplName) {
-  var nameLiteral = JSON.stringify(tplName);
-  var templateDotNameLiteral = JSON.stringify("Template." + tplName);
-  var res = "";
 
-  for(key in helpers) {
-     res += "\nTemplate[" + nameLiteral + "].helpers({\n  "+key+
-       ": function() {\n    return (" + helpers[key] + ");\n  }\n});\n";
-  }
-  return res;
-};
 
 var fileModeHandler = function (compileStep) {
   var results = getCompilerResult(compileStep, true);
@@ -111,14 +135,8 @@ var fileModeHandler = function (compileStep) {
   if (results.body !== null) {
     jsContent += bodyGen(results.body, results.bodyAttrs);
   }
-  if (! _.isEmpty(results.bodyHelpers)) {
-    jsContent += templateHelperGen(results.bodyHelpers, 'body');
-  }
   if (! _.isEmpty(results.templates)) {
     jsContent += _.map(results.templates, templateGen).join("");
-  }
-  if (! _.isEmpty(results.templatesHelpers)) {
-    jsContent += _.map(results.templatesHelpers, templateHelperGen).join("");
   }
 
 
@@ -132,16 +150,7 @@ var fileModeHandler = function (compileStep) {
     });
   }
 };
-var findHelpers = function(result) {
-  if(!result)
-    return null;
-  if(result.helpers)
-    return result.helpers;
-  for(var i=0; i<result.length; i++) {
-    if(typeof(result[i])=='object'&&result[i].helpers)
-      return result[i].helpers;
-  }
-}
+
 var templateModeHandler = function (compileStep) {
   var result = getCompilerResult(compileStep, false);
   var templateName = path.basename(compileStep.inputPath, '.tpl.jade');
@@ -161,9 +170,6 @@ var templateModeHandler = function (compileStep) {
     else {
       jsContent = templateGen(result, templateName);
     }
-    var helpers = findHelpers(result); 
-    if(helpers)
-      jsContent += templateHelperGen(helpers, templateName)
 
     // console.log("result: ", JSON.stringify(result, null, 2), ", template output: ", jsContent)
     compileStep.addJavaScript({
