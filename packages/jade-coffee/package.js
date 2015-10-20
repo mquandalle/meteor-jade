@@ -1,8 +1,8 @@
 Package.describe({
-  summary: "Jade template language",
-  version: "0.4.3_1",
-  name: "mquandalle:jade",
-  git: "https://github.com/mquandalle/meteor-jade.git",
+  summary: "Jade template language with inline coffeescript and Javascript support",
+  version: "0.5",
+  name: "xiphy:jade-coffee",
+  git: "https://github.com/xiphias/meteor-jade-coffee.git",
   documentation: "../../README.md"
 });
 
@@ -13,7 +13,7 @@ Package.registerBuildPlugin({
     "htmljs@1.0.0",
     "minifiers@1.0.0",
     "spacebars-compiler@1.0.0",
-    "mquandalle:jade-compiler@0.4.3"
+    "xiphy:jade-compiler@0.5"
   ],
   sources: [
     "plugin/handler.js",

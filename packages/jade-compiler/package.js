@@ -1,8 +1,8 @@
 Package.describe({
-  summary: "Compiler for the meteor-jade template language",
-  version: "0.4.3",
-  name: "mquandalle:jade-compiler",
-  git: "https://github.com/mquandalle/meteor-jade.git",
+  summary: "Compiler for the meteor-jade template language with inline anonymous helpers and events support",
+  version: "0.5",
+  name: "xiphy:jade-compiler",
+  git: "https://github.com/xiphias/meteor-jade.git",
   documentation: "../../README.md"
 });
 
@@ -17,7 +17,8 @@ Package.onUse(function(api) {
     'htmljs',
     'html-tools',
     'blaze-tools',
-    'spacebars-compiler'
+    'spacebars-compiler',
+	'coffeescript'
   ]);
   api.use('minifiers', ['server'], { weak: true });
   api.addFiles([
