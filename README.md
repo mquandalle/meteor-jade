@@ -3,7 +3,31 @@
 This [Meteor](https://www.meteor.com/) smart package provides support for
 the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative with inline Javascript and Coffeescript.
 
-With this version of meteor-jade you can cut down a lot of code. To see the simple-todos example using the jade-coffee Meteor package, see the Example code at https://github.com/xiphias/meteor-jade-coffee#example-code
+With this version of meteor-jade you can cut down a lot of code. Here's a part of the simple todos app using Jade-Coffee:
+
+simple-todos.coffee.jade:
+```jade
+head
+  title Todo List
+
+body
+  .container
+    header
+      h1 Todo List (#{Tasks.find({checked: $ne: true}).count()})
+      label.hide-completed(mt-change="Session.set 'hideCompleted', event.target.checked")
+        input(type="checkbox" checked="#{Session.get 'hideCompleted'}")
+        | Hide Completed Tasks #{testhelper}
+
+      +loginButtons
+      if currentUser
+        form.new-task
+          input(type="text" name="text" placeholder="Type to add new tasks!")
+    ul
+      each shownTasks()
+        +task
+```
+
+To see the simple-todos example using the jade-coffee Meteor package, see the Example code at https://github.com/xiphias/meteor-jade-coffee#example-code
 
 ## Example code
 
