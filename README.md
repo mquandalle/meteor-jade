@@ -3,7 +3,7 @@
 With this version of meteor-jade you can cut down a lot of code.
 Here is how you can write the whole simple-todos app (except the unmodified css) in 95 lines of code:
 
-simple-todos.jade:
+simple-todos.coffee.jade:
 ```jade
 head
   title Todo List
@@ -11,10 +11,10 @@ head
 body
   .container
     header
-      h1 Todo List (#{Tasks.find({checked: {$ne: true}}).count()})
-      label.hide-completed(mt-change="Session.set('hideCompleted', event.target.checked)")
-        input(type="checkbox" checked="#{Session.get('hideCompleted')}")
-        | Hide Completed Tasks
+      h1 Todo List (#{Tasks.find({checked: $ne: true}).count()})
+      label.hide-completed(mt-change="Session.set 'hideCompleted', event.target.checked")
+        input(type="checkbox" checked="#{Session.get 'hideCompleted'}")
+        | Hide Completed Tasks #{testhelper}
 
       +loginButtons
       if currentUser
@@ -23,17 +23,16 @@ body
     ul
       each shownTasks()
         +task
-
 ```
 
-task.tpl.jade:
+task.tpl.coffee.jade:
 ```jade
 li(class="{{#if checked}}checked{{/if}} {{#if private}}private{{/if}}")
-    button.delete(mt-click="Meteor.call('deleteTask', this._id)") &times;
+    button.delete(mt-click="Meteor.call 'deleteTask', @_id") &times;
     input(type="checkbox" checked=checked
-        mt-click="Meteor.call('setChecked', this.id, !this.checked)")
+        mt-click="Meteor.call 'setChecked', @_id, !@checked")
     if this.owner==Meteor.userId()
-      button(mt-click="Meteor.call('setPrivate', this._id, !this.private)")
+      button(mt-click="Meteor.call 'setPrivate', @_id, !@private")
         if private
           | Private
         else
@@ -106,7 +105,7 @@ Meteor.methods
 ```
 
 This [Meteor](https://www.meteor.com/) smart package provides support for
-the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative.
+the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative and adds inline Javascript and Coffeescript support.
 
 Spacebars and Jade packages can coexist, Spacebars will continue to compile
 files ending with `.html` and Jade will take care of those ending with `.jade`.
