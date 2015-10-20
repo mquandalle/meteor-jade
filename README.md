@@ -1,11 +1,12 @@
 # Jade for Meteor with support for anonymous Meteor helper and event templates using inline CoffeeScript or JavaScript
 
-
 This [Meteor](https://www.meteor.com/) smart package provides support for
 the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative with inline Javascript and Coffeescript.
 
+With this version of meteor-jade you can cut down a lot of code. To see the simple-todos example using the jade-coffee Meteor package, see the Example code at https://github.com/xiphias/meteor-jade-coffee#example-code
 
-With this version of meteor-jade you can cut down a lot of code.
+## Example code
+
 Here is how you can write the whole simple-todos app (except the unmodified css) in less than 100 lines of code, while making the app easier to maintain:
 
 simple-todos.coffee.jade:
