@@ -35,7 +35,8 @@ Package.onTest(function (api) {
     "tests/match.html",
     "tests/runtime.jade",
     "tests/body.tpl.jade",
-    "tests/img_tag_here.tpl.jade"
+    "tests/img_tag_here.tpl.jade",
+    "tests/runtimec.coffee.jade"
   ]);
   api.addFiles(["tests/match.js", "tests/runtime.js"], "client");
 });

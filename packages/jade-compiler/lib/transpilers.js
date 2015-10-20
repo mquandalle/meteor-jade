@@ -63,14 +63,14 @@ function searchNewArgs(value, found, foundEvents) {
       found[value.newArgs]=value.origArgs
   }
   if(value.helpers) {
-    for(var key in value.helpers) {
-      found[key]=value.helpers[key];
-    }
+    _.each(value.helpers, function(helper, key) {
+      found[key]=helper;
+    })
   }
-  if(value.events && !_.isEmpty(value.events)) {
-    for(var key in value.events) {
-      foundEvents[key+" ."+value.eventClass]=value.events[key];
-    }
+  if(value.events) {
+    _.each(value.events, function(event, key) {
+      foundEvents[key+" ."+value.eventClass]=event;
+    })
   }
   if(value.children) {
     searchNewArgs(value.children, found, foundEvents)
@@ -80,9 +80,9 @@ function searchNewArgs(value, found, foundEvents) {
   }
 
   if(value.attrs) {
-    for(var attr in value.attrs) {
-      searchNewArgs(value.attrs[attr], found, foundEvents)
-    }
+    _.each(value.attrs, function(attrValue, attr) {
+      searchNewArgs(attrValue, found, foundEvents)
+    })
   }
 }
 
@@ -148,10 +148,8 @@ _.extend(FileCompiler.prototype, {
       value=templates[key]
       // search for newArgs - origArgs
       found=genHelpers(value)
-      for(f in found) { // check if found is empty
-        r[key]=found
-        break;
-      }
+      if(!_.isEmpty(found))
+        r[key]=found;
     }
     return r;
 

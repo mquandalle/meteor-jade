@@ -40,3 +40,8 @@ Tinytest.add('Jade - If eval test', function (test) {
   test.equal($('#ifEvalTest').text(),
     "9\n12");
 });
+
+Tinytest.add('Jade - Coffee eval test', function (test) {
+  test.equal($('#coffeeTest').text(),
+    "25");
+});

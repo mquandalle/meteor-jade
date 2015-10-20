@@ -4,6 +4,7 @@ head
 body(data-test="value")
   #myUniqueJadeIdentifier
     +insert_a_PRE_tag_here
+  +coffeeTemplate
   #otherUnique Evaluated content: #{(2+3)*3}
   #inlineEval(content="c#{function(){return 2+(2+2)}()}")
   #ifEvalTest
