@@ -1,7 +1,7 @@
-# Jade for Meteor with anonymous helpers and event support
+# Jade for Meteor with support for anonymous Meteor helper and event templates using inline CoffeeScript or JavaScript
 
 With this version of meteor-jade you can cut down a lot of code.
-Here is how you can write the whole simple-todos app (except the unmodified css) in 95 lines of code:
+Here is how you can write the whole simple-todos app (except the unmodified css) in less than 100 lines of code, while making the app easier to maintain:
 
 simple-todos.coffee.jade:
 ```jade
@@ -105,7 +105,7 @@ Meteor.methods
 ```
 
 This [Meteor](https://www.meteor.com/) smart package provides support for
-the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative and adds inline Javascript and Coffeescript support.
+the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative with inline Javascript and Coffeescript.
 
 Spacebars and Jade packages can coexist, Spacebars will continue to compile
 files ending with `.html` and Jade will take care of those ending with `.jade`.
@@ -316,8 +316,9 @@ can only define one template per file and you don't need to wrap your template
 in a tag. The template will be named after the file name. We handle special
 `head.tpl.jade` and `body.tpl.jade` templates as expected.
 
+You can also use the `.coffee.jade` file extension for inline CoffeeScript, and the program accepts both `.coffee.tpl.jade` and `.tpl.coffee.jade` as Jade templates with inline CoffeeScript support.
 
-### Anonymous helper
+### Anonymous helpers
 
 There is experimental support for helper functions inside the templates:
 
@@ -328,9 +329,18 @@ if player.score > 10
 ```
 
 It can be useful for conditions (`if`, `else if` and `unless`) and inside
-attributes.
+attributes. Anonymous helpers can't call other template helper functions though. If you want to use a helper function in multiple anonymous helpers, you have to declare it as a global function.
 
-See [related issue](https://github.com/mquandalle/meteor-jade/issues/1)
+### Anonymous events
+
+There is experimental support for anonymous event functions inside the templates as well:
+
+```jade
+    button.delete(mt-click="Meteor.call 'deleteTask', @_id") &times;
+```
+
+It uses the event after mt-, and uses JavaScript or CoffeeScript depending on the extension of the file. The event function can use the current object and also can access current DOM event with the event variable. 
+
 
 ## Contributing
 
@@ -360,21 +370,5 @@ Use the following command to run the tests:
 $ meteor test-packages --test-app-path . packages/*
 ```
 
-### Tips
-
-If you want to buy me a beer, I proudly accept bitcoin tips:
-[1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy][blockchain]
-
-[blockchain]: https://blockchain.info/address/1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy
-
 ## Known bugs
-
-### Using Jade in a package
-
-When using Jade in a package you need to lock the version to the [latest version](https://github.com/mquandalle/meteor-jade/blob/master/packages/jade/package.js#L3) manually. See [issue #83](https://github.com/mquandalle/meteor-jade/issues/83).
-```javascript
-api.use([
-    "templating",
-    "mquandalle:jade@0.4.1"
-], "client");
-```
+This is an experimental version so there can be many unknown bugs, but the biggest problem that I know of is that the program uses a heuristic to see if the code is inline anonymous helper (that can't call other helper functions) or if it is a named Meteor helper function.
