@@ -1,5 +1,10 @@
 # Jade for Meteor with support for anonymous Meteor helper and event templates using inline CoffeeScript or JavaScript
 
+
+This [Meteor](https://www.meteor.com/) smart package provides support for
+the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative with inline Javascript and Coffeescript.
+
+
 With this version of meteor-jade you can cut down a lot of code.
 Here is how you can write the whole simple-todos app (except the unmodified css) in less than 100 lines of code, while making the app easier to maintain:
 
@@ -104,8 +109,6 @@ Meteor.methods
 
 ```
 
-This [Meteor](https://www.meteor.com/) smart package provides support for
-the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative with inline Javascript and Coffeescript.
 
 Spacebars and Jade packages can coexist, Spacebars will continue to compile
 files ending with `.html` and Jade will take care of those ending with `.jade`.
