@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Compiler for the meteor-jade template language with inline anonymous helpers and events support",
-  version: "0.5",
+  version: "0.5.0",
   name: "xiphy:jade-compiler",
   git: "https://github.com/xiphias/meteor-jade.git",
   documentation: "../../README.md"
@@ -36,6 +36,6 @@ Package.onTest(function (api) {
   api.use("minifiers");
   api.use("ecmascript")
   api.use("underscore")
-  api.use("mquandalle:jade-compiler", "server");
+  api.use("xiphy:jade-compiler", "server");
   api.addFiles(["tests/tests.js"], "server");
 });

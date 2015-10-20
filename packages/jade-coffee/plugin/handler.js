@@ -13,7 +13,6 @@ var coffeePrecompiler = function(code) {
   };
 
   compiled = coffee.compile(code, options);
-  console.log("Compiled: ", compiled)
   return compiled;
 }
 
@@ -59,7 +58,6 @@ var templateHelpersGen = function (helpers, tplName, preCompiler) {
     res += "\nTemplate[" + nameLiteral + "].helpers({\n  "+key+
        ": function() {\n    " + preCompiler("return ("+helpers[key]+");") + "\n  }\n});\n";
   }
-  console.log(res);
   return res;
 };
 
