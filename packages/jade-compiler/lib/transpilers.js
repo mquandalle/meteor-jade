@@ -78,6 +78,10 @@ function searchNewArgs(value, found, foundEvents) {
   if(value.content) {
     searchNewArgs(value.content, found, foundEvents)
   }
+  if(value.elseContent) {
+    searchNewArgs(value.elseContent, found, foundEvents)
+  }
+
 
   if(value.attrs) {
     _.each(value.attrs, function(attrValue, attr) {

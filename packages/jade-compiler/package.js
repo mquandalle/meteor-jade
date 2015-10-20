@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Compiler for the meteor-jade template language with inline anonymous helpers and events support",
-  version: "0.5.0",
+  version: "0.5.1",
   name: "xiphy:jade-compiler",
   git: "https://github.com/xiphias/meteor-jade.git",
   documentation: "../../README.md"
