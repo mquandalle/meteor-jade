@@ -18,6 +18,7 @@ files ending with `.html` and Jade will take care of those ending with `.jade`.
 	* [else if](#else-if)
 	* [Unwrapped templates](#unwrapped-templates)
 	* [Anonymous helper](#anonymous-helper)
+* [Unsupported Jade Features](#unsupported-features)
 * [Contributing](#contributing)
 	* [Implementation](#implementation)
 	* [License](#license)
@@ -226,6 +227,14 @@ It'll be useful for conditions (`if`, `else if` and `unless`) and inside
 attributes.
 
 See [related issue](https://github.com/mquandalle/meteor-jade/issues/1)
+
+## Unsupported Features
+
+Currently the following Jade features are not supported by `meteor-jade`.
+
+- Code
+- Case
+- Filter
 
 ## Contributing
 
