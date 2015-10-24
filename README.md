@@ -1,6 +1,6 @@
 # Jade for Meteor
 
-This [Meteor](https://www.meteor.com/) smart package provides support for
+This [Meteor](https://www.meteor.com/) smart package provides some support for
 the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative.
 
 Spacebars and Jade packages can coexist, Spacebars will continue to compile
@@ -18,6 +18,7 @@ files ending with `.html` and Jade will take care of those ending with `.jade`.
 	* [else if](#else-if)
 	* [Unwrapped templates](#unwrapped-templates)
 	* [Anonymous helper](#anonymous-helper)
+* [Unsupported Jade Features](#unsupported-features)
 * [Contributing](#contributing)
 	* [Implementation](#implementation)
 	* [License](#license)
@@ -42,7 +43,7 @@ versions of those examples templates and even more in the
 
 ## Usage
 
-Meteor-jade basically works like pure Jade, so if you never use Jade before you
+Meteor-jade works somewhat like Jade, so if you never use Jade before you
 should take a look at the [documentation](http://jade-lang.com/reference/).
 
 There are some specifics rules relative to the Meteor way of handling templates.
@@ -215,7 +216,7 @@ in a tag. The template will be named after the file name. We handle special
 
 ### Anonymous helper
 
-This one is not implemented yet but I'd like to write such kind of things:
+**This feature is not yet implemented.**  However, once implemented it could:
 
 ```jade
 if player.score > 10
@@ -226,6 +227,14 @@ It'll be useful for conditions (`if`, `else if` and `unless`) and inside
 attributes.
 
 See [related issue](https://github.com/mquandalle/meteor-jade/issues/1)
+
+## Unsupported Features
+
+Currently the following Jade features are not supported by `meteor-jade`.
+
+- Code
+- Case
+- Filter
 
 ## Contributing
 
