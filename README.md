@@ -279,6 +279,6 @@ When using Jade in a package you need to lock the version to the [latest version
 ```javascript
 api.use([
     "templating",
-    "mquandalle:jade@0.4.1"
+    "mquandalle:jade@0.4.4"
 ], "client");
 ```
