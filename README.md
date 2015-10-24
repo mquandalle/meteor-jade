@@ -17,7 +17,7 @@ files ending with `.html` and Jade will take care of those ending with `.jade`.
 * [Additional features](#additional-features)
 	* [else if](#else-if)
 	* [Unwrapped templates](#unwrapped-templates)
-	* [Anonymous helper](#PR-anonymous-helper)
+	* [Anonymous helper](#anonymous-helper)
 * [Contributing](#contributing)
 	* [Implementation](#implementation)
 	* [License](#license)
@@ -213,7 +213,7 @@ in a tag. The template will be named after the file name. We handle special
 `head.tpl.jade` and `body.tpl.jade` templates as expected.
 
 
-### *PR* Anonymous helper
+### Anonymous helper
 
 **This feature is not yet implemented.**  However, once implemented it could:
 
