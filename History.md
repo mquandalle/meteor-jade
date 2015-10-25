@@ -1,3 +1,10 @@
+## v0.4.4
+
+*requires Meteor 1.2*
+
+* Add a missing runtime dependency, `blaze`
+* Fix Meteor 1.2 compatibility #175
+
 ## v0.4.3
 
 * Support body attributes #121
