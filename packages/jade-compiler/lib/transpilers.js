@@ -2,6 +2,8 @@
 // of this object is to transform the jade syntax-tree to a spacebars
 // syntax-tree.
 //
+// XXX Migrate to ES6
+//
 // XXX Source-mapping: Jade give us the line number, so we could implement a
 // simple line-mapping but it's not yet supported by the spacebars compiler.
 
@@ -104,7 +106,7 @@ _.extend(FileCompiler.prototype, {
         throwError('Templates must only have a "name" attribute', node);
 
       var name = node.attrs[0].val.slice(1, -1);
-      
+
       if (_.has(self.templates, name))
         throwError('Template "' + name + '" is set twice', node);
 
@@ -166,12 +168,14 @@ _.extend(TemplateCompiler.prototype, {
         // Create the stack [nodeIf, nodeElseIf..., nodeElse]
         stack = [];
         while (currentNode.name === "if" && nodes[i+1] &&
-          nodes[i+1].type === "Mixin" && nodes[i+1].name === "else if")
-            stack.push(nodes[++i]);
+                 nodes[i+1].type === "Mixin" && nodes[i+1].name === "else if") {
+          stack.push(nodes[++i]);
+        }
 
         if (nodes[i+1] && nodes[i+1].type === "Mixin" &&
-          nodes[i+1].name === "else")
-            stack.push(nodes[++i]);
+                                                   nodes[i+1].name === "else") {
+          stack.push(nodes[++i]);
+        }
 
         // Transform the stack
         elseNode = stack.shift();
@@ -312,7 +316,7 @@ _.extend(TemplateCompiler.prototype, {
     return self.visitComment(comment);
   },
 
-  visitFilter: function (filter, attrs, content) {
+  visitFilter: function (filter) {
     throwError("Jade filters are not supported in meteor-jade", filter);
   },
 

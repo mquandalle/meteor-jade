@@ -7,12 +7,13 @@ Package.describe({
 });
 
 Npm.depends({
- jade: "https://github.com/mquandalle/jade/tarball/f3f956fa1031e05f85be7bc7b67f12e9ec80ba37"
+  jade: "https://github.com/mquandalle/jade/tarball/f3f956fa1031e05f85be7bc7b67f12e9ec80ba37"
 });
 
 Package.onUse(function(api) {
   api.versionsFrom("METEOR@1.2.0.1");
   api.use([
+    'ecmascript',
     'underscore',
     'htmljs',
     'html-tools',

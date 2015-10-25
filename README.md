@@ -11,19 +11,19 @@ files ending with `.html` and Jade will take care of those ending with `.jade`.
 * [Installation](#installation)
 * [Examples](#examples)
 * [Usage](#usage)
-	* [Templates](#templates)
-	* [HTML Tag attributes](#html-tag-attributes)
-	* [Components](#components)
+  * [Templates](#templates)
+  * [HTML Tag attributes](#html-tag-attributes)
+  * [Components](#components)
 * [Additional features](#additional-features)
-	* [else if](#else-if)
-	* [Unwrapped templates](#unwrapped-templates)
-	* [Anonymous helper](#anonymous-helper)
+  * [else if](#else-if)
+  * [Unwrapped templates](#unwrapped-templates)
+  * [Anonymous helper](#anonymous-helper)
 * [Unsupported Jade Features](#unsupported-features)
 * [Contributing](#contributing)
-	* [Implementation](#implementation)
-	* [License](#license)
-	* [Tests](#tests)
-	* [Tips](#tips)
+  * [Implementation](#implementation)
+  * [License](#license)
+  * [Tests](#tests)
+  * [Tips](#tips)
 * [Known bugs](#known-bugs)
   * [Using Jade in a package](#using-jade-in-a-package)
 
@@ -261,7 +261,7 @@ This code is published under the [MIT license](LICENSE).
 Use the following command to run the tests:
 
 ```
-$ meteor test-packages --test-app-path . packages/*
+$ meteor test-packages packages/*
 ```
 
 ### Tips
@@ -275,10 +275,13 @@ If you want to buy me a beer, I proudly accept bitcoin tips:
 
 ### Using Jade in a package
 
-When using Jade in a package you need to lock the version to the [latest version](https://github.com/mquandalle/meteor-jade/blob/master/packages/jade/package.js#L3) manually. See [issue #83](https://github.com/mquandalle/meteor-jade/issues/83).
+When using Jade in a package you need to lock the version to the [latest
+version](https://github.com/mquandalle/meteor-jade/blob/master/packages/jade/package.js#L3) manually. See
+[issue #83](https://github.com/mquandalle/meteor-jade/issues/83).
+
 ```javascript
 api.use([
-    "templating",
-    "mquandalle:jade@0.4.4"
+  "templating",
+  "mquandalle:jade@0.4.4"
 ], "client");
 ```
