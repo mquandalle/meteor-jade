@@ -376,3 +376,12 @@ $ meteor test-packages --test-app-path . packages/*
 
 ## Known bugs
 This is an experimental version so there can be many unknown bugs, but the biggest problem that I know of is that the program uses a heuristic to see if the code is inline anonymous helper (that can't call other helper functions) or if it is a named Meteor helper function.
+
+### Releasing
+```
+meteor publish
+meteor admin get-machine os.linux.x86_64 --minutes 5
+meteor publish-for-arch xiphy:jade-compiler@0.5.0
+meteor publish-for-arch xiphy:jade-coffee@0.1.1
+```
+
