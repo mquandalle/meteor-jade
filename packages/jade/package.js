@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Jade template language",
-  version: "0.4.4",
+  version: "0.4.5",
   name: "mquandalle:jade",
   git: "https://github.com/mquandalle/meteor-jade.git",
   documentation: "../../README.md",
@@ -15,7 +15,7 @@ Package.registerBuildPlugin({
     "htmljs@1.0.0",
     "minifiers@1.0.0",
     "spacebars-compiler@1.0.0",
-    "mquandalle:jade-compiler@0.4.4",
+    "mquandalle:jade-compiler@0.4.5",
   ],
   sources: [
     "plugin/handler.js",

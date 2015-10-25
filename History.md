@@ -1,3 +1,7 @@
+## v0.4.5
+
+* Support Meteor 1.2 “Batch Plugin” API
+
 ## v0.4.4
 
 *requires Meteor 1.2*

@@ -282,6 +282,6 @@ version](https://github.com/mquandalle/meteor-jade/blob/master/packages/jade/pac
 ```javascript
 api.use([
   "templating",
-  "mquandalle:jade@0.4.4"
+  "mquandalle:jade@0.4.5"
 ], "client");
 ```

@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Compiler for the meteor-jade template language",
-  version: "0.4.4",
+  version: "0.4.5",
   name: "mquandalle:jade-compiler",
   git: "https://github.com/mquandalle/meteor-jade.git",
   documentation: "../../README.md"
