@@ -358,10 +358,16 @@ _.extend(TemplateCompiler.prototype, {
 
     // attrs may have created events with mt-...
     if(node.events) {
-      if(attrs.class==null)
-        attrs.class="";
+      if(attrs==null)
+        attrs={}
       node.eventClass="_event_line"+node.line;
-      attrs.class=attrs.class+" "+node.eventClass;
+      if(_.isArray(attrs.class)) {
+        attrs.class=attrs.class.join("");
+      }
+      if(attrs.class==null)
+        attrs.class=node.eventClass;
+      else
+        attrs.class=attrs.class+" "+node.eventClass;
     }
 
     var content;
