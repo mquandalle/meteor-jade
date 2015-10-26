@@ -1,7 +1,9 @@
 # Jade for Meteor
 
-This [Meteor](https://www.meteor.com/) smart package provides some support for
-the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative.
+[![Meteor Icon](http://icon.meteor.com/package/mquandalle:jade)][atmosphere]
+
+This [Meteor](https://www.meteor.com/) package provides some support for the
+[Jade](http://jade-lang.com/) template engine as a Spacebars alternative.
 
 Spacebars and Jade packages can coexist, Spacebars will continue to compile
 files ending with `.html` and Jade will take care of those ending with `.jade`.
@@ -29,7 +31,8 @@ files ending with `.html` and Jade will take care of those ending with `.jade`.
 
 ## Installation
 
-Meteor-jade is installable from atmosphere, the meteor package system:
+Meteor-jade is installable from [atmosphere][atmosphere], the meteor package
+system:
 
 ```sh
 $ meteor add mquandalle:jade
@@ -269,8 +272,6 @@ $ meteor test-packages packages/*
 If you want to buy me a beer, I proudly accept bitcoin tips:
 [1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy][blockchain]
 
-[blockchain]: https://blockchain.info/address/1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy
-
 ## Known bugs
 
 ### Using Jade in a package
@@ -285,3 +286,6 @@ api.use([
   "mquandalle:jade@0.4.5"
 ], "client");
 ```
+
+[blockchain]: https://blockchain.info/address/1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy
+[atmosphere]: https://atmospherejs.com/mquandalle/jade
