@@ -1,6 +1,6 @@
 # Jade for Meteor with support for anonymous Meteor helper and event templates using inline CoffeeScript or JavaScript
 
-[![Meteor Icon](http://icon.meteor.com/package/mquandalle:jade)][atmosphere]
+[![Meteor Icon](http://icon.meteor.com/package/xiphy:jade-coffee)][atmosphere]
 
 This [Meteor](https://www.meteor.com/) package provides some support for the
 [Jade](http://jade-lang.com/) template engine as a Spacebars alternative
@@ -351,7 +351,7 @@ It uses the event after mt-, and uses JavaScript or CoffeeScript depending on th
 
 ## Unsupported Features
 
-Currently the following Jade features are not supported by `meteor-jade`.
+Currently the following Jade features are not supported by `meteor-jade-coffee`.
 
 - Case
 - Filter
@@ -359,7 +359,7 @@ Currently the following Jade features are not supported by `meteor-jade`.
 ## Contributing
 
 Contributions are welcome, whether it is for a
-[bug report](https://github.com/mquandalle/meteor-jade/issues/new), a fix or a
+[bug report](https://github.com/xiphy/meteor-jade-coffee/issues/new), a fix or a
 new functionnality proposition.
 
 ### Implementation
@@ -398,7 +398,7 @@ meteor publish-for-arch xiphy:jade-coffee@0.1.5
 ### Using Jade in a package
 
 When using Jade in a package you need to lock the version to the [latest
-version](https://github.com/mquandalle/meteor-jade/blob/master/packages/jade/package.js#L3) manually. See
+version](https://github.com/xiphy/meteor-jade-coffee/blob/master/packages/jade/package.js#L3) manually. See
 [issue #83](https://github.com/mquandalle/meteor-jade/issues/83).
 
 ```javascript
@@ -409,4 +409,4 @@ api.use([
 ```
 
 [blockchain]: https://blockchain.info/address/1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy
-[atmosphere]: https://atmospherejs.com/mquandalle/jade
+[atmosphere]: https://atmospherejs.com/xiphy/jade-coffee
