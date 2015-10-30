@@ -1,0 +1,35 @@
+{
+  "rules": {
+    "indent": [2, 2],
+    "linebreak-style": [2, "unix"],
+    "semi": [2, "always"],
+    "comma-dangle": [0],
+  },
+  "globals": {
+    // Exported by packages we use
+    "$": false,
+    "_": false,
+    "BlazeTools": false,
+    "CachingCompiler": false,
+    "HTML": false,
+    "HTMLTools": false,
+    "Npm": false,
+    "Package": false,
+    "SpacebarsCompiler": false,
+    "Template": false,
+    "TemplateCompiler": false,
+    "Tinytest": false,
+
+    // Our globals variables
+    "FileCompiler": true,
+    "JadeCompiler": true,
+    "Lexer": true,
+    "Parser": true,
+    "TemplateCompiler": true,
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+  },
+  "extends": "eslint:recommended",
+}

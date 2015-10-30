@@ -2,27 +2,27 @@
   "dependencies": [
     [
       "meteor",
-      "1.1.3"
+      "1.2.0"
     ],
     [
       "underscore",
-      "1.0.1"
+      "1.0.4"
     ]
   ],
   "pluginDependencies": [
     [
       "compileJade",
       {
-        "spacebars-compiler": "1.0.3",
-        "mquandalle:jade-compiler": "0.4.1",
-        "deps": "1.0.5",
-        "tracker": "1.0.3",
-        "html-tools": "1.0.2",
-        "underscore": "1.0.1",
-        "meteor": "1.1.3",
-        "blaze-tools": "1.0.1",
-        "htmljs": "1.0.2",
-        "minifiers": "1.1.2"
+        "spacebars-compiler": "1.0.7",
+        "mquandalle:jade-compiler": "0.4.4",
+        "deps": "1.0.9",
+        "tracker": "1.0.9",
+        "html-tools": "1.0.5",
+        "underscore": "1.0.4",
+        "meteor": "1.2.0",
+        "blaze-tools": "1.0.4",
+        "htmljs": "1.0.5",
+        "minifiers": "1.1.7"
       }
     ]
   ],
