@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Jade template language with inline coffeescript and Javascript support",
-  version: "0.1.4",
+  version: "0.1.6",
   name: "xiphy:jade-coffee",
   git: "https://github.com/xiphias/meteor-jade-coffee.git",
   documentation: "../../README.md"
@@ -9,11 +9,13 @@ Package.describe({
 Package.registerBuildPlugin({
   name: "compileJade",
   use: [
+    "ecmascript@0.1.0",
+    "caching-compiler@1.0.0",
     "underscore@1.0.0",
     "htmljs@1.0.0",
     "minifiers@1.0.0",
     "spacebars-compiler@1.0.0",
-    "xiphy:jade-compiler@0.5.1",
+    "xiphy:jade-compiler@0.5.2",
     "coffeescript@1.0.10"
   ],
   sources: [
@@ -26,15 +28,21 @@ Package.registerBuildPlugin({
 });
 
 Package.onUse(function (api) {
+  api.use("isobuild:compiler-plugin@1.0.0");
   api.use("blaze@2.0.0");
 });
 
 Package.onTest(function (api) {
-  api.versionsFrom("METEOR@0.9.0");
+  api.versionsFrom("METEOR@1.2.0.1");
   api.use("tinytest");
-  api.use("underscore@1.0.0")
-  api.use("jquery")
-  api.use(["xiphy:jade-coffee", "ui", "spacebars", "templating"]);
+  api.use([
+    "xiphy:jade-coffee",
+    "jquery",
+    "spacebars",
+    "templating",
+    "ui",
+    "underscore",
+  ]);
   api.addFiles([
     "tests/match.jade",
     "tests/match.html",

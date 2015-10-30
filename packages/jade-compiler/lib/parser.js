@@ -4,7 +4,7 @@
 // The goal of the PR is to add a `lexer` option to the parser so that the user
 // could provide his own customized Lexer object.
 
-Parser = function Parser(str, filename, options){
+Parser = function (str, filename, options){
   //Strip any UTF-8 BOM off of the start of `str`, if it exists.
   this.input = str.replace(/^\uFEFF/, '');
   this.filename = filename;

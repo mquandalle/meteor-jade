@@ -1,8 +1,10 @@
 # Jade for Meteor with support for anonymous Meteor helper and event templates using inline CoffeeScript or JavaScript
 
-This [Meteor](https://www.meteor.com/) smart package provides support for
-the [Jade](http://jade-lang.com/) template engine as a Spacebars alternative with inline Javascript and Coffeescript.
+[![Meteor Icon](http://icon.meteor.com/package/xiphy:jade-coffee)][atmosphere]
 
+This [Meteor](https://www.meteor.com/) package provides some support for the
+[Jade](http://jade-lang.com/) template engine as a Spacebars alternative
+with inline JavaScript and CoffeeScript support.
 
 ## Example code
 
@@ -119,24 +121,25 @@ files ending with `.html` and Jade will take care of those ending with `.jade`.
 * [Installation](#installation)
 * [Examples](#examples)
 * [Usage](#usage)
-	* [Templates](#templates)
-	* [HTML Tag attributes](#html-tag-attributes)
-	* [Components](#components)
+  * [Templates](#templates)
+  * [HTML Tag attributes](#html-tag-attributes)
+  * [Components](#components)
 * [Additional features](#additional-features)
-	* [else if](#else-if)
-	* [Unwrapped templates](#unwrapped-templates)
-	* [Anonymous helper](#anonymous-helper)
+  * [else if](#else-if)
+  * [Unwrapped templates](#unwrapped-templates)
+  * [Anonymous helper](#anonymous-helper)
+* [Unsupported Jade Features](#unsupported-features)
 * [Contributing](#contributing)
-	* [Implementation](#implementation)
-	* [License](#license)
-	* [Tests](#tests)
-	* [Tips](#tips)
+  * [Implementation](#implementation)
+  * [License](#license)
+  * [Tests](#tests)
 * [Known bugs](#known-bugs)
   * [Using Jade in a package](#using-jade-in-a-package)
 
 ## Installation
 
-Meteor-jade is installable from atmosphere, the meteor package system:
+Meteor-jade is installable from [atmosphere][atmosphere], the meteor package
+system:
 
 ```sh
 $ meteor add mquandalle:jade
@@ -150,7 +153,7 @@ versions of those examples templates and even more in the
 
 ## Usage
 
-Meteor-jade basically works like pure Jade, so if you never use Jade before you
+Meteor-jade works somewhat like Jade, so if you never use Jade before you
 should take a look at the [documentation](http://jade-lang.com/reference/).
 
 There are some specifics rules relative to the Meteor way of handling templates.
@@ -346,10 +349,17 @@ There is experimental support for anonymous event functions inside the templates
 It uses the event after mt-, and uses JavaScript or CoffeeScript depending on the extension of the file. The event function can use the current object and also can access current DOM event with the event variable. 
 
 
+## Unsupported Features
+
+Currently the following Jade features are not supported by `meteor-jade-coffee`.
+
+- Case
+- Filter
+
 ## Contributing
 
 Contributions are welcome, whether it is for a
-[bug report](https://github.com/mquandalle/meteor-jade/issues/new), a fix or a
+[bug report](https://github.com/xiphias/meteor-jade-coffee/issues/new), a fix or a
 new functionnality proposition.
 
 ### Implementation
@@ -371,7 +381,7 @@ This code is published under the [MIT license](LICENSE).
 Use the following command to run the tests:
 
 ```
-$ meteor test-packages --test-app-path . packages/*
+$ meteor test-packages packages/*
 ```
 
 ## Known bugs
@@ -380,8 +390,20 @@ This is an experimental version so there can be many unknown bugs, but the bigge
 ### Releasing
 ```
 meteor publish
-meteor admin get-machine os.linux.x86_64 --minutes 5
-meteor publish-for-arch xiphy:jade-compiler@0.5.0
-meteor publish-for-arch xiphy:jade-coffee@0.1.1
 ```
 
+### Using Jade in a package
+
+When using Jade in a package you need to lock the version to the [latest
+version](https://github.com/xiphias/meteor-jade-coffee/blob/master/packages/jade-coffee/package.js#L3) manually. See
+[issue #83](https://github.com/mquandalle/meteor-jade/issues/83).
+
+```javascript
+api.use([
+  "templating",
+  "xiphy:jade-coffee@0.1.6"
+], "server");
+```
+
+[blockchain]: https://blockchain.info/address/1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy
+[atmosphere]: https://atmospherejs.com/xiphy/jade-coffee
