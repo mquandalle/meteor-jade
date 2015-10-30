@@ -7,7 +7,7 @@ Package.describe({
 });
 
 Package.registerBuildPlugin({
-  name: "compileJadeBatch",
+  name: "compileJade",
   use: [
     "ecmascript@0.1.0",
     "caching-compiler@1.0.0",
