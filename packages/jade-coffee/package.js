@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Jade template language with inline coffeescript and Javascript support",
-  version: "0.1.5",
+  version: "0.1.6",
   name: "xiphy:jade-coffee",
   git: "https://github.com/xiphias/meteor-jade-coffee.git",
   documentation: "../../README.md"
