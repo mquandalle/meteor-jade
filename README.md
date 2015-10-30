@@ -359,7 +359,7 @@ Currently the following Jade features are not supported by `meteor-jade-coffee`.
 ## Contributing
 
 Contributions are welcome, whether it is for a
-[bug report](https://github.com/xiphy/meteor-jade-coffee/issues/new), a fix or a
+[bug report](https://github.com/xiphias/meteor-jade-coffee/issues/new), a fix or a
 new functionnality proposition.
 
 ### Implementation
@@ -392,13 +392,13 @@ This is an experimental version so there can be many unknown bugs, but the bigge
 meteor publish
 meteor admin get-machine os.linux.x86_64 --minutes 5
 meteor publish-for-arch xiphy:jade-compiler@0.5.2
-meteor publish-for-arch xiphy:jade-coffee@0.1.5
+meteor publish-for-arch xiphy:jade-coffee@0.1.6
 ```
 
 ### Using Jade in a package
 
 When using Jade in a package you need to lock the version to the [latest
-version](https://github.com/xiphy/meteor-jade-coffee/blob/master/packages/jade/package.js#L3) manually. See
+version](https://github.com/xiphias/meteor-jade-coffee/blob/master/packages/jade/package.js#L3) manually. See
 [issue #83](https://github.com/mquandalle/meteor-jade/issues/83).
 
 ```javascript
