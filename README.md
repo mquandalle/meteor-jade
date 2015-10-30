@@ -404,7 +404,7 @@ version](https://github.com/xiphias/meteor-jade-coffee/blob/master/packages/jade
 ```javascript
 api.use([
   "templating",
-  "xiphy:jade-coffee@0.5.2"
+  "xiphy:jade-coffee@0.1.6"
 ], "server");
 ```
 
