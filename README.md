@@ -398,7 +398,7 @@ meteor publish-for-arch xiphy:jade-coffee@0.1.6
 ### Using Jade in a package
 
 When using Jade in a package you need to lock the version to the [latest
-version](https://github.com/xiphias/meteor-jade-coffee/blob/master/packages/jade/package.js#L3) manually. See
+version](https://github.com/xiphias/meteor-jade-coffee/blob/master/packages/jade-coffee/package.js#L3) manually. See
 [issue #83](https://github.com/mquandalle/meteor-jade/issues/83).
 
 ```javascript
