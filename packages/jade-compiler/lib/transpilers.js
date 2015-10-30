@@ -323,7 +323,7 @@ _.extend(TemplateCompiler.prototype, {
         }
 
         if (nodes[i+1] && nodes[i+1].type === "Mixin" &&
-                                                   nodes[i+1].name === "else") {
+                 nodes[i+1].name === "else") {
           stack.push(nodes[++i]);
         }
 

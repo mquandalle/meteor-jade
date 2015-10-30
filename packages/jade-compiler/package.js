@@ -18,8 +18,8 @@ Package.onUse(function(api) {
     'htmljs',
     'html-tools',
     'blaze-tools',
-	'coffeescript',
-    'spacebars-compiler'
+    'spacebars-compiler',
+    'coffeescript'
   ], ['server']);
   api.use('minifiers', ['server'], { weak: true });
   api.addFiles([
