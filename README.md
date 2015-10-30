@@ -390,9 +390,6 @@ This is an experimental version so there can be many unknown bugs, but the bigge
 ### Releasing
 ```
 meteor publish
-meteor admin get-machine os.linux.x86_64 --minutes 5
-meteor publish-for-arch xiphy:jade-compiler@0.5.2
-meteor publish-for-arch xiphy:jade-coffee@0.1.6
 ```
 
 ### Using Jade in a package
