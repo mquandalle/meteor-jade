@@ -83,6 +83,22 @@ template(name="leaderboard")
   p Welcome #{player.name}
 ```
 
+If you indent after a div or similar element, you can use `|` symbol in order jade not
+to confuse with tags:
+
+```jade
+template(name='leaderboard')
+  #content
+   | #{greeting}
+```
+
+You can also use `=` as a shortcut:
+```jade
+template(name='leaderboard')
+  #content
+   = greeting
+```
+
 If you want to insert raw HTML you can use the `!{jade}` syntax which is
 equivalent to the triple-braced `{{{spacebars}}}` expression.
 
