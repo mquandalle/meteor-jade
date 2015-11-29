@@ -44,6 +44,73 @@ var throwError = function (message, node) {
   throw new Error(message);
 };
 
+// Recursively search for anonymous helper functions and
+// record them
+// Arguments:
+// value: the tree created by the transpiler.
+// found: a map from helper function names to
+//    their function body.
+function searchNewArgs(value, found, foundEvents) {
+  if(value==null) {
+    return;
+  }
+  if(Array.isArray(value)) {
+    for(var i=0; i<value.length; i++) {
+      searchNewArgs(value[i], found, foundEvents)
+    }
+
+  }
+
+  if(value.newArgs) {
+      found[value.newArgs]=value.origArgs
+  }
+  if(value.helpers) {
+    _.each(value.helpers, function(helper, key) {
+      found[key]=helper;
+    })
+  }
+  if(value.events) {
+    _.each(value.events, function(event, key) {
+      foundEvents[key+" ."+value.eventClass]=event;
+    })
+  }
+  if(value.children) {
+    searchNewArgs(value.children, found, foundEvents)
+  }
+  if(value.content) {
+    searchNewArgs(value.content, found, foundEvents)
+  }
+  if(value.elseContent) {
+    searchNewArgs(value.elseContent, found, foundEvents)
+  }
+
+
+  if(value.attrs) {
+    _.each(value.attrs, function(attrValue, attr) {
+      searchNewArgs(attrValue, found, foundEvents)
+    })
+  }
+}
+
+// Recursively search for anonymous helper functions and
+// record them. The input is a tree and it returns
+// a map from helper function names to
+//    their function body.
+var genHelpers = function(body) {
+      found={};
+      foundEvents={}
+      searchNewArgs(body, found, foundEvents);
+      return found;
+}
+
+var genEvents = function(body) {
+      found={};
+      foundEvents={}
+      searchNewArgs(body, found, foundEvents);
+      return foundEvents;
+}
+
+
 FileCompiler = function(tree, options) {
   var self = this;
   self.nodes = tree.nodes;
@@ -60,12 +127,38 @@ _.extend(FileCompiler.prototype, {
     for (var i = 0; i < self.nodes.length; i++)
       self.registerRootNode(self.nodes[i]);
 
-    return {
+    self.templatesHelpers=self.genTemplateHelpers(self.templates);
+    self.bodyHelpers=genHelpers(self.body);
+
+    r = {
       head: self.head,
       body: self.body,
       bodyAttrs: self.bodyAttrs,
-      templates: self.templates
+      templates: self.templates,
     };
+    // We actually wouldn't need bodyHelpers and templatesHelpers as
+    // there is a helpers attribute written in the root of the body
+    // and every template. Should we get rid of bodyHelpers and
+    // templatesHelpers (which is currently used by the file handler)?
+    if(!_.isEmpty(self.bodyHelpers))
+      r.bodyHelpers=self.bodyHelpers;
+    if(!_.isEmpty(self.templatesHelpers))
+      r.templatesHelpers=self.templatesHelpers
+    return r;
+  },
+
+  // Generate template helpers for every template.
+  genTemplateHelpers: function(templates) {
+    r={}
+    for (var key in templates) {
+      value=templates[key]
+      // search for newArgs - origArgs
+      found=genHelpers(value)
+      if(!_.isEmpty(found))
+        r[key]=found;
+    }
+    return r;
+
   },
 
   registerRootNode: function(node) {
@@ -130,7 +223,41 @@ _.extend(FileCompiler.prototype, {
   }
 });
 
+// Find #{ - } and !{ - } pairs and call back a function (fn) that
+// returns the replacement value for them.
+// Args:
+//   text: input text
+//   start: #{ or !{
+//   fn: callback function
+// Returns:
+//   Replaced text
+function replaceExpression(text, start, fn) {
+  spos=text.indexOf(start);
+  if(spos<0) {
+    return text;
+  }
+  spos=spos+start.length;
+  // find end
+  end = spos;
+  var i=0;
+  while(i>=0 && end < text.length) {
+    if(text[end]=='{')
+      i=i+1;
+    if(text[end]=='}')
+      i=i-1;
+    end=end+1;
+  }
+  if(i>=0) {
+    throw new Error("not found } for text "+text)
+  }
+  r = text.substr(0, spos-start.length)+fn(text.substr(spos, end-spos-1))+
+         replaceExpression(text.substr(end), start, fn);
+  return r
+}
 
+// This is used for creating anonymous helper function name if
+//   there is no line number available.
+this.globalParsedCounter=0;
 
 TemplateCompiler = function(tree, options) {
   var self = this;
@@ -141,7 +268,30 @@ TemplateCompiler = function(tree, options) {
 _.extend(TemplateCompiler.prototype, {
   compile: function () {
     var self = this;
-    return self._optimize(self.visitBlock(self.tree));
+    r = self._optimize(self.visitBlock(self.tree));
+    // We write helpers attribute at the root of the output parse tree
+    //   without changing it when there is no anonymous helper needed.
+    if(r) {
+      helpers = genHelpers(r);
+      events = genEvents(r);
+      if(!_.isEmpty(helpers) || !_.isEmpty(events))
+        if(Array.isArray(r)) {
+          for(var i=0; i<r.length; i++) {
+            if(typeof(r[i])=='object') {
+              if(!_.isEmpty(helpers))
+                r[i].helpers = helpers;
+              if(!_.isEmpty(events))
+                r[i].events = events;
+              break;
+            }
+          }
+        } else
+          if(!_.isEmpty(helpers))
+            r.helpers = helpers;
+          if(!_.isEmpty(events))
+            r.events = events;
+    }
+    return r;
   },
 
   visitBlock: function (block) {
@@ -173,7 +323,7 @@ _.extend(TemplateCompiler.prototype, {
         }
 
         if (nodes[i+1] && nodes[i+1].type === "Mixin" &&
-                                                   nodes[i+1].name === "else") {
+                 nodes[i+1].name === "else") {
           stack.push(nodes[++i]);
         }
 
@@ -206,7 +356,22 @@ _.extend(TemplateCompiler.prototype, {
 
   visitNode: function(node, elseNode) {
     var self = this;
-    var attrs = self.visitAttributes(node.attrs);
+    var attrs = self.visitAttributes(node.attrs, node);
+
+    // attrs may have created events with mt-...
+    if(node.events) {
+      if(attrs==null)
+        attrs={}
+      node.eventClass="_event_line"+node.line;
+      if(_.isArray(attrs.class)) {
+        attrs.class=attrs.class.join("");
+      }
+      if(attrs.class==null)
+        attrs.class=node.eventClass;
+      else
+        attrs.class=attrs.class+" "+node.eventClass;
+    }
+
     var content;
 
     if (node.code) {
@@ -249,8 +414,21 @@ _.extend(TemplateCompiler.prototype, {
 
     var spacebarsSymbol = content.length === 0 ? ">" : "#";
     var args = node.args || "";
+    // Create anonymous helper if needed
+    var origArgs=null;
+
+    if(node.name.match(/^if|else if|unless|each$/) && args.length > 0 && args.match(/[^_a-zA-Z0-9 .]/)) {
+      origArgs=args
+      args="_jade_line"+(node.block.line-1)  // No line number was generated
+    }
+
+
     var mustache = "{{" + spacebarsSymbol + componentName + " " + args + "}}";
     var tag = self._spacebarsParse(mustache);
+    if(origArgs) {
+      tag.origArgs=origArgs
+      tag.newArgs=args
+    }
 
     // Optimize arrays
     content = self._optimize(content);
@@ -282,26 +460,82 @@ _.extend(TemplateCompiler.prototype, {
     if (! _.isEmpty(attrs))
       content.unshift(attrs);
 
-    return HTML.getTag(tagName).apply(null, content);
+    var r = HTML.getTag(tagName).apply(null, content);
+    if(node.events && !_.isEmpty(node.events)) {
+      r.events=node.events;
+      r.eventClass=node.eventClass;
+    }
+    return r;
   },
 
   visitText: function(node) {
     var self = this;
-    return node.val ? self.parseText(node.val) : null;
+    return node.val ? self.parseText(node.val, null, node) : null;
   },
 
-  parseText: function(text, options) {
+  parseText: function(text, options, node) {
     // The parser doesn't parse #{expression} and !{unescapedExpression}
     // syntaxes. So let's do it.
     // Since we rely on the Spacebars parser for this, we support the
     // {{mustache}} and {{{unescapedMustache}}} syntaxes as well.
+    anonFuncs={}
+    var helperIndex=0;
+    // Generate a new name for each new anonymous helper function.
+    var getHelperName=function() {
+      var base;
+      if(node==null) {
+        base="complexParsed"+globalParsedCounter;
+        globalParsedCounter++;
+      } else {
+        base="_jade_line"+node.line;
+        if(helperIndex>0) {
+          base=base+"_"+helperIndex;
+        }
+        helperIndex++;
+      }
+      return base;
+    }
+    // Search for #{
+    text=replaceExpression(text, '#{', function(innerExpr) {
+      if(innerExpr.match(/^\s*((\.{1,2}\/)*[\w\.-]+)\s*$/)) {
+        return "{{"+innerExpr+"}}";
+      }
+      // complex expression
+      var helperName=getHelperName();
+      anonFuncs[helperName]=innerExpr;
+      return "{{"+helperName+"}}"
+    })
+    text=replaceExpression(text, '!{', function(innerExpr) {
+      if(innerExpr.match(/^\s*((\.{1,2}\/)*[\w\.-]+)\s*$/)) {
+        return "{{{"+innerExpr+"}}}";
+      }
+      // complex expression
+      var helperName=getHelperName();
+      anonFuncs[helperName]=innerExpr;
+      return "{{{"+helperName+"}}}"
+    })
     text = text.replace(/#\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g, "{{$1}}");
     text = text.replace(/!\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g, "{{{$1}}}");
 
     options = options || {};
     options.getTemplateTag = SpacebarsCompiler.TemplateTag.parseCompleteTag;
-
-    return HTMLTools.parseFragment(text, options);
+    
+    // Put helpers attribute anywhere in the output of parseFragement
+    r = HTMLTools.parseFragment(text, options);
+    if(!_.isEmpty(anonFuncs)) {
+      if(Array.isArray(r)) {
+        for(var j=0; j<r.length; j++) {
+          if(typeof(r[j])=='object' && !_.isEmpty(anonFuncs)) {
+            r[j].helpers=anonFuncs;
+            break;
+          }
+        }
+      } else {
+        if(r && !_.isEmpty(anonFuncs))
+          r.helpers=anonFuncs;
+      }
+    }
+    return r;
   },
 
   visitComment: function (comment) {
@@ -324,7 +558,7 @@ _.extend(TemplateCompiler.prototype, {
     throwError("Case statements are not supported in meteor-jade", node);
   },
 
-  visitAttributes: function (attrs) {
+  visitAttributes: function (attrs, node) {
     // The jade parser provide an attribute tree of this type:
     // [{name: "class", val: "val1", escaped: true}, {name: "id" val: "val2"}]
     // Let's transform that into:
@@ -357,6 +591,8 @@ _.extend(TemplateCompiler.prototype, {
       var val = attr.val;
       var key = attr.name;
 
+
+
       // XXX We need a better handler for JavaScript code
       // First case this is a string
       var strLiteral = stringRepresentationToLiteral(val);
@@ -375,6 +611,15 @@ _.extend(TemplateCompiler.prototype, {
         val = self._spacebarsParse(self.lookup(val, attr.escaped));
         val.position = HTMLTools.TEMPLATE_TAG_POSITION.IN_ATTRIBUTE;
       }
+
+
+      if(key.indexOf("mt-")==0) {
+        // Create event
+        if(node.events==null) {
+          node.events={}
+        }
+        node.events[key.substr(3)]=val;
+       }
 
       if (key === "$dyn") {
         val.position = HTMLTools.TEMPLATE_TAG_POSITION.IN_START_TAG;

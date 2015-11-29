@@ -1,9 +1,117 @@
-# Jade for Meteor
+# Jade for Meteor with support for anonymous Meteor helper and event templates using inline CoffeeScript or JavaScript
 
-[![Meteor Icon](http://icon.meteor.com/package/mquandalle:jade)][atmosphere]
+[![Meteor Icon](http://icon.meteor.com/package/xiphy:jade-coffee)][atmosphere]
 
 This [Meteor](https://www.meteor.com/) package provides some support for the
-[Jade](http://jade-lang.com/) template engine as a Spacebars alternative.
+[Jade](http://jade-lang.com/) template engine as a Spacebars alternative
+with inline JavaScript and CoffeeScript support.
+
+## Example code
+
+With this version of meteor-jade you can cut down a lot of code.
+Here is how you can write the whole simple-todos app (except the unmodified css) in less than 100 lines of code, while making the app easier to maintain:
+
+simple-todos.coffee.jade:
+```jade
+head
+  title Todo List
+
+body
+  .container
+    header
+      h1 Todo List (#{Tasks.find({checked: $ne: true}).count()})
+      label.hide-completed(mt-change="Session.set 'hideCompleted', event.target.checked")
+        input(type="checkbox" checked="#{Session.get 'hideCompleted'}")
+        | Hide Completed Tasks #{testhelper}
+
+      +loginButtons
+      if currentUser
+        form.new-task
+          input(type="text" name="text" placeholder="Type to add new tasks!")
+    ul
+      each shownTasks()
+        +task
+```
+
+task.tpl.coffee.jade:
+```jade
+li(class="{{#if checked}}checked{{/if}} {{#if private}}private{{/if}}")
+    button.delete(mt-click="Meteor.call 'deleteTask', @_id") &times;
+    input(type="checkbox" checked=checked
+        mt-click="Meteor.call 'setChecked', @_id, !@checked")
+    if this.owner==Meteor.userId()
+      button(mt-click="Meteor.call 'setPrivate', @_id, !@private")
+        if private
+          | Private
+        else
+          | Public
+    span.text <strong>#{username}</strong> - #{text}
+```
+
+simple-todos.coffee:
+```jade
+Tasks = new (Mongo.Collection)('tasks')
+@shownTasks=->
+  if Session.get('hideCompleted')
+    # If hide completed is checked, filter tasks
+    Tasks.find { checked: $ne: true }, sort: createdAt: -1
+  else
+    # Otherwise, return all of the tasks
+    Tasks.find {}, sort: createdAt: -1
+
+if Meteor.isServer
+  # This code only runs on the server
+  # Only publish tasks that are public or belong to the current user
+  Meteor.publish 'tasks', ->
+    Tasks.find $or: [
+      { private: $ne: true }
+      { owner: @userId }
+    ]
+if Meteor.isClient
+  # This code only runs on the client
+  Meteor.subscribe 'tasks'
+  Template.body.events
+    'submit .new-task': (event) ->
+      # Prevent default browser form submit
+      event.preventDefault()
+      # Get value from form element
+      text = event.target.text.value
+      # Insert a task into the collection
+      Meteor.call 'addTask', text
+      # Clear form
+      event.target.text.value = ''
+  Accounts.ui.config passwordSignupFields: 'USERNAME_ONLY'
+Meteor.methods
+  addTask: (text) ->
+    # Make sure the user is logged in before inserting a task
+    if !Meteor.userId()
+      throw new (Meteor.Error)('not-authorized')
+    Tasks.insert
+      text: text
+      createdAt: new Date
+      owner: Meteor.userId()
+      username: Meteor.user().username
+  deleteTask: (taskId) ->
+    task = Tasks.findOne(taskId)
+    if task.private and task.owner != Meteor.userId()
+      # If the task is private, make sure only the owner can delete it
+      throw new (Meteor.Error)('not-authorized')
+    Tasks.remove taskId
+  setChecked: (taskId, setChecked) ->
+    task = Tasks.findOne(taskId)
+    if task.private and task.owner != Meteor.userId()
+      # If the task is private, make sure only the owner can check it off
+      throw new (Meteor.Error)('not-authorized')
+    Tasks.update taskId, $set: checked: setChecked
+  setPrivate: (taskId, setToPrivate) ->
+    task = Tasks.findOne(taskId)
+    # Make sure only the task owner can make a task private
+    if task.owner != Meteor.userId()
+      throw new (Meteor.Error)('not-authorized')
+    Tasks.update taskId, $set: private: setToPrivate
+
+```
+
 
 Spacebars and Jade packages can coexist, Spacebars will continue to compile
 files ending with `.html` and Jade will take care of those ending with `.jade`.
@@ -25,7 +133,6 @@ files ending with `.html` and Jade will take care of those ending with `.jade`.
   * [Implementation](#implementation)
   * [License](#license)
   * [Tests](#tests)
-  * [Tips](#tips)
 * [Known bugs](#known-bugs)
   * [Using Jade in a package](#using-jade-in-a-package)
 
@@ -232,33 +339,43 @@ can only define one template per file and you don't need to wrap your template
 in a tag. The template will be named after the file name. We handle special
 `head.tpl.jade` and `body.tpl.jade` templates as expected.
 
+You can also use the `.coffee.jade` file extension for inline CoffeeScript, and the program accepts both `.coffee.tpl.jade` and `.tpl.coffee.jade` as Jade templates with inline CoffeeScript support.
 
-### Anonymous helper
+### Anonymous helpers
 
-**This feature is not yet implemented.**  However, once implemented it could:
+There is experimental support for helper functions inside the templates:
 
 ```jade
 if player.score > 10
-  p Well done!
+  p Well done, you have #{player.score} points!
+
 ```
 
-It'll be useful for conditions (`if`, `else if` and `unless`) and inside
-attributes.
+It can be useful for conditions (`if`, `else if` and `unless`) and inside
+attributes. Anonymous helpers can't call other template helper functions though. If you want to use a helper function in multiple anonymous helpers, you have to declare it as a global function.
 
-See [related issue](https://github.com/mquandalle/meteor-jade/issues/1)
+### Anonymous events
+
+There is experimental support for anonymous event functions inside the templates as well:
+
+```jade
+    button.delete(mt-click="Meteor.call 'deleteTask', @_id") &times;
+```
+
+It uses the event after mt-, and uses JavaScript or CoffeeScript depending on the extension of the file. The event function can use the current object and also can access current DOM event with the event variable. 
+
 
 ## Unsupported Features
 
-Currently the following Jade features are not supported by `meteor-jade`.
+Currently the following Jade features are not supported by `meteor-jade-coffee`.
 
-- Code
 - Case
 - Filter
 
 ## Contributing
 
 Contributions are welcome, whether it is for a
-[bug report](https://github.com/mquandalle/meteor-jade/issues/new), a fix or a
+[bug report](https://github.com/xiphias/meteor-jade-coffee/issues/new), a fix or a
 new functionnality proposition.
 
 ### Implementation
@@ -283,25 +400,26 @@ Use the following command to run the tests:
 $ meteor test-packages packages/*
 ```
 
-### Tips
-
-If you want to buy me a beer, I proudly accept bitcoin tips:
-[1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy][blockchain]
-
 ## Known bugs
+This is an experimental version so there can be many unknown bugs, but the biggest problem that I know of is that the program uses a heuristic to see if the code is inline anonymous helper (that can't call other helper functions) or if it is a named Meteor helper function.
+
+### Releasing
+```
+meteor publish
+```
 
 ### Using Jade in a package
 
 When using Jade in a package you need to lock the version to the [latest
-version](https://github.com/mquandalle/meteor-jade/blob/master/packages/jade/package.js#L3) manually. See
+version](https://github.com/xiphias/meteor-jade-coffee/blob/master/packages/jade-coffee/package.js#L3) manually. See
 [issue #83](https://github.com/mquandalle/meteor-jade/issues/83).
 
 ```javascript
 api.use([
   "templating",
-  "mquandalle:jade@0.4.5"
-], "client");
+  "xiphy:jade-coffee@0.1.6"
+], "server");
 ```
 
 [blockchain]: https://blockchain.info/address/1Jade7Fscsx2bF13iFVVFvcSUhe7eLJgSy
-[atmosphere]: https://atmospherejs.com/mquandalle/jade
+[atmosphere]: https://atmospherejs.com/xiphy/jade-coffee
