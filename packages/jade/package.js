@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Jade template language",
-  version: "0.4.5",
+  version: "0.4.6",
   name: "mquandalle:jade",
   git: "https://github.com/mquandalle/meteor-jade.git",
   documentation: "../../README.md",
