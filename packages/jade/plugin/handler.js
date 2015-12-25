@@ -106,6 +106,8 @@ class JadeCompilerPlugin extends CachingCompiler {
       jsContent += _.map(results.templates, this._templateGen).join("");
     }
 
+    jsContent = jsContent.replace(/\\n/g, "");
+
     if (jsContent !== "") {
       file.addJavaScript({
         path: file.getPathInPackage() + '.js',
@@ -131,6 +133,8 @@ class JadeCompilerPlugin extends CachingCompiler {
       } else {
         jsContent = this._templateGen(result, templateName);
       }
+
+      jsContent = jsContent.replace(/\\n/g, "");
 
       file.addJavaScript({
         path: file.getPathInPackage() + '.js',
