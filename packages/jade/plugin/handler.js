@@ -34,11 +34,11 @@ class JadeCompilerPlugin extends CachingCompiler {
   }
 
   compileResultSize(compileResult) {
-    function lengthOrZero(field) {
-      return field ? field.length : 0;
-    }
-    return lengthOrZero(compileResult.head) + lengthOrZero(compileResult.body) +
-      lengthOrZero(compileResult.templates);
+    let n = 0;
+    n += Object.keys(compileResult.templates || {}).length;
+    n += compileResult.head ? 1 : 0;
+    n += compileResult.body ? 1 : 0;
+    return n;
   }
 
   _getMode(file) {
