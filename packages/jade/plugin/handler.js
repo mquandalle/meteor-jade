@@ -15,11 +15,8 @@ class JadeCompilerPlugin extends CachingCompiler {
   }
 
   compileOneFile(file) {
-    const ext = file.getExtension();
-
     try {
-      const handlerMode = (ext === 'jade') ? 'file' : 'template';
-      this[`_${handlerMode}ModeHandler`](file);
+      return this._getCompilerResult(file);
     } catch (err) {
       file.error({
         message: "Jade syntax error: " + err.message
@@ -29,6 +26,24 @@ class JadeCompilerPlugin extends CachingCompiler {
 
   getCacheKey(inputFile) {
     return [ inputFile.getSourceHash() ];
+  }
+
+  addCompileResult(inputFile, compileResult) {
+    const fileMode = this._getMode(inputFile);
+    this[`_${fileMode}ModeHandler`](inputFile, compileResult);
+  }
+
+  compileResultSize(compileResult) {
+    function lengthOrZero(field) {
+      return field ? field.length : 0;
+    }
+    return lengthOrZero(compileResult.head) + lengthOrZero(compileResult.body) +
+      lengthOrZero(compileResult.templates);
+  }
+
+  _getMode(file) {
+    const ext = file.getExtension();
+    return (ext === 'jade') ? 'file' : 'template';
   }
 
   // XXX Handle body attributes
@@ -60,11 +75,11 @@ class JadeCompilerPlugin extends CachingCompiler {
     `;
   }
 
-  _getCompilerResult(file, fileMode) {
+  _getCompilerResult(file) {
     try {
       return JadeCompiler.parse(file.getContentsAsString(), {
         filename: file.getPathInPackage(),
-        fileMode: fileMode
+        fileMode: this._getMode(file) === 'file'
       });
     } catch (err) {
       return file.error({
@@ -74,9 +89,7 @@ class JadeCompilerPlugin extends CachingCompiler {
     }
   }
 
-  _fileModeHandler(file) {
-    const results = this._getCompilerResult(file, true);
-
+  _fileModeHandler(file, results) {
     // Head
     if (results.head !== null) {
       file.addHtml({
@@ -102,8 +115,7 @@ class JadeCompilerPlugin extends CachingCompiler {
     }
   }
 
-  _templateModeHandler(file) {
-    const result = this._getCompilerResult(file, false);
+  _templateModeHandler(file, result) {
     const templateName = path.basename(file.getPathInPackage(), '.tpl.jade');
     let jsContent;
 
