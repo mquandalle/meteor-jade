@@ -17,6 +17,7 @@
     "Package": false,
     "SpacebarsCompiler": false,
     "Template": false,
+    "TemplatingTools": false,
     "Tinytest": false,
 
     // Our globals variables

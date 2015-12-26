@@ -34,32 +34,22 @@ class JadeCompilerPlugin extends CachingHtmlCompiler {
   }
 
   // XXX Handle body attributes
-  _bodyGen(tpl, attrs) {
-    const renderFunction = SpacebarsCompiler.codeGen(tpl, {
+  _bodyGen(body) {
+    const renderFuncCode = SpacebarsCompiler.codeGen(body, {
       isBody: true,
       sourceName: "<body>"
     });
 
-    return `
-      Meteor.startup(function() { $('body').attr(${JSON.stringify(attrs)}); });
-      Template.body.addContent(${renderFunction});
-      Meteor.startup(Template.body.renderToDocument);
-    `;
+    return TemplatingTools.generateBodyJS(renderFuncCode);
   }
 
   _templateGen(tree, tplName) {
-    const nameLiteral = JSON.stringify(tplName);
-    const templateDotNameLiteral = JSON.stringify(`Template.${tplName}`);
-    const renderFunction = SpacebarsCompiler.codeGen(tree, {
+    const renderFuncCode = SpacebarsCompiler.codeGen(tree, {
       isTemplate: true,
       sourceName: `Template "${tplName}"`
     });
 
-    return `
-      Template.__checkName(${nameLiteral});
-      Template[${nameLiteral}] =
-        new Template(${templateDotNameLiteral}, ${renderFunction});
-    `;
+    return TemplatingTools.generateTemplateJS(tplName, renderFuncCode);
   }
 
   _getCompilerResult(mode, file) {
@@ -84,10 +74,13 @@ class JadeCompilerPlugin extends CachingHtmlCompiler {
     }
 
     if (results.body !== null) {
-      js += this._bodyGen(results.body, results.bodyAttrs);
+      js += this._bodyGen(results.body);
     }
     if (! _.isEmpty(results.templates)) {
       js += _.map(results.templates, this._templateGen).join("");
+    }
+    if (! _.isEmpty(results.bodyAttrs)) {
+      bodyAttrs = results.bodyAttrs;
     }
 
     return { head, body, js, bodyAttrs };
