@@ -1,3 +1,7 @@
+## v0.4.7
+
+* Fix a critical bug when running `meteor build` on 0.4.6 #195
+
 ## v0.4.6
 
 * Fix file caching on the new “Batch Plugin” API
