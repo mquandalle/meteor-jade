@@ -10,14 +10,13 @@
     "$": false,
     "_": false,
     "BlazeTools": false,
-    "CachingCompiler": false,
+    "CachingHtmlCompiler": false,
     "HTML": false,
     "HTMLTools": false,
     "Npm": false,
     "Package": false,
     "SpacebarsCompiler": false,
     "Template": false,
-    "TemplateCompiler": false,
     "Tinytest": false,
 
     // Our globals variables

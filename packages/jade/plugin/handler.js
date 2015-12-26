@@ -6,19 +6,19 @@ Plugin.registerCompiler({
   isTemplate: true,
 }, () => new JadeCompilerPlugin());
 
-class JadeCompilerPlugin extends CachingCompiler {
+class JadeCompilerPlugin extends CachingHtmlCompiler {
   constructor() {
-    super({
-      compilerName: 'jade',
-      defaultCacheSize: 1024*1024*10,
-    });
+    super('jade');
   }
 
-  compileOneFile(file) {
+  compileOneFile(inputFile) {
+    const mode = this._getMode(inputFile);
+
     try {
-      return this._getCompilerResult(file);
+      const compileResult = this._getCompilerResult(mode, inputFile);
+      return this[`_${mode}ModeHandler`](inputFile, compileResult);
     } catch (err) {
-      file.error({
+      inputFile.error({
         message: "Jade syntax error: " + err.message
       });
     }
@@ -26,19 +26,6 @@ class JadeCompilerPlugin extends CachingCompiler {
 
   getCacheKey(inputFile) {
     return [ inputFile.getSourceHash() ];
-  }
-
-  addCompileResult(inputFile, compileResult) {
-    const fileMode = this._getMode(inputFile);
-    this[`_${fileMode}ModeHandler`](inputFile, compileResult);
-  }
-
-  compileResultSize(compileResult) {
-    let n = 0;
-    n += Object.keys(compileResult.templates || {}).length;
-    n += compileResult.head ? 1 : 0;
-    n += compileResult.body ? 1 : 0;
-    return n;
   }
 
   _getMode(file) {
@@ -75,11 +62,11 @@ class JadeCompilerPlugin extends CachingCompiler {
     `;
   }
 
-  _getCompilerResult(file) {
+  _getCompilerResult(mode, file) {
     try {
       return JadeCompiler.parse(file.getContentsAsString(), {
         filename: file.getPathInPackage(),
-        fileMode: this._getMode(file) === 'file'
+        fileMode: mode === 'file'
       });
     } catch (err) {
       return file.error({
@@ -90,53 +77,35 @@ class JadeCompilerPlugin extends CachingCompiler {
   }
 
   _fileModeHandler(file, results) {
-    // Head
+    let head = '', body = '', js = '', bodyAttrs = {};
+
     if (results.head !== null) {
-      file.addHtml({
-        section: "head",
-        data: HTML.toHTML(results.head)
-      });
+      head = HTML.toHTML(results.head);
     }
 
-    let jsContent = "";
     if (results.body !== null) {
-      jsContent += this._bodyGen(results.body, results.bodyAttrs);
+      js += this._bodyGen(results.body, results.bodyAttrs);
     }
     if (! _.isEmpty(results.templates)) {
-      jsContent += _.map(results.templates, this._templateGen).join("");
+      js += _.map(results.templates, this._templateGen).join("");
     }
 
-    if (jsContent !== "") {
-      file.addJavaScript({
-        path: file.getPathInPackage() + '.js',
-        sourcePath: file.getPathInPackage(),
-        data: jsContent
-      });
-    }
+    return { head, body, js, bodyAttrs };
   }
 
   _templateModeHandler(file, result) {
+    let head = '', body = '', js = '', bodyAttrs = {};
+
     const templateName = path.basename(file.getPathInPackage(), '.tpl.jade');
-    let jsContent;
 
     if (templateName === "head") {
-      file.addHtml({
-        section: "head",
-        data: HTML.toHTML(result)
-      });
-
+      head = HTML.toHTML(result);
+    } else if (templateName === "body") {
+      js = this._bodyGen(result);
     } else {
-      if (templateName === "body") {
-        jsContent = this._bodyGen(result);
-      } else {
-        jsContent = this._templateGen(result, templateName);
-      }
-
-      file.addJavaScript({
-        path: file.getPathInPackage() + '.js',
-        sourcePath: file.getPathInPackage(),
-        data: jsContent
-      });
+      js = this._templateGen(result, templateName);
     }
+
+    return { head, body, js, bodyAttrs };
   }
 }

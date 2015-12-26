@@ -10,7 +10,7 @@ Package.registerBuildPlugin({
   name: "compileJadeBatch",
   use: [
     "ecmascript@0.1.0",
-    "caching-compiler@1.0.0",
+    "caching-html-compiler@1.0.2",
     "underscore@1.0.0",
     "htmljs@1.0.0",
     "minifiers@1.0.0",
