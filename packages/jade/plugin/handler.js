@@ -25,7 +25,10 @@ class JadeCompilerPlugin extends CachingHtmlCompiler {
   }
 
   getCacheKey(inputFile) {
-    return [ inputFile.getSourceHash() ];
+    return [
+      inputFile.getSourceHash(),
+      inputFile.getBasename(),
+    ];
   }
 
   _getMode(file) {
