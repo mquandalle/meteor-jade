@@ -1,3 +1,7 @@
+## v0.4.9
+
+* Recompile jade files when their name change #199
+
 ## v0.4.8
 
 * Fix a critical bug when running `meteor build` on 0.4.{6,7} #195 (again)
