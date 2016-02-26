@@ -302,8 +302,8 @@ _.extend(TemplateCompiler.prototype, {
 
     text = text.replace(regex, function (match, prefix, expression) {
       var begin = (prefix === "!" ? "{{{" : "{{"),
-          end = (prefix === "!" ? "}}}" : "}}"),
-          paren_re = /((?:\.{1,2}\/)?[\w\.-]+)\((.*)\)$/g;  // Allow #{helper(args)} syntax
+        end = (prefix === "!" ? "}}}" : "}}"),
+        paren_re = /((?:\.{1,2}\/)?[\w\.-]+)\((.*)\)$/g;  // Allow #{helper(args)} syntax
 
       return begin + expression.replace(paren_re, "$1 $2") + end;
     });
@@ -450,8 +450,6 @@ _.extend(TemplateCompiler.prototype, {
       content = self._optimize(content[0]);
     else if (interposeEOL)
       content = self._interposeEOL(content);
-    else
-      content = content;
 
     return self._removeNewLinePrefixes(content);
   }

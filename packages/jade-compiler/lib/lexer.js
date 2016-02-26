@@ -62,12 +62,11 @@ var attrs = Lexer.prototype.attrs;
 Lexer.prototype.attrs = function (push) {
   if (this.input.charAt(0) === "(") {
     var range = this.bracketExpression(),
-        attrs_str = this.input.slice(range.start, range.end),
-        regex = /(!?[$=])((?:\.{1,2}\/)?[\w\.-]+)\(((?:(['"])\4|(['"]).*?[^\\]\5|[^)]*[^\\](['"])\6|[^)]*?[^\\](['"]).*[^\\]\7)*[^)]*?)\)/g;
+      attrs_str = this.input.slice(range.start, range.end),
+      regex = /(!?[$=])((?:\.{1,2}\/)?[\w\.-]+)\(((?:(['"])\4|(['"]).*?[^\\]\5|[^)]*[^\\](['"])\6|[^)]*?[^\\](['"]).*[^\\]\7)*[^)]*?)\)/g;
 
     attrs_str = attrs_str.replace(regex, function (match, prefix, helper, args) {
-      var begin = (prefix === "$" ? "$dyn='" : (prefix === "!=" ? "!='{" : "='")) + "{{",
-          end = "}}" + (prefix === "!=" ? "}'" : "'");
+      var begin = (prefix === "$" ? "$dyn='" : (prefix === "!=" ? "!='{" : "='")) + "{{", end = "}}" + (prefix === "!=" ? "}'" : "'");
 
       return begin + helper + " " + args.replace(/(^|[^\\])'/g, "$1\\'") + end;
     });
