@@ -30,3 +30,15 @@ Tinytest.add("JadeCompiler - compile templates", function(test) {
   test.equal(JadeCompiler.compile(template),
   "(function() {\n  return HTML.P(\"hello world\");\n})");
 });
+
+Tinytest.add("JadeCompiler - compile template with parameters in helper", function(test) {
+  var template = 'p #{foo (foo "bar")}';
+  test.equal(JadeCompiler.compile(template),
+  "(function() {\n  return HTML.P(Blaze.View(\"lookup:foo\", function() {\n    return Spacebars.mustache(view.lookup(\"foo\"), Spacebars.dataMustache(view.lookup(\"foo\"), \"bar\"));\n  }));\n})");
+});
+
+Tinytest.add("JadeCompiler - compile template with parameters in helper on attribute", function(test) {
+  var template = "p(title=foo('bar'))";
+  test.equal(JadeCompiler.compile(template),
+  "(function() {\n  return HTML.P({\n    title: function() {\n      return Spacebars.mustache(view.lookup(\"foo\"), \"bar\");\n    }\n  });\n})");
+});
