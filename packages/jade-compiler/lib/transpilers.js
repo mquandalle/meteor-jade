@@ -295,8 +295,18 @@ _.extend(TemplateCompiler.prototype, {
     // syntaxes. So let's do it.
     // Since we rely on the Spacebars parser for this, we support the
     // {{mustache}} and {{{unescapedMustache}}} syntaxes as well.
-    text = text.replace(/#\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g, "{{$1}}");
-    text = text.replace(/!\{\s*((\.{1,2}\/)*[\w\.-]+)\s*\}/g, "{{{$1}}}");
+    // We capture everything until the closing curly brace. We do not want to
+    // match a closing curly brace if we are inside a string literal, i.e.
+    // inside non-escaped single or double quotes.
+    var regex = /([#!])\{([^}]*?(?:[^\\](['"]).*?[^\\]\3[^}]*?)*)\}/g;
+
+    text = text.replace(regex, function (match, prefix, expression) {
+      var begin = (prefix === "!" ? "{{{" : "{{"),
+        end = (prefix === "!" ? "}}}" : "}}"),
+        paren_re = /((?:\.{1,2}\/)?[\w\.-]+)\((.*)\)$/g;  // Allow #{helper(args)} syntax
+
+      return begin + expression.replace(paren_re, "$1 $2") + end;
+    });
 
     options = options || {};
     options.getTemplateTag = SpacebarsCompiler.TemplateTag.parseCompleteTag;
@@ -440,8 +450,6 @@ _.extend(TemplateCompiler.prototype, {
       content = self._optimize(content[0]);
     else if (interposeEOL)
       content = self._interposeEOL(content);
-    else
-      content = content;
 
     return self._removeNewLinePrefixes(content);
   }
