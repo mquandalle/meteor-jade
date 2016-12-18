@@ -354,6 +354,12 @@ _.extend(TemplateCompiler.prototype, {
     var dynamicAttrs = [];
 
     _.each(attrs, function (attr) {
+      // Rewrite $ attributes directly to dynamic attributes
+      if (attr.name.charAt(0) === "$" && attr.name !== "$dyn") {
+        attr.val = attr.name.slice(1) + " " + attr.val;
+        attr.name = "$dyn";
+      }
+
       var val = attr.val;
       var key = attr.name;
 
